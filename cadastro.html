@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Começar meu Planejamento | PlanejaNoiva</title>
+    
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&family=Montserrat:wght@700&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+    <style>
+        :root {
+            --cor-primaria: #EEABAB;
+            --cor-texto: #4A453E;
+            --cor-fundo: #FDF9F6;
+            --cor-dourado: #D4AF37;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Inter', sans-serif; }
+        
+        body { 
+            background-color: var(--cor-fundo); 
+            display: flex; 
+            justify-content: center; 
+            align-items: center; 
+            min-height: 100vh;
+            padding: 40px 20px;
+        }
+
+        .signup-card {
+            background: white;
+            padding: 40px;
+            border-radius: 30px;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.05);
+            width: 100%;
+            max-width: 550px;
+            border: 1px solid rgba(238, 171, 171, 0.2);
+            text-align: center;
+        }
+
+        .logo { height: 50px; margin-bottom: 20px; mix-blend-mode: multiply; }
+        h2 { font-family: 'Montserrat', sans-serif; color: var(--cor-texto); margin-bottom: 25px; font-size: 1.5rem; }
+
+        .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; text-align: left; }
+        .full { grid-column: span 2; }
+
+        label { display: block; font-size: 0.7rem; font-weight: 700; text-transform: uppercase; color: #8C857B; margin-bottom: 5px; letter-spacing: 1px; }
+        input { width: 100%; padding: 12px 15px; border: 1px solid #E5DED5; border-radius: 12px; background: #FCF9F5; outline: none; font-size: 0.9rem; transition: 0.3s; }
+        input:focus { border-color: var(--cor-primaria); background: white; }
+
+        /* CORREÇÃO: Selo de Identidade Única */
+        .palette-box {
+            grid-column: span 2;
+            border: 1px dashed var(--cor-primaria);
+            border-radius: 15px;
+            padding: 20px;
+            margin: 10px 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .preview-circle {
+            width: 65px;
+            height: 65px;
+            border-radius: 50%;
+            background-color: var(--cor-primaria);
+            border: 3px solid var(--cor-dourado);
+            cursor: pointer;
+            position: relative;
+            transition: 0.3s;
+            box-shadow: 0 8px 15px rgba(0,0,0,0.1);
+        }
+
+        .input-hidden-color { position: absolute; opacity: 0; inset: 0; cursor: pointer; width: 100%; height: 100%; }
+
+        .btn-registrar { width: 100%; background: var(--cor-primaria); color: white; border: none; padding: 16px; border-radius: 15px; font-weight: 700; font-size: 1rem; cursor: pointer; margin-top: 20px; transition: 0.4s; }
+        .btn-registrar:hover { transform: translateY(-2px); box-shadow: 0 10px 20px rgba(238, 171, 171, 0.3); }
+
+        .footer-link { margin-top: 20px; font-size: 0.85rem; color: #8C857B; }
+        .footer-link a { color: var(--cor-primaria); text-decoration: none; font-weight: 600; }
+    </style>
+</head>
+<body>
+
+<div class="signup-card">
+    <img src="https://i.ibb.co/YTTQXBx8/Logo-Planeja-Noiva.png" class="logo">
+    <h2>Começar meu Planejamento</h2>
+
+    <div class="form-grid">
+        <div class="form-group full">
+            <label>Seu Nome Completo</label>
+            <input type="text" id="nomeNoiva" placeholder="Ex: Letícia Moura">
+        </div>
+
+        <div class="form-group">
+            <label>E-mail</label>
+            <input type="email" id="email" placeholder="seu@email.com">
+        </div>
+
+        <div class="form-group">
+            <label>Senha</label>
+            <input type="password" id="senha" placeholder="••••••••">
+        </div>
+
+        <div class="form-group full">
+            <label>Nome do Noivo</label>
+            <input type="text" id="nomeNoivo" placeholder="Nome do seu parceiro">
+        </div>
+
+        <div class="form-group">
+            <label>Data do Casamento</label>
+            <input type="datetime-local" id="dataCasamento">
+        </div>
+
+        <div class="form-group">
+            <label>Local/Cidade</label>
+            <input type="text" id="local" placeholder="Ex: Goiânia, GO">
+        </div>
+
+        <!-- BOX DE COR CORRIGIDO -->
+        <div class="palette-box">
+            <label>Sua Paleta de Cores</label>
+            <div class="preview-circle" id="circleDisplay">
+                <input type="color" id="corPrincipal" class="input-hidden-color" value="#EEABAB" oninput="document.getElementById('circleDisplay').style.backgroundColor = this.value">
+            </div>
+            <p style="font-size: 0.65rem; color: #B2ACA3; margin-top: 8px;">Toque no círculo para escolher seu tom</p>
+        </div>
+    </div>
+
+    <button class="btn-registrar" onclick="registrarNoiva()">Criar minha conta 💍</button>
+
+    <div class="footer-link">
+        Já tem conta? <a href="index.html">Fazer Login</a>
+    </div>
+</div>
+
+<script>
+    const _supabase = supabase.createClient('https://vuiqbdqnfnofwkpvvuqy.supabase.co', 'sb_publishable_LjKm4HF9kyD7m0ch3Eefdw_TJ5SG6w2');
+
+    async function registrarNoiva() {
+        const nome = document.getElementById('nomeNoiva').value;
+        const email = document.getElementById('email').value;
+        const senha = document.getElementById('senha').value;
+        const noivo = document.getElementById('nomeNoivo').value;
+        const data = document.getElementById('dataCasamento').value;
+        const local = document.getElementById('local').value;
+        const cor = document.getElementById('corPrincipal').value;
+
+        if (!nome || !email || !senha || !data) {
+            Swal.fire({ icon: 'warning', title: 'Atenção', text: 'Preencha os campos obrigatórios.' });
+            return;
+        }
+
+        const { error } = await _supabase.from('usuarios').insert([
+            { 
+                nome: nome, 
+                email: email, 
+                senha: senha, 
+                nome_noivo: noivo, 
+                data_casamento: data,
+                local_casamento: local,
+                paleta_cores: cor 
+            }
+        ]);
+
+        if (!error) {
+            localStorage.setItem('usuario_email', email);
+            localStorage.setItem('usuario_nome', nome);
+
+            Swal.fire({
+                icon: 'success',
+                title: 'Bem-vinda!',
+                text: 'Cadastro realizado com sucesso.',
+                confirmButtonColor: '#EEABAB'
+            }).then(() => {
+                window.location.href = 'dashboard.html';
+            });
+        } else {
+            Swal.fire({ icon: 'error', title: 'Erro', text: 'Tente usar outro e-mail.' });
+        }
+    }
+</script>
+
+</body>
+</html>

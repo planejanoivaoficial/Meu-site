@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Meus Fornecedores | PlanejaNoiva</title>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20,400,0,0" />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Inter', sans-serif; }
+        body { background-color: #F7EFE4; color: #4A453E; padding-bottom: 50px; }
+        
+        nav { background: white; padding: 15px 5%; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 2px 15px rgba(0,0,0,0.05); position: sticky; top: 0; z-index: 1000; }
+        .nav-logo { height: 45px; mix-blend-mode: multiply; }
+        .btn-voltar { color: #EEABAB; text-decoration: none; font-weight: 700; font-size: 0.9rem; display: flex; align-items: center; gap: 5px; }
+
+        .container { max-width: 1000px; margin: 40px auto; padding: 0 20px; }
+        
+        .add-area { background: white; padding: 30px; border-radius: 25px; margin-bottom: 30px; box-shadow: 0 10px 30px rgba(0,0,0,0.03); border: 1px solid rgba(238, 171, 171, 0.1); }
+        .form-row { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px; margin-bottom: 15px; }
+        .form-group label { display: block; font-size: 0.8rem; font-weight: 700; margin-bottom: 8px; color: #8C857B; }
+        .form-group input { width: 100%; padding: 12px; border: 1px solid #E5DED5; border-radius: 12px; outline: none; background: #FCF9F5; transition: 0.3s; }
+        .form-group input:focus { border-color: #EEABAB; box-shadow: 0 0 10px rgba(238, 171, 171, 0.1); }
+        
+        .btn-salvar { background: #EEABAB; color: white; border: none; padding: 15px 40px; border-radius: 12px; font-weight: 700; cursor: pointer; transition: 0.3s; width: 100%; margin-top: 10px; }
+        .btn-salvar:hover { background: #e59a9a; transform: translateY(-2px); }
+
+        .fornecedores-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 20px; }
+        .fornecedor-card { background: white; padding: 25px; border-radius: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.03); border-left: 5px solid #EEABAB; position: relative; animation: fadeIn 0.5s ease-in-out; }
+        
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        
+        .cat-tag { font-size: 0.7rem; font-weight: 700; color: #EEABAB; text-transform: uppercase; letter-spacing: 1px; display: block; margin-bottom: 5px; }
+        .fornecedor-nome { font-size: 1.2rem; font-weight: 700; margin-bottom: 15px; display: block; text-transform: capitalize; }
+        
+        .acoes-card { display: flex; gap: 10px; border-top: 1px solid #F7EFE4; margin-top: 15px; padding-top: 15px; }
+        .btn-contato { flex: 1; display: flex; align-items: center; justify-content: center; gap: 8px; padding: 10px; border-radius: 10px; text-decoration: none; font-size: 0.85rem; font-weight: 600; transition: 0.2s; }
+        .btn-wpp { background: #E8F5E9; color: #2E7D32; border: 1px solid #C8E6C9; }
+        .btn-wpp:hover { background: #C8E6C9; }
+        
+        .btn-del { position: absolute; top: 15px; right: 15px; color: #F0E9E0; cursor: pointer; border: none; background: none; transition: 0.3s; }
+        .btn-del:hover { color: #EF4444; }
+    </style>
+</head>
+<body>
+
+    <nav>
+        <img src="https://i.ibb.co/YTTQXBx8/Logo-Planeja-Noiva.png" class="nav-logo">
+        <a href="dashboard.html" class="btn-voltar">
+            <span class="material-symbols-outlined">arrow_back</span> Voltar ao Painel
+        </a>
+    </nav>
+
+    <div class="container">
+        <div class="add-area">
+            <h3 style="margin-bottom: 20px;">Adicionar Novo Fornecedor</h3>
+            <div class="form-row">
+                <div class="form-group">
+                    <label>Nome do Fornecedor</label>
+                    <input type="text" id="nome" placeholder="Ex: João Fotografia">
+                </div>
+                <div class="form-group">
+                    <label>Categoria do Serviço</label>
+                    <input type="text" id="categoria" placeholder="Ex: Maquiagem, Bolo...">
+                </div>
+                <div class="form-group">
+                    <label>WhatsApp (com DDD)</label>
+                    <input type="number" id="telefone" placeholder="62999999999">
+                </div>
+            </div>
+            <button class="btn-salvar" onclick="adicionarFornecedor()">Salvar na Agenda</button>
+        </div>
+
+        <div class="fornecedores-grid" id="listaFornecedores"></div>
+    </div>
+
+    <script>
+        const _supabase = supabase.createClient('https://vuiqbdqnfnofwkpvvuqy.supabase.co', 'sb_publishable_LjKm4HF9kyD7m0ch3Eefdw_TJ5SG6w2');
+        const email = localStorage.getItem('usuario_email');
+
+        async function carregarFornecedores() {
+            const { data, error } = await _supabase.from('fornecedores').select('*').eq('usuario_email', email).order('id', { ascending: false });
+            
+            if (error) {
+                console.error("Erro ao carregar:", error);
+                return;
+            }
+
+            const container = document.getElementById('listaFornecedores');
+            container.innerHTML = "";
+
+            data.forEach(f => {
+                const linkWpp = `https://wa.me/55${f.telefone}`;
+                container.innerHTML += `
+                    <div class="fornecedor-card">
+                        <button class="btn-del" onclick="excluirFornecedor(${f.id})">
+                            <span class="material-symbols-outlined">delete</span>
+                        </button>
+                        <span class="cat-tag">${f.categoria || 'Serviço'}</span>
+                        <span class="fornecedor-nome">${f.nome}</span>
+                        <div class="acoes-card">
+                            <a href="${linkWpp}" target="_blank" class="btn-contato btn-wpp">
+                                <span class="material-symbols-outlined" style="font-size: 18px;">chat</span> WhatsApp
+                            </a>
+                        </div>
+                    </div>
+                `;
+            });
+        }
+
+        async function adicionarFornecedor() {
+            const nomeInput = document.getElementById('nome');
+            const categoriaInput = document.getElementById('categoria');
+            const telefoneInput = document.getElementById('telefone');
+
+            const nome = nomeInput.value.trim();
+            const categoria = categoriaInput.value.trim();
+            const telefone = telefoneInput.value.trim();
+
+            if (!nome || !categoria || !telefone) { 
+                alert("Por favor, preencha todos os campos!"); 
+                return; 
+            }
+
+            const { error } = await _supabase.from('fornecedores').insert([{ 
+                nome: nome, 
+                categoria: categoria, 
+                telefone: telefone, 
+                usuario_email: email 
+            }]);
+
+            if (!error) {
+                // Limpa os campos após o sucesso
+                nomeInput.value = "";
+                categoriaInput.value = "";
+                telefoneInput.value = "";
+                
+                // Recarrega a lista
+                carregarFornecedores();
+            } else {
+                alert("Erro ao salvar fornecedor. Verifique sua conexão.");
+                console.error(error);
+            }
+        }
+
+        async function excluirFornecedor(id) {
+            if (confirm("Deseja remover este fornecedor da sua agenda?")) {
+                const { error } = await _supabase.from('fornecedores').delete().eq('id', id);
+                if (!error) {
+                    carregarFornecedores();
+                } else {
+                    alert("Erro ao excluir.");
+                }
+            }
+        }
+
+        // Inicia a carga de dados ao abrir a página
+        carregarFornecedores();
+    </script>
+</body>
+</html>

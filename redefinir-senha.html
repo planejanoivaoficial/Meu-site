@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PlanejaNoiva - Nova Senha</title>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <style>
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; display: flex; justify-content: center; align-items: center; height: 100vh; background-color: #f9f6f2; margin: 0; }
+        .card { background: white; padding: 40px; border-radius: 12px; box-shadow: 0 4px 20px rgba(0,0,0,0.05); width: 100%; max-width: 400px; text-align: center; }
+        h2 { color: #5d4037; margin-bottom: 20px; }
+        input { width: 100%; padding: 12px; margin: 10px 0; border: 1px solid #ddd; border-radius: 6px; box-sizing: border-box; }
+        button { width: 100%; padding: 12px; background-color: #5d4037; color: white; border: none; border-radius: 6px; cursor: pointer; font-weight: bold; transition: 0.3s; }
+        button:hover { background-color: #3e2723; }
+        #mensagem { margin-top: 15px; font-size: 14px; color: #d32f2f; }
+    </style>
+</head>
+<body>
+    <div class="card">
+        <h2>Criar Nova Senha</h2>
+        <p>Insira sua nova senha para o PlanejaNoiva</p>
+        <input type="password" id="novaSenha" placeholder="Nova Senha">
+        <input type="password" id="confirmarSenha" placeholder="Confirme a Nova Senha">
+        <button onclick="atualizarSenha()">Salvar Nova Senha</button>
+        <p id="mensagem"></p>
+    </div>
+
+    <script>
+        // Configuração com as chaves reais do seu projeto PlanejaNoiva
+        const supabaseUrl = 'https://vuiqbdqnfnofwkpvvuqy.supabase.co'; 
+        const supabaseKey = 'sb_publishable_LjKm4HF9kyD7m0ch3Eefdw_TJ5SG6w2';
+        const _supabase = supabase.createClient(supabaseUrl, supabaseKey);
+
+        async function atualizarSenha() {
+            const senha = document.getElementById('novaSenha').value;
+            const confirma = document.getElementById('confirmarSenha').value;
+            const msgElement = document.getElementById('mensagem');
+
+            if (senha !== confirma) {
+                alert("As senhas não coincidem!");
+                return;
+            }
+
+            if (senha.length < 6) {
+                alert("A senha deve ter pelo menos 6 caracteres.");
+                return;
+            }
+
+            const { data, error } = await _supabase.auth.updateUser({ password: senha });
+
+            if (error) {
+                msgElement.innerText = "Erro: " + error.message;
+            } else {
+                alert("Senha atualizada com sucesso!");
+                window.location.href = "index.html"; 
+            }
+        }
+    </script>
+</body>
+</html>

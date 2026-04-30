@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cronograma Oficial | PlanejaNoiva</title>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,500;1,400&family=Montserrat:wght@200;400;600&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <style>
+        :root {
+            --cor-tema: #EEABAB; /* Cor padrão que será substituída pela do banco */
+            --cor-texto: #4A453E;
+            --cor-bege: #FDF9F6;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        
+        body { 
+            background-color: var(--cor-bege);
+            color: var(--cor-texto); 
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 60px 20px;
+            font-family: 'Cormorant Garamond', serif;
+        }
+
+        /* Textura de Papel Natural */
+        body::before {
+            content: "";
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background-image: url("https://www.transparenttextures.com/patterns/natural-paper.png");
+            opacity: 0.4;
+            z-index: -1;
+            pointer-events: none;
+        }
+
+        .header { text-align: center; margin-bottom: 50px; max-width: 800px; width: 100%; }
+        
+        .logo-img { 
+            height: 110px; 
+            mix-blend-mode: multiply; 
+            opacity: 0.9;
+            margin-bottom: 15px;
+        }
+        
+        .couple-names {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: clamp(2.5rem, 8vw, 3.5rem);
+            font-style: italic;
+            margin-bottom: 8px;
+            line-height: 1.1;
+            font-weight: 400;
+            transition: color 0.5s ease;
+        }
+
+        .wedding-info {
+            font-family: 'Montserrat', sans-serif;
+            font-size: 0.8rem;
+            letter-spacing: 4px;
+            text-transform: uppercase;
+            font-weight: 600;
+            line-height: 1.8;
+        }
+
+        /* Selo de Identidade (Círculo Único) */
+        .identity-seal {
+            width: 15px;
+            height: 15px;
+            border-radius: 50%;
+            margin: 20px auto;
+            border: 1px solid rgba(0,0,0,0.1);
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+        }
+
+        .title-tag { 
+            font-family: 'Montserrat', sans-serif;
+            font-size: 0.65rem; 
+            color: var(--cor-texto); 
+            letter-spacing: 5px;
+            text-transform: uppercase;
+            border-top: 1px solid rgba(0,0,0,0.1);
+            border-bottom: 1px solid rgba(0,0,0,0.1);
+            padding: 12px 40px;
+            display: inline-block;
+            margin-top: 10px;
+        }
+
+        .timeline { width: 100%; max-width: 600px; margin-top: 40px; }
+
+        .item { 
+            display: flex;
+            justify-content: space-between;
+            align-items: baseline;
+            margin-bottom: 25px;
+            border-bottom: 0.5px solid rgba(0,0,0,0.05);
+            padding-bottom: 10px;
+        }
+
+        .time { 
+            font-family: 'Montserrat', sans-serif;
+            font-size: 0.95rem; 
+            font-weight: 600;
+            min-width: 85px;
+            transition: color 0.5s ease;
+        }
+
+        .desc { 
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 1.6rem; 
+            color: var(--cor-texto);
+            text-align: right;
+            font-style: italic;
+            flex: 1;
+        }
+
+        .btn-imprimir { 
+            background: transparent;
+            color: var(--cor-texto); 
+            border: 1px solid var(--cor-texto);
+            padding: 12px 35px; 
+            font-family: 'Montserrat', sans-serif; 
+            font-size: 0.6rem;
+            text-transform: uppercase; 
+            letter-spacing: 3px;
+            cursor: pointer; 
+            margin-top: 60px;
+            transition: 0.4s;
+            opacity: 0.5;
+        }
+
+        .btn-imprimir:hover { opacity: 1; background: var(--cor-texto); color: white; }
+
+        @media print { 
+            .no-print { display: none; } 
+            body { padding: 30px; background: white; }
+            .item { border-bottom: 0.5px solid #eee; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="header">
+        <img src="https://i.ibb.co/YTTQXBx8/Logo-Planeja-Noiva.png" class="logo-img">
+        
+        <div class="couple-names" id="nomesCasal">Orquestrando o Amor</div>
+        
+        <div class="wedding-info">
+            <span id="infoCasamento">A carregar detalhes...</span><br>
+            <span id="localEvento" style="font-size: 0.7rem; opacity: 0.7; letter-spacing: 2px;"></span>
+        </div>
+
+        <div class="identity-seal" id="seloCor"></div>
+        
+        <div class="title-tag" id="tagLinha">Cronograma Oficial do Evento</div>
+    </div>
+
+    <div class="timeline" id="lista"></div>
+
+    <button class="btn-imprimir no-print" onclick="window.print()">Exportar PDF de Luxo</button>
+
+    <script>
+        const _supabase = supabase.createClient('https://vuiqbdqnfnofwkpvvuqy.supabase.co', 'sb_publishable_LjKm4HF9kyD7m0ch3Eefdw_TJ5SG6w2');
+        const urlParams = new URLSearchParams(window.location.search);
+        const noivaEmail = urlParams.get('noiva');
+
+        async function carregar() {
+            if (!noivaEmail) return;
+            
+            // 1. Busca dados do usuário (Identidade e Local)
+            const { data: user } = await _supabase.from('usuarios').select('*').eq('email', noivaEmail).single();
+            
+            if (user) {
+                const nomeNoiva = user.nome || "Noiva";
+                const nomeNoivo = user.nome_noivo || "Noivo";
+                document.getElementById('nomesCasal').innerText = `${nomeNoiva} & ${nomeNoivo}`;
+                
+                if (user.data_casamento) {
+                    const dataObj = new Date(user.data_casamento);
+                    const dataFormatada = dataObj.toLocaleDateString('pt-BR');
+                    const horaFormatada = dataObj.toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' });
+                    document.getElementById('infoCasamento').innerText = `${dataFormatada} • às ${horaFormatada}h`;
+                }
+
+                if (user.local_casamento) {
+                    document.getElementById('localEvento').innerText = user.local_casamento;
+                }
+
+                // APLICAÇÃO DA COR TEMA (SOFISTICAÇÃO)
+                if (user.paleta_cores) {
+                    const corUnica = user.paleta_cores;
+                    document.getElementById('seloCor').style.backgroundColor = corUnica;
+                    document.getElementById('nomesCasal').style.color = corUnica;
+                    document.getElementById('infoCasamento').style.color = corUnica;
+                    document.getElementById('tagLinha').style.borderColor = corUnica;
+                }
+            }
+
+            // 2. Busca itens do cronograma
+            const { data: crono } = await _supabase.from('cronograma').select('*').eq('usuario_email', noivaEmail).order('hora', { ascending: true });
+            
+            const lista = document.getElementById('lista');
+            if (crono && crono.length > 0) {
+                lista.innerHTML = "";
+                crono.forEach(item => {
+                    lista.innerHTML += `
+                        <div class="item">
+                            <span class="time" style="color: ${user.paleta_cores || '#EEABAB'}">${item.hora.substring(0, 5)}h</span>
+                            <span class="desc">${item.descricao}</span>
+                        </div>
+                    `;
+                });
+            } else {
+                lista.innerHTML = "<p style='text-align:center; font-style: italic; opacity: 0.4;'>A definir o roteiro dos sonhos...</p>";
+            }
+        }
+        carregar();
+    </script>
+</body>
+</html>

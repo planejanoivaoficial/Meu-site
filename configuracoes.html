@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Configurações do Casamento | PlanejaNoiva</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&family=Montserrat:wght@400;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <style>
+        :root { --cor-primaria: #EEABAB; --cor-fundo: #FDF9F6; --cor-texto: #4A453E; }
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Inter', sans-serif; }
+        body { background-color: var(--cor-fundo); color: var(--cor-texto); padding: 40px 20px; display: flex; justify-content: center; }
+        
+        .card { background: white; padding: 40px; border-radius: 25px; box-shadow: 0 10px 30px rgba(0,0,0,0.03); width: 100%; max-width: 450px; }
+        .logo { height: 70px; display: block; margin: 0 auto 20px; mix-blend-mode: multiply; }
+        h2 { text-align: center; margin-bottom: 25px; font-family: 'Montserrat', sans-serif; color: var(--cor-texto); }
+        
+        .group { margin-bottom: 20px; }
+        label { display: block; font-size: 0.75rem; font-weight: 700; margin-bottom: 8px; color: #8C857B; text-transform: uppercase; }
+        input { width: 100%; padding: 14px; border: 1px solid #E5DED5; border-radius: 12px; outline: none; background: #FCF9F5; font-size: 1rem; color: var(--cor-texto); }
+        
+        .btn-salvar { width: 100%; background: var(--cor-primaria); color: white; border: none; padding: 16px; border-radius: 12px; font-weight: 700; cursor: pointer; transition: 0.3s; font-size: 1rem; margin-top: 10px; }
+        .btn-salvar:hover { transform: translateY(-2px); box-shadow: 0 5px 15px rgba(238, 171, 171, 0.4); }
+    </style>
+</head>
+<body>
+
+<div class="card">
+    <img src="https://i.ibb.co/YTTQXBx8/Logo-Planeja-Noiva.png" class="logo">
+    <h2>Seu Casamento</h2>
+    
+    <div class="group">
+        <label>Nome do Noivo (Completo)</label>
+        <input type="text" id="nomeNoivo" placeholder="Ex: Odesvaldo de Souza Matos Júnior">
+    </div>
+
+    <div class="group">
+        <label>Data e Hora do Início</label>
+        <input type="datetime-local" id="dataCasamento">
+    </div>
+
+    <button class="btn-salvar" onclick="atualizarDados()">Salvar no Cronograma</button>
+</div>
+
+<script>
+    // 1. Configuração do seu Supabase
+    const _supabase = supabase.createClient('https://vuiqbdqnfnofwkpvvuqy.supabase.co', 'sb_publishable_LjKm4HF9kyD7m0ch3Eefdw_TJ5SG6w2');
+    
+    // 2. Pega o e-mail da noiva que está logada (estamos usando o localStorage que você já usa)
+    const emailNoiva = localStorage.getItem('usuario_email');
+
+    // 3. Função para carregar o que já está salvo (para ela não ver os campos vazios)
+    async function carregarCampos() {
+        if (!emailNoiva) return;
+        
+        const { data, error } = await _supabase
+            .from('usuarios')
+            .select('nome_noivo, data_casamento')
+            .eq('email', emailNoiva)
+            .single();
+
+        if (data) {
+            document.getElementById('nomeNoivo').value = data.nome_noivo || "";
+            if (data.data_casamento) {
+                // Ajusta a data para o formato do calendário do navegador
+                document.getElementById('dataCasamento').value = data.data_casamento.substring(0, 16);
+            }
+        }
+    }
+
+    // 4. A FUNÇÃO DO PASSO 2: Enviar para o Banco de Dados
+    async function atualizarDados() {
+        const noivo = document.getElementById('nomeNoivo').value;
+        const dataH = document.getElementById('dataCasamento').value;
+
+        if (!noivo || !dataH) {
+            return Swal.fire({ icon: 'info', title: 'Campos Vazios', text: 'Preencha o nome do noivo e a data para o cronograma ficar lindo!' });
+        }
+
+        // Faz o UPDATE na tabela 'usuarios' injetando o nome do noivo e a data
+        const { error } = await _supabase
+            .from('usuarios')
+            .update({ 
+                nome_noivo: noivo, 
+                data_casamento: dataH 
+            })
+            .eq('email', emailNoiva);
+
+        if (!error) {
+            Swal.fire({
+                icon: 'success',
+                title: 'Dados Salvos!',
+                text: 'Agora seu cronograma oficial está personalizado.',
+                confirmButtonColor: '#EEABAB'
+            });
+        } else {
+            console.error(error);
+            Swal.fire({ icon: 'error', title: 'Erro ao salvar', text: 'Verifique se a coluna nome_noivo foi criada no Supabase.' });
+        }
+    }
+
+    carregarCampos();
+</script>
+
+</body>
+</html>

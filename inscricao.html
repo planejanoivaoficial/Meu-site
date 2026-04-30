@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Criar Minha Conta | PlanejaNoiva</title>
+    
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&family=Montserrat:wght@700&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+    <style>
+        :root {
+            --cor-primaria: #EEABAB;
+            --cor-texto: #4A453E;
+            --cor-fundo: #FDF9F6;
+            --cor-dourado: #D4AF37;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Inter', sans-serif; }
+        
+        body { 
+            background-color: var(--cor-fundo); 
+            background-image: url("https://www.transparenttextures.com/patterns/silk-weave.png");
+            display: flex; 
+            justify-content: center; 
+            align-items: center; 
+            min-height: 100vh;
+            padding: 40px 20px;
+        }
+
+        .signup-card {
+            background: white;
+            padding: 40px;
+            border-radius: 30px;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.05);
+            width: 100%;
+            max-width: 600px;
+            border: 1px solid rgba(238, 171, 171, 0.2);
+        }
+
+        .logo {
+            display: block;
+            height: 60px;
+            margin: 0 auto 15px;
+            mix-blend-mode: multiply;
+        }
+
+        h2 { 
+            text-align: center; 
+            font-family: 'Montserrat', sans-serif; 
+            color: var(--cor-texto);
+            font-size: 1.4rem;
+            margin-bottom: 25px;
+        }
+
+        .form-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+        }
+
+        .full { grid-column: span 2; }
+
+        .form-group { margin-bottom: 12px; }
+        
+        label { 
+            display: block; 
+            font-size: 0.65rem; 
+            font-weight: 700; 
+            text-transform: uppercase; 
+            color: #8C857B; 
+            margin-bottom: 4px;
+            letter-spacing: 1px;
+        }
+
+        input {
+            width: 100%;
+            padding: 10px 15px;
+            border: 1px solid #E5DED5;
+            border-radius: 10px;
+            background: #FCF9F5;
+            outline: none;
+            font-size: 0.9rem;
+            transition: 0.3s;
+        }
+
+        input:focus { border-color: var(--cor-primaria); background: white; }
+
+        /* Selo de Cor Única Sofisticado */
+        .identity-selector {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            background: #f9f6f2;
+            padding: 20px;
+            border-radius: 20px;
+            margin-top: 5px;
+            border: 1px dashed var(--cor-primaria);
+        }
+
+        .preview-circle {
+            width: 70px;
+            height: 70px;
+            border-radius: 50%;
+            background-color: var(--cor-primaria);
+            border: 3px solid var(--cor-dourado);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+            cursor: pointer;
+            position: relative;
+            transition: transform 0.3s;
+        }
+
+        .preview-circle:hover { transform: scale(1.05); }
+
+        .input-hidden-color {
+            position: absolute;
+            opacity: 0;
+            inset: 0;
+            cursor: pointer;
+            width: 100%;
+            height: 100%;
+        }
+
+        .btn-registrar {
+            width: 100%;
+            background: var(--cor-primaria);
+            color: white;
+            border: none;
+            padding: 16px;
+            border-radius: 12px;
+            font-weight: 700;
+            font-size: 1rem;
+            cursor: pointer;
+            margin-top: 20px;
+            transition: 0.4s;
+            box-shadow: 0 8px 20px rgba(238, 171, 171, 0.2);
+        }
+
+        .btn-registrar:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(238, 171, 171, 0.3);
+        }
+
+        .footer-links {
+            text-align: center;
+            margin-top: 20px;
+            font-size: 0.8rem;
+            color: #8C857B;
+        }
+
+        .footer-links a { color: var(--cor-primaria); text-decoration: none; font-weight: 600; }
+    </style>
+</head>
+<body>
+
+<div class="signup-card">
+    <img src="https://i.ibb.co/YTTQXBx8/Logo-Planeja-Noiva.png" class="logo">
+    <h2>Criar Minha Conta</h2>
+
+    <div class="form-grid">
+        <div class="form-group full">
+            <label>Seu Nome Completo</label>
+            <input type="text" id="nomeNoiva" placeholder="Ex: Letícia Gabriely Moura">
+        </div>
+
+        <div class="form-group">
+            <label>E-mail</label>
+            <input type="email" id="email" placeholder="contato@exemplo.com">
+        </div>
+
+        <div class="form-group">
+            <label>Sua Senha</label>
+            <input type="password" id="senha" placeholder="••••••••">
+        </div>
+
+        <div class="form-group full">
+            <label>Nome do Noivo</label>
+            <input type="text" id="nomeNoivo" placeholder="Ex: Odesvaldo Júnior">
+        </div>
+
+        <div class="form-group">
+            <label>Data e Hora do Evento</label>
+            <input type="datetime-local" id="dataCasamento">
+        </div>
+
+        <div class="form-group">
+            <label>Cidade/Local</label>
+            <input type="text" id="local" placeholder="Ex: Goiânia, GO">
+        </div>
+
+        <div class="form-group full">
+            <label>Cor Identidade do Casamento</label>
+            <div class="identity-selector">
+                <div class="preview-circle" id="circleDisplay">
+                    <input type="color" id="corIdentidade" class="input-hidden-color" value="#EEABAB" oninput="document.getElementById('circleDisplay').style.backgroundColor = this.value">
+                </div>
+                <p style="font-size: 0.7rem; color: #8C857B; margin-top: 10px; font-style: italic;">Toque no círculo para escolher seu tom oficial.</p>
+            </div>
+        </div>
+    </div>
+
+    <button class="btn-registrar" onclick="registrarNoiva()">Criar Meu Painel Profissional</button>
+
+    <div class="footer-links">
+        Já possui acesso? <a href="index.html">Entrar</a>
+    </div>
+</div>
+
+<script>
+    const _supabase = supabase.createClient('https://vuiqbdqnfnofwkpvvuqy.supabase.co', 'sb_publishable_LjKm4HF9kyD7m0ch3Eefdw_TJ5SG6w2');
+
+    async function registrarNoiva() {
+        const nome = document.getElementById('nomeNoiva').value;
+        const email = document.getElementById('email').value;
+        const senha = document.getElementById('senha').value;
+        const noivo = document.getElementById('nomeNoivo').value;
+        const data = document.getElementById('dataCasamento').value;
+        const local = document.getElementById('local').value;
+        const cor = document.getElementById('corIdentidade').value;
+
+        if (!nome || !email || !senha || !data) {
+            Swal.fire({ icon: 'warning', title: 'Atenção', text: 'Preencha os campos essenciais (Nome, E-mail, Senha e Data).' });
+            return;
+        }
+
+        const { error } = await _supabase.from('usuarios').insert([
+            { 
+                nome: nome, 
+                email: email, 
+                senha: senha, 
+                nome_noivo: noivo, 
+                data_casamento: data,
+                local_casamento: local,
+                paleta_cores: cor 
+            }
+        ]);
+
+        if (!error) {
+            localStorage.setItem('usuario_email', email);
+            localStorage.setItem('usuario_nome', nome);
+
+            Swal.fire({
+                icon: 'success',
+                title: 'Seja bem-vinda!',
+                text: 'Seu acesso foi criado. Vamos começar a planejar?',
+                confirmButtonColor: '#EEABAB'
+            }).then(() => {
+                window.location.href = 'dashboard.html';
+            });
+        } else {
+            Swal.fire({ icon: 'error', title: 'Erro no Cadastro', text: 'Verifique se as colunas existem no Supabase ou se o e-mail já está em uso.' });
+        }
+    }
+</script>
+
+</body>
+</html>

@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Meu Checklist | PlanejaNoiva</title>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20,400,0,0" />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Inter', sans-serif; }
+        body { background-color: #F7EFE4; color: #4A453E; padding-bottom: 50px; }
+        
+        nav { background: white; padding: 15px 5%; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 2px 15px rgba(0,0,0,0.05); position: sticky; top: 0; z-index: 1000; }
+        .nav-logo { height: 45px; mix-blend-mode: multiply; }
+        .btn-voltar { color: #EEABAB; text-decoration: none; font-weight: 700; font-size: 0.9rem; display: flex; align-items: center; gap: 5px; }
+
+        .container { max-width: 800px; margin: 40px auto; padding: 0 20px; }
+        h2 { font-weight: 700; margin-bottom: 30px; font-size: 1.6rem; text-align: center; }
+
+        .add-task-area { background: white; padding: 25px; border-radius: 25px; margin-bottom: 40px; box-shadow: 0 10px 30px rgba(0,0,0,0.03); display: flex; gap: 10px; border: 1px solid rgba(238, 171, 171, 0.2); }
+        .add-task-area input { flex: 1; padding: 15px; border: 1px solid #E5DED5; border-radius: 12px; outline: none; background: #FCF9F5; font-size: 1rem; }
+        .btn-add { background: #EEABAB; color: white; border: none; padding: 15px 25px; border-radius: 12px; font-weight: 700; cursor: pointer; transition: 0.3s; }
+        
+        .task-card { background: white; padding: 20px; border-radius: 18px; margin-bottom: 12px; display: flex; align-items: center; justify-content: space-between; box-shadow: 0 4px 15px rgba(0,0,0,0.02); border-left: 5px solid transparent; transition: 0.3s; }
+        .task-card.contratado { border-left: 5px solid #EEABAB; }
+        
+        .task-info { display: flex; align-items: center; gap: 15px; flex: 1; }
+        .btn-check { background: none; border: none; cursor: pointer; color: #E5DED5; }
+        .btn-check.done { color: #EEABAB; }
+        .task-text { font-size: 1rem; font-weight: 700; }
+        .task-text.done { color: #B2ACA3; text-decoration: line-through; }
+        
+        .status-label { font-size: 0.7rem; font-weight: 700; margin-top: 2px; }
+        .btn-del { color: #F8D7DA; border: none; background: none; cursor: pointer; transition: 0.2s; }
+        .btn-del:hover { color: #EF4444; }
+    </style>
+</head>
+<body>
+
+    <nav>
+        <img src="https://i.ibb.co/YTTQXBx8/Logo-Planeja-Noiva.png" class="nav-logo">
+        <a href="dashboard.html" class="btn-voltar">
+            <span class="material-symbols-outlined">arrow_back</span> Voltar ao Painel
+        </a>
+    </nav>
+
+    <div class="container">
+        <h2>Checklist de Consultoria 💍</h2>
+
+        <div class="add-task-area">
+            <input type="text" id="inputNovaTarefa" placeholder="Adicionar item à sua consultoria...">
+            <button class="btn-add" onclick="adicionarTarefa()">Incluir</button>
+        </div>
+
+        <div id="listaChecklist"></div>
+    </div>
+
+    <script>
+    const _supabase = supabase.createClient('https://vuiqbdqnfnofwkpvvuqy.supabase.co', 'sb_publishable_LjKm4HF9kyD7m0ch3Eefdw_TJ5SG6w2');
+    const email = localStorage.getItem('usuario_email');
+
+    async function carregarTarefas() {
+        const { data } = await _supabase.from('checklist').select('*').eq('usuario_email', email).order('id', { ascending: true });
+        
+        if (data && data.length === 0) {
+            await carregarEssenciaisConsultoria();
+            return;
+        }
+
+        const container = document.getElementById('listaChecklist');
+        container.innerHTML = "";
+
+        data.forEach(t => {
+            container.innerHTML += `
+                <div class="task-card ${t.concluida ? 'contratado' : ''}">
+                    <div class="task-info">
+                        <button class="btn-check ${t.concluida ? 'done' : ''}" onclick="toggleTarefa(${t.id}, ${t.concluida})">
+                            <span class="material-symbols-outlined">${t.concluida ? 'verified' : 'radio_button_unchecked'}</span>
+                        </button>
+                        <div style="display: flex; flex-direction: column;">
+                            <span class="task-text ${t.concluida ? 'done' : ''}">${t.tarefa}</span>
+                            <span class="status-label" style="color: ${t.concluida ? '#EEABAB' : '#B2ACA3'}">
+                                ${t.concluida ? 'ITEM CONTRATADO' : 'PENDENTE'}
+                            </span>
+                        </div>
+                    </div>
+                    <button class="btn-del" onclick="excluirTarefa(${t.id})">
+                        <span class="material-symbols-outlined">delete</span>
+                    </button>
+                </div>`;
+        });
+    }
+
+    async function adicionarTarefa() {
+        const input = document.getElementById('inputNovaTarefa');
+        if (!input.value) return;
+        await _supabase.from('checklist').insert([{ tarefa: input.value, usuario_email: email }]);
+        input.value = "";
+        carregarTarefas();
+    }
+
+    async function excluirTarefa(id) {
+        if (confirm("Remover da lista?")) {
+            await _supabase.from('checklist').delete().eq('id', id);
+            carregarTarefas();
+        }
+    }
+
+    async function toggleTarefa(id, st) {
+        await _supabase.from('checklist').update({ concluida: !st }).eq('id', id);
+        carregarTarefas();
+    }
+
+   async function carregarEssenciaisConsultoria() {
+        const checklistMestre = [
+            // --- CERIMÔNIA E PROTOCOLO ---
+            { tarefa: "💍 Porta-Aliança (Quem entrega e onde fica guardado)", usuario_email: email },
+            { tarefa: "📄 Votos impressos em papel firme (Evite o celular no altar)", usuario_email: email },
+            { tarefa: "🚰 Kit Altar: Água gelada e Lenços (Para o conforto dos noivos)", usuario_email: email },
+            { tarefa: "💒 Reserva e Identificação dos assentos dos pais/avós", usuario_email: email },
+            { tarefa: "🧺 Cestas e adereços para Daminhas/Pajens", usuario_email: email },
+            { tarefa: "👗 Cabide personalizado para a foto do vestido", usuario_email: email },
+            
+            // --- RECEPÇÃO E FESTA ---
+            { tarefa: "🍾 Contagem de Bebidas (Conferir entrada de espumantes/whisky)", usuario_email: email },
+            { tarefa: "👠 Chinelos/Havaianas (Conferir grades e local de entrega)", usuario_email: email },
+            { tarefa: "🎼 Cronograma da Pista (Valsa, Brinde, Buquê e Abertura)", usuario_email: email },
+            { tarefa: "🗺️ Mapa de Assentados (Confirmar mesas reservadas)", usuario_email: email },
+            { tarefa: "🍔 Lanchinho da Madrugada (Confirmar horário de saída)", usuario_email: email },
+            { tarefa: "🎁 Lembrancinhas e Mimos (Conferir contagem e local de entrega)", usuario_email: email },
+
+            // --- LOGÍSTICA E SEGURANÇA ---
+            { tarefa: "🚐 Gerador de Energia (Indispensável e testado)", usuario_email: email },
+            { tarefa: "🍽️ Alimentação do Staff (Fotografia, Banda, Cerimonial)", usuario_email: email },
+            { tarefa: "📦 Caixas para sobras de Doces/Bolo e Bem-casados", usuario_email: email },
+            { tarefa: "🧺 Kit Banheiro Completo (Higiene e Primeiros Socorros)", usuario_email: email }
+        ];
+        await _supabase.from('checklist').insert(checklistMestre);
+        carregarTarefas();
+    }
+    carregarTarefas();
+</script>
+</body>
+</html>
