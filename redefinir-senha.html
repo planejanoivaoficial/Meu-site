@@ -6,85 +6,22 @@
     <title>PlanejaNoiva - Nova Senha</title>
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <style>
-        /* Estética de Luxo: Tons de Areia e Bronze */
-        body { 
-            font-family: 'Times New Roman', Times, serif; 
-            display: flex; 
-            justify-content: center; 
-            align-items: center; 
-            height: 100vh; 
-            background-color: #f8f5f2; 
-            margin: 0; 
-        }
-        .card { 
-            background: white; 
-            padding: 50px; 
-            border-radius: 4px; 
-            box-shadow: 0 10px 30px rgba(0,0,0,0.05); 
-            width: 100%; 
-            max-width: 450px; 
-            text-align: center; 
-            border: 1px solid #e2d1c3; 
-        }
-        h2 { 
-            color: #5c4d42; 
-            margin-bottom: 20px; 
-            text-transform: uppercase; 
-            letter-spacing: 2px; 
-            font-weight: 300;
-        }
-        p#subtitulo {
-            color: #8c7e74;
-            font-style: italic;
-            margin-bottom: 30px;
-        }
-        input { 
-            width: 100%; 
-            padding: 15px; 
-            margin: 10px 0; 
-            border: 1px solid #e2d1c3; 
-            border-radius: 2px; 
-            box-sizing: border-box; 
-            font-family: sans-serif;
-        }
-        button { 
-            width: 100%; 
-            padding: 18px; 
-            background-color: #d4a373; 
-            color: white; 
-            border: none; 
-            border-radius: 2px; 
-            cursor: pointer; 
-            font-weight: bold; 
-            text-transform: uppercase;
-            letter-spacing: 2px;
-            transition: 0.3s; 
-            margin-top: 20px;
-        }
-        button:hover { 
-            background-color: #b58d63; 
-        }
-        button:disabled {
-            background-color: #ccc;
-            cursor: not-allowed;
-        }
-        #mensagem { 
-            margin-top: 20px; 
-            font-size: 14px; 
-            min-height: 20px;
-        }
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; display: flex; justify-content: center; align-items: center; height: 100vh; background-color: #f9f6f2; margin: 0; }
+        .card { background: white; padding: 40px; border-radius: 12px; box-shadow: 0 4px 20px rgba(0,0,0,0.05); width: 100%; max-width: 400px; text-align: center; }
+        h2 { color: #5d4037; margin-bottom: 20px; }
+        input { width: 100%; padding: 12px; margin: 10px 0; border: 1px solid #ddd; border-radius: 6px; box-sizing: border-box; }
+        button { width: 100%; padding: 12px; background-color: #5d4037; color: white; border: none; border-radius: 6px; cursor: pointer; font-weight: bold; transition: 0.3s; }
+        button:hover { background-color: #3e2723; }
+        #mensagem { margin-top: 15px; font-size: 14px; color: #d32f2f; }
     </style>
 </head>
 <body>
     <div class="card">
         <h2>Criar Nova Senha</h2>
-        <p id="subtitulo">Escolha sua nova senha para continuar sua jornada no PlanejaNoiva.</p>
-        
+        <p id="subtitulo">Sua jornada impecável continua aqui.</p>
         <input type="password" id="novaSenha" placeholder="Nova Senha">
         <input type="password" id="confirmarSenha" placeholder="Confirme a Nova Senha">
-        
         <button id="btnAtualizar" onclick="atualizarSenha()">Salvar Alterações</button>
-        
         <p id="mensagem"></p>
     </div>
 
@@ -93,14 +30,13 @@
         const supabaseKey = 'sb_publishable_LjKm4HF9kyD7m0ch3Eefdw_TJ5SG6w2';
         const _supabase = supabase.createClient(supabaseUrl, supabaseKey);
 
-        // Verificação de Segurança: Garante que há uma sessão ativa via link de e-mail
+        // Verifica se a sessão de recuperação está ativa ao carregar a página
         window.onload = async () => {
             const { data: { session }, error } = await _supabase.auth.getSession();
-            const msgElement = document.getElementById('mensagem');
-            
             if (error || !session) {
-                msgElement.style.color = "#d32f2f";
-                msgElement.innerText = "Link expirado ou inválido. Solicite uma nova recuperação.";
+                const msg = document.getElementById('mensagem');
+                msg.style.color = "#d32f2f";
+                msg.innerText = "Link inválido ou expirado. Tente novamente.";
                 document.getElementById('btnAtualizar').disabled = true;
             }
         };
@@ -111,23 +47,9 @@
             const msgElement = document.getElementById('mensagem');
             const btn = document.getElementById('btnAtualizar');
 
-            msgElement.innerText = "";
-
-            if (!senha || !confirma) {
-                msgElement.style.color = "#d32f2f";
-                msgElement.innerText = "Preencha todos os campos.";
-                return;
-            }
-
             if (senha !== confirma) {
                 msgElement.style.color = "#d32f2f";
                 msgElement.innerText = "As senhas não coincidem.";
-                return;
-            }
-
-            if (senha.length < 6) {
-                msgElement.style.color = "#d32f2f";
-                msgElement.innerText = "A senha deve ter no mínimo 6 caracteres.";
                 return;
             }
 
@@ -144,9 +66,7 @@
             } else {
                 msgElement.style.color = "#5c4d42";
                 msgElement.innerText = "Senha atualizada! Redirecionando...";
-                setTimeout(() => {
-                    window.location.href = "index.html"; 
-                }, 2500);
+                setTimeout(() => { window.location.href = "index.html"; }, 2500);
             }
         }
     </script>
