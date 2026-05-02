@@ -71,7 +71,7 @@
 <body>
 
     <div class="login-card">
-        <!-- Logo atualizada para o link oficial do seu Bucket Supabase -->
+        <!-- Logo do PlanejaNoiva vinda do seu bucket oficial -->
         <img src="https://vuiqbdqnfnofwkpvvuqy.supabase.co/storage/v1/object/public/logos/logo.png" alt="PlanejaNoiva" class="logo-img">
         
         <div class="input-group">
@@ -96,6 +96,7 @@
     </div>
 
     <script>
+        // Configuração oficial do seu Supabase
         const _supabase = supabase.createClient('https://vuiqbdqnfnofwkpvvuqy.supabase.co', 'sb_publishable_LjKm4HF9kyD7m0ch3Eefdw_TJ5SG6w2');
 
         async function realizarLogin() {
@@ -107,24 +108,21 @@
                 return;
             }
 
-            // Busca na tabela de usuários customizada
-            const { data, error } = await _supabase
-                .from('usuarios')
-                .select('*')
-                .eq('email', email)
-                .eq('senha', senha)
-                .single();
+            // Realiza o login usando o sistema de autenticação oficial para evitar erros de permissão
+            const { data, error } = await _supabase.auth.signInWithPassword({
+                email: email,
+                password: senha,
+            });
 
-            if (error || !data) { 
+            if (error) { 
                 Swal.fire({ 
                     icon: 'error', 
                     title: 'Acesso Negado', 
-                    text: 'E-mail ou senha estão incorretos.', 
+                    text: 'E-mail ou senha incorretos ou não confirmados.', 
                     confirmButtonColor: '#EEABAB' 
                 });
             } else { 
-                localStorage.setItem('usuario_nome', data.nome);
-                localStorage.setItem('usuario_email', email); 
+                localStorage.setItem('usuario_email', data.user.email); 
                 window.location.href = 'dashboard.html'; 
             }
         }
@@ -143,18 +141,19 @@
             });
 
             if (email) {
-                // ALTERAÇÃO REALIZADA AQUI: Adicionado redirectTo para a sua página na Vercel
+                // Ajuste crítico: Redirecionamento para a página correta na Vercel
                 const { error } = await _supabase.auth.resetPasswordForEmail(email, {
                     redirectTo: 'https://planeja-noiva.vercel.app/redefinir-senha.html'
                 });
                 
                 if (error) {
-                    Swal.fire({ icon: 'error', title: 'Ops!', text: 'Erro ao processar solicitação: ' + error.message, confirmButtonColor: '#EEABAB' });
+                    const msg = error.status === 429 ? 'Muitas tentativas. Aguarde 15 minutos.' : error.message;
+                    Swal.fire({ icon: 'error', title: 'Ops!', text: msg, confirmButtonColor: '#EEABAB' });
                 } else {
                     Swal.fire({ 
                         icon: 'success', 
                         title: 'E-mail Enviado!', 
-                        text: 'Verifique sua caixa de entrada para criar sua nova senha impecável.', 
+                        text: 'Verifique sua caixa de entrada para redefinir sua senha.', 
                         confirmButtonColor: '#EEABAB' 
                     });
                 }
