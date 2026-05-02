@@ -6,49 +6,118 @@
     <title>PlanejaNoiva - Nova Senha</title>
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <style>
-        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; display: flex; justify-content: center; align-items: center; height: 100vh; background-color: #f9f6f2; margin: 0; }
-        .card { background: white; padding: 40px; border-radius: 12px; box-shadow: 0 4px 20px rgba(0,0,0,0.05); width: 100%; max-width: 400px; text-align: center; }
-        h2 { color: #5d4037; margin-bottom: 20px; }
-        input { width: 100%; padding: 12px; margin: 10px 0; border: 1px solid #ddd; border-radius: 6px; box-sizing: border-box; }
-        button { width: 100%; padding: 12px; background-color: #5d4037; color: white; border: none; border-radius: 6px; cursor: pointer; font-weight: bold; transition: 0.3s; }
-        button:hover { background-color: #3e2723; }
-        #mensagem { margin-top: 15px; font-size: 14px; color: #d32f2f; }
+        /* Paleta: Greige (#4A423C), Dourado (#C1A076), Fundo Areia (#FDFBFA) */
+        body { font-family: 'Georgia', serif; display: flex; justify-content: center; align-items: center; height: 100vh; background-color: #FDFBFA; margin: 0; }
+        
+        .card { 
+            background: white; 
+            padding: 50px 40px; 
+            border-radius: 4px; 
+            border: 1px solid #E8E1DA; 
+            box-shadow: 0 4px 20px rgba(74, 66, 60, 0.05); 
+            width: 100%; 
+            max-width: 380px; 
+            text-align: center; 
+        }
+
+        .logo { width: 130px; margin-bottom: 30px; height: auto; }
+        
+        h2 { 
+            color: #4A423C; 
+            text-transform: uppercase; 
+            letter-spacing: 3px; 
+            font-size: 18px; 
+            font-weight: 300; 
+            margin-bottom: 10px; 
+        }
+
+        #subtitulo { color: #7D7267; font-style: italic; font-size: 14px; margin-bottom: 30px; }
+
+        input { 
+            width: 100%; 
+            padding: 14px; 
+            margin: 8px 0; 
+            border: 1px solid #E8E1DA; 
+            border-radius: 2px; 
+            box-sizing: border-box; 
+            font-family: inherit; 
+            background-color: #fcfcfc;
+        }
+
+        input:focus { outline: none; border-color: #C1A076; }
+
+        button { 
+            width: 100%; 
+            padding: 16px; 
+            background-color: #C1A076; 
+            color: white; 
+            border: none; 
+            border-radius: 2px; 
+            cursor: pointer; 
+            font-weight: bold; 
+            text-transform: uppercase; 
+            letter-spacing: 2px; 
+            margin-top: 15px;
+            transition: 0.3s; 
+        }
+
+        button:hover { background-color: #A6875D; }
+        button:disabled { background-color: #d1c7bc; cursor: not-allowed; }
+
+        #mensagem { margin-top: 20px; font-size: 13px; min-height: 20px; }
+        .erro { color: #d32f2f; }
+        .sucesso { color: #4A423C; }
     </style>
 </head>
 <body>
     <div class="card">
+        <!-- Logo do Bucket Público do PlanejaNoiva -->
+        <img src="https://vuiqbdqnfnofwkpvvuqy.supabase.co/storage/v1/object/public/logos/logo.png" alt="PlanejaNoiva" class="logo">
+        
         <h2>Criar Nova Senha</h2>
         <p id="subtitulo">Sua jornada impecável continua aqui.</p>
+        
         <input type="password" id="novaSenha" placeholder="Nova Senha">
         <input type="password" id="confirmarSenha" placeholder="Confirme a Nova Senha">
+        
         <button id="btnAtualizar" onclick="atualizarSenha()">Salvar Alterações</button>
         <p id="mensagem"></p>
     </div>
 
     <script>
+        // Configurações do Supabase extraídas do seu projeto
         const supabaseUrl = 'https://vuiqbdqnfnofwkpvvuqy.supabase.co';
-        const supabaseKey = 'sb_publishable_LjKm4HF9kyD7m0ch3Eefdw_TJ5SG6w2';
+        const supabaseKey = 'sb_publishable_LjKm4HF9kyD7m0ch3Eefdw_TJ5SG6w2'; // Chave anônima pública
         const _supabase = supabase.createClient(supabaseUrl, supabaseKey);
 
-        // Verifica se a sessão de recuperação está ativa ao carregar a página
+        const msgElement = document.getElementById('mensagem');
+        const btn = document.getElementById('btnAtualizar');
+
+        // 1. Verificação de sessão (Melhorado para capturar o hash da URL)
         window.onload = async () => {
             const { data: { session }, error } = await _supabase.auth.getSession();
+            
             if (error || !session) {
-                const msg = document.getElementById('mensagem');
-                msg.style.color = "#d32f2f";
-                msg.innerText = "Link inválido ou expirado. Tente novamente.";
-                document.getElementById('btnAtualizar').disabled = true;
+                msgElement.className = "erro";
+                msgElement.innerText = "Link de recuperação inválido ou expirado.";
+                btn.disabled = true;
             }
         };
 
+        // 2. Função de atualização
         async function atualizarSenha() {
             const senha = document.getElementById('novaSenha').value;
             const confirma = document.getElementById('confirmarSenha').value;
-            const msgElement = document.getElementById('mensagem');
-            const btn = document.getElementById('btnAtualizar');
+
+            // Validações básicas
+            if (senha.length < 6) {
+                msgElement.className = "erro";
+                msgElement.innerText = "A senha deve ter no mínimo 6 caracteres.";
+                return;
+            }
 
             if (senha !== confirma) {
-                msgElement.style.color = "#d32f2f";
+                msgElement.className = "erro";
                 msgElement.innerText = "As senhas não coincidem.";
                 return;
             }
@@ -59,14 +128,18 @@
             const { error } = await _supabase.auth.updateUser({ password: senha });
 
             if (error) {
-                msgElement.style.color = "#d32f2f";
+                msgElement.className = "erro";
                 msgElement.innerText = "Erro: " + error.message;
                 btn.disabled = false;
                 btn.innerText = "Salvar Alterações";
             } else {
-                msgElement.style.color = "#5c4d42";
-                msgElement.innerText = "Senha atualizada! Redirecionando...";
-                setTimeout(() => { window.location.href = "index.html"; }, 2500);
+                msgElement.className = "sucesso";
+                msgElement.innerText = "Senha atualizada com sucesso! Redirecionando...";
+                
+                // Redireciona para a home após 2.5 segundos
+                setTimeout(() => { 
+                    window.location.href = "https://planeja-noiva.vercel.app"; 
+                }, 2500);
             }
         }
     </script>

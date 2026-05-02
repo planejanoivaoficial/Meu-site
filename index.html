@@ -71,7 +71,8 @@
 <body>
 
     <div class="login-card">
-        <img src="https://i.ibb.co/YTTQXBx8/Logo-Planeja-Noiva.png" alt="PlanejaNoiva" class="logo-img">
+        <!-- Logo atualizada para o link oficial do seu Bucket Supabase -->
+        <img src="https://vuiqbdqnfnofwkpvvuqy.supabase.co/storage/v1/object/public/logos/logo.png" alt="PlanejaNoiva" class="logo-img">
         
         <div class="input-group">
             <label>E-mail</label>
@@ -106,6 +107,7 @@
                 return;
             }
 
+            // Busca na tabela de usuários customizada
             const { data, error } = await _supabase
                 .from('usuarios')
                 .select('*')
@@ -130,7 +132,7 @@
         async function esqueciSenha() {
             const { value: email } = await Swal.fire({
                 title: 'Recuperar Senha',
-                text: 'Digite o e-mail cadastrado para receber instruções.',
+                text: 'Digite o e-mail cadastrado para receber o link de redefinição.',
                 input: 'email',
                 inputPlaceholder: 'seu@email.com',
                 confirmButtonText: 'Enviar Link',
@@ -141,16 +143,18 @@
             });
 
             if (email) {
-                // Lógica de reset do Supabase
-                const { error } = await _supabase.auth.resetPasswordForEmail(email);
+                // ALTERAÇÃO REALIZADA AQUI: Adicionado redirectTo para a sua página na Vercel
+                const { error } = await _supabase.auth.resetPasswordForEmail(email, {
+                    redirectTo: 'https://planeja-noiva.vercel.app/redefinir-senha.html'
+                });
                 
                 if (error) {
-                    Swal.fire({ icon: 'error', title: 'Ops!', text: 'Erro ao processar solicitação.', confirmButtonColor: '#EEABAB' });
+                    Swal.fire({ icon: 'error', title: 'Ops!', text: 'Erro ao processar solicitação: ' + error.message, confirmButtonColor: '#EEABAB' });
                 } else {
                     Swal.fire({ 
                         icon: 'success', 
                         title: 'E-mail Enviado!', 
-                        text: 'Se o e-mail estiver cadastrado, você receberá um link em instantes.', 
+                        text: 'Verifique sua caixa de entrada para criar sua nova senha impecável.', 
                         confirmButtonColor: '#EEABAB' 
                     });
                 }
