@@ -239,6 +239,45 @@ button{
   .stats{grid-template-columns:1fr}
   h1{font-size:2.1rem}
 }
+
+/* 🔥 COLE AQUI (ANTES DO </style>) */
+.config-mesas{
+  display:grid;
+  grid-template-columns:repeat(4,1fr);
+  gap:15px;
+  margin:25px 0;
+}
+
+.config-mesas input,
+.config-mesas select{
+  padding:14px;
+  border-radius:10px;
+  border:1px solid var(--border);
+  font-size:14px;
+  background:#fff;
+}
+
+.config-mesas button{
+  background:var(--rose);
+  border:none;
+  border-radius:10px;
+  color:#fff;
+  font-weight:600;
+  cursor:pointer;
+  transition:.2s;
+}
+
+.config-mesas button:hover{
+  transform:scale(1.03);
+  opacity:.9;
+}
+
+@media(max-width:800px){
+  .config-mesas{
+    grid-template-columns:1fr;
+  }
+}
+
 </style>
 </head>
 
@@ -256,6 +295,37 @@ button{
 <div class="container">
 
 <section class="hero">
+    <div class="container">
+
+<section class="hero">
+  <div class="badge">
+    <span class="material-symbols-outlined">event_seat</span>
+    Protocolo premium de assentos
+  </div>
+
+  <h1>Organize mesas, lugares especiais e convidados importantes.</h1>
+
+  <p>Crie mesas, distribua convidados e registre observações importantes.</p>
+</section>
+
+<!-- 🔥 COLE AQUI -->
+<div class="config-mesas">
+
+  <input id="qtdMesas" type="number" placeholder="Quantidade de mesas" />
+
+  <input id="qtdCadeiras" type="number" placeholder="Cadeiras por mesa" />
+
+  <select id="tipoLayout">
+    <option value="tradicional">Tradicional</option>
+    <option value="familia">Familiar</option>
+    <option value="premium">Premium</option>
+  </select>
+
+  <button onclick="salvarConfiguracao()">
+    Gerar organização automática
+  </button>
+
+</div>
   <div class="badge">
     <span class="material-symbols-outlined">event_seat</span>
     Protocolo premium de assentos
@@ -441,6 +511,85 @@ async function remover(id){
 document.getElementById('observacao').addEventListener("keypress", e=>{
   if(e.key === "Enter") adicionar();
 });
+async function salvarConfiguracao(){
+
+  const mesas = document.getElementById('qtdMesas').value;
+  const cadeiras = document.getElementById('qtdCadeiras').value;
+  const layout = document.getElementById('tipoLayout').value;
+
+  if(!mesas || !cadeiras){
+    Swal.fire({
+      icon:'warning',
+      title:'Preencha tudo',
+      text:'Informe a quantidade de mesas e cadeiras.',
+      confirmButtonColor:'#EEABAB'
+    });
+    return;
+  }
+
+  const { error } = await supa
+    .from('mesas_assentos')
+    .insert([{
+      usuario_email: email,
+      quantidade_mesas: Number(mesas),
+      cadeiras_por_mesa: Number(cadeiras),
+      tipo_layout: layout
+    }]);
+
+  if(error){
+    Swal.fire('Erro', error.message, 'error');
+    return;
+  }
+
+  gerarMesas(Number(mesas), Number(cadeiras), layout);
+}
+
+async function gerarMesas(qtdMesas, cadeiras, layout){
+
+  let lista = [];
+
+  for(let i = 1; i <= qtdMesas; i++){
+
+    let nomeMesa = '';
+
+    if(layout === 'tradicional'){
+      nomeMesa = 'Mesa ' + i;
+    }
+
+    if(layout === 'familia'){
+      nomeMesa = i === 1 ? 'Família dos Noivos' : 'Família ' + i;
+    }
+
+    if(layout === 'premium'){
+      nomeMesa = 'VIP ' + i;
+    }
+
+    lista.push({
+      usuario_email: email,
+      mesa: nomeMesa,
+      nome: 'Mesa vazia',
+      observacao: `Capacidade: ${cadeiras} cadeiras`
+    });
+  }
+
+  const { error } = await supa
+    .from('assentos')
+    .insert(lista);
+
+  if(error){
+    Swal.fire('Erro ao gerar mesas', error.message, 'error');
+    return;
+  }
+
+  Swal.fire({
+    icon:'success',
+    title:'Mesas criadas automaticamente',
+    text:'Agora você pode substituir “Mesa vazia” pelos convidados.',
+    confirmButtonColor:'#EEABAB'
+  });
+
+  carregar();
+}
 
 carregar();
 </script>
