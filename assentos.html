@@ -319,9 +319,15 @@ async function carregar(){
     .order('mesa', { ascending:true });
 
   if(error){
-    Swal.fire("Erro ao carregar assentos");
-    return;
-  }
+  console.log(error);
+  Swal.fire({
+    icon: 'error',
+    title: 'Erro ao carregar assentos',
+    text: error.message,
+    confirmButtonColor: '#EEABAB'
+  });
+  return;
+}
 
   const lista = document.getElementById('lista');
 
