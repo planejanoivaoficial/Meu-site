@@ -16,7 +16,6 @@
   --rose-dark:#D98F8F;
   --text:#3F3932;
   --muted:#8F857A;
-  --bg:#FBF6F1;
   --cream:#FFF9F4;
   --border:#EADFD6;
   --red:#EF4444;
@@ -34,7 +33,7 @@ body{
 
 nav{
   height:76px;
-  background:rgba(255,255,255,.86);
+  background:rgba(255,255,255,.9);
   backdrop-filter:blur(16px);
   display:flex;
   align-items:center;
@@ -62,17 +61,20 @@ nav{
 }
 
 .container{
-  max-width:1050px;
+  max-width:1100px;
   margin:34px auto;
   padding:0 20px 60px;
 }
 
-.hero{
+.hero,.config-box,.form-box,.mesa,.empty{
   background:white;
   border:1px solid var(--border);
-  border-radius:34px;
-  padding:34px;
   box-shadow:var(--shadow);
+}
+
+.hero{
+  border-radius:34px;
+  padding:36px;
   margin-bottom:24px;
 }
 
@@ -92,14 +94,14 @@ nav{
 
 h1{
   font-family:'Playfair Display',serif;
-  font-size:2.5rem;
+  font-size:2.55rem;
   line-height:1.05;
 }
 
 .hero p{
   color:var(--muted);
   line-height:1.7;
-  margin-top:10px;
+  margin-top:12px;
 }
 
 .stats{
@@ -128,12 +130,33 @@ h1{
   font-weight:800;
 }
 
-.form-box{
-  background:white;
-  border:1px solid var(--border);
+.config-box{
   border-radius:28px;
   padding:22px;
-  box-shadow:0 12px 35px rgba(63,57,50,.045);
+  margin-bottom:22px;
+}
+
+.config-title{
+  font-weight:900;
+  margin-bottom:14px;
+}
+
+.config-subtitle{
+  color:var(--muted);
+  font-size:.9rem;
+  margin-bottom:16px;
+  line-height:1.5;
+}
+
+.config-mesas{
+  display:grid;
+  grid-template-columns:1fr 1fr 1fr auto;
+  gap:12px;
+}
+
+.form-box{
+  border-radius:28px;
+  padding:22px;
   margin-bottom:24px;
 }
 
@@ -143,7 +166,7 @@ h1{
   gap:12px;
 }
 
-input{
+input,select{
   padding:15px;
   border-radius:16px;
   border:1px solid var(--border);
@@ -158,12 +181,18 @@ button{
   font-family:'Inter',sans-serif;
 }
 
-.add{
+.add,.gerar{
   background:var(--rose);
   color:white;
   padding:0 20px;
   border-radius:16px;
   font-weight:900;
+  transition:.2s;
+}
+
+.add:hover,.gerar:hover{
+  transform:translateY(-2px);
+  box-shadow:0 12px 24px rgba(238,171,171,.35);
 }
 
 .mesas{
@@ -173,11 +202,8 @@ button{
 }
 
 .mesa{
-  background:white;
-  border:1px solid var(--border);
   border-radius:28px;
   padding:22px;
-  box-shadow:0 12px 35px rgba(63,57,50,.045);
 }
 
 .mesa h3{
@@ -189,6 +215,7 @@ button{
 
 .mesa h3 span{
   color:var(--rose-dark);
+  font-size:.95rem;
 }
 
 .pessoa{
@@ -203,15 +230,8 @@ button{
   align-items:center;
 }
 
-.pessoa strong{
-  display:block;
-}
-
-.pessoa small{
-  color:var(--muted);
-  display:block;
-  margin-top:3px;
-}
+.pessoa strong{display:block}
+.pessoa small{color:var(--muted);display:block;margin-top:3px}
 
 .del{
   background:#FFF1F1;
@@ -225,59 +245,28 @@ button{
 }
 
 .empty{
-  background:white;
-  border:1px dashed var(--border);
   border-radius:24px;
-  padding:30px;
+  padding:26px;
   text-align:center;
   color:var(--muted);
+  border-style:dashed;
+}
+
+.dica{
+  margin-top:14px;
+  background:var(--cream);
+  border:1px solid var(--border);
+  border-radius:18px;
+  padding:14px;
+  color:var(--muted);
+  line-height:1.5;
 }
 
 @media(max-width:800px){
-  .form{grid-template-columns:1fr}
-  .add{padding:15px}
-  .stats{grid-template-columns:1fr}
+  .form,.config-mesas,.stats{grid-template-columns:1fr}
+  .add,.gerar{padding:15px}
   h1{font-size:2.1rem}
 }
-
-/* 🔥 COLE AQUI (ANTES DO </style>) */
-.config-mesas{
-  display:grid;
-  grid-template-columns:repeat(4,1fr);
-  gap:15px;
-  margin:25px 0;
-}
-
-.config-mesas input,
-.config-mesas select{
-  padding:14px;
-  border-radius:10px;
-  border:1px solid var(--border);
-  font-size:14px;
-  background:#fff;
-}
-
-.config-mesas button{
-  background:var(--rose);
-  border:none;
-  border-radius:10px;
-  color:#fff;
-  font-weight:600;
-  cursor:pointer;
-  transition:.2s;
-}
-
-.config-mesas button:hover{
-  transform:scale(1.03);
-  opacity:.9;
-}
-
-@media(max-width:800px){
-  .config-mesas{
-    grid-template-columns:1fr;
-  }
-}
-
 </style>
 </head>
 
@@ -285,7 +274,6 @@ button{
 
 <nav>
   <img src="https://i.ibb.co/YTTQXBx8/Logo-Planeja-Noiva.png" class="logo">
-
   <a href="dashboard.html" class="voltar">
     <span class="material-symbols-outlined">arrow_back</span>
     Painel
@@ -295,37 +283,6 @@ button{
 <div class="container">
 
 <section class="hero">
-    <div class="container">
-
-<section class="hero">
-  <div class="badge">
-    <span class="material-symbols-outlined">event_seat</span>
-    Protocolo premium de assentos
-  </div>
-
-  <h1>Organize mesas, lugares especiais e convidados importantes.</h1>
-
-  <p>Crie mesas, distribua convidados e registre observações importantes.</p>
-</section>
-
-<!-- 🔥 COLE AQUI -->
-<div class="config-mesas">
-
-  <input id="qtdMesas" type="number" placeholder="Quantidade de mesas" />
-
-  <input id="qtdCadeiras" type="number" placeholder="Cadeiras por mesa" />
-
-  <select id="tipoLayout">
-    <option value="tradicional">Tradicional</option>
-    <option value="familia">Familiar</option>
-    <option value="premium">Premium</option>
-  </select>
-
-  <button onclick="salvarConfiguracao()">
-    Gerar organização automática
-  </button>
-
-</div>
   <div class="badge">
     <span class="material-symbols-outlined">event_seat</span>
     Protocolo premium de assentos
@@ -334,8 +291,8 @@ button{
   <h1>Organize mesas, lugares especiais e convidados importantes.</h1>
 
   <p>
-    Crie mesas, distribua convidados e registre observações importantes para família, padrinhos,
-    idosos, crianças e convidados VIP.
+    Defina a quantidade de mesas, cadeiras por mesa e um estilo de organização.
+    Depois distribua os convidados com clareza e elegância.
   </p>
 
   <div class="stats">
@@ -356,11 +313,35 @@ button{
   </div>
 </section>
 
+<div class="config-box">
+  <div class="config-title">Configuração automática das mesas</div>
+  <div class="config-subtitle">
+    Escolha a quantidade de mesas, cadeiras por mesa e o tipo de organização. O sistema cria a estrutura para você.
+  </div>
+
+  <div class="config-mesas">
+    <input id="qtdMesas" type="number" min="1" placeholder="Quantidade de mesas">
+    <input id="qtdCadeiras" type="number" min="1" placeholder="Cadeiras por mesa">
+
+    <select id="tipoLayout" onchange="mostrarDicaLayout()">
+      <option value="tradicional">Tradicional</option>
+      <option value="familia">Familiar</option>
+      <option value="premium">Premium</option>
+    </select>
+
+    <button class="gerar" onclick="salvarConfiguracao()">Gerar mesas</button>
+  </div>
+
+  <div class="dica" id="dicaLayout">
+    Tradicional: mesas numeradas, ideal para casamentos clássicos e organização simples.
+  </div>
+</div>
+
 <div class="form-box">
   <div class="form">
     <input id="mesa" placeholder="Mesa 1">
     <input id="nome" placeholder="Nome do convidado">
-    <input id="observacao" placeholder="Observação: família da noiva, padrinho, idoso...">
+    <input id="observacao" placeholder="Observação: família da noiva, padrinho, VIP...">
     <button class="add" onclick="adicionar()">Adicionar</button>
   </div>
 </div>
@@ -381,7 +362,51 @@ if(!email){
   window.location.href = 'index.html';
 }
 
+const dicasLayout = {
+  tradicional: 'Tradicional: mesas numeradas, ideal para casamentos clássicos e organização simples.',
+  familia: 'Familiar: prioriza famílias próximas, pais, avós e pessoas com maior vínculo emocional.',
+  premium: 'Premium: cria mesas VIP, ideal para padrinhos, amigos próximos e convidados estratégicos.'
+};
+
+function mostrarDicaLayout(){
+  const layout = document.getElementById('tipoLayout').value;
+  document.getElementById('dicaLayout').innerText = dicasLayout[layout];
+}
+
+function nomeMesaPorLayout(i, layout){
+  if(layout === 'familia'){
+    return i === 1 ? 'Família dos Noivos' : 'Família ' + i;
+  }
+
+  if(layout === 'premium'){
+    return 'VIP ' + i;
+  }
+
+  return 'Mesa ' + i;
+}
+
+async function carregarConfiguracao(){
+  const { data } = await supa
+    .from('mesas_assentos')
+    .select('*')
+    .eq('usuario_email', email)
+    .order('created_at', { ascending:false })
+    .limit(1)
+    .maybeSingle();
+
+  return data;
+}
+
 async function carregar(){
+  const config = await carregarConfiguracao();
+
+  if(config){
+    document.getElementById('qtdMesas').value = config.quantidade_mesas || '';
+    document.getElementById('qtdCadeiras').value = config.cadeiras_por_mesa || '';
+    document.getElementById('tipoLayout').value = config.tipo_layout || 'tradicional';
+    mostrarDicaLayout();
+  }
+
   const { data, error } = await supa
     .from('assentos')
     .select('*')
@@ -389,22 +414,33 @@ async function carregar(){
     .order('mesa', { ascending:true });
 
   if(error){
-  console.log(error);
-  Swal.fire({
-    icon: 'error',
-    title: 'Erro ao carregar assentos',
-    text: error.message,
-    confirmButtonColor: '#EEABAB'
-  });
-  return;
-}
+    Swal.fire('Erro ao carregar assentos', error.message, 'error');
+    return;
+  }
 
   const lista = document.getElementById('lista');
+  let mesasPadrao = [];
 
-  if(!data || data.length === 0){
+  if(config){
+    for(let i = 1; i <= config.quantidade_mesas; i++){
+      mesasPadrao.push(nomeMesaPorLayout(i, config.tipo_layout));
+    }
+  }
+
+  const grupos = {};
+  mesasPadrao.forEach(m => grupos[m] = []);
+
+  (data || []).forEach(item => {
+    if(!grupos[item.mesa]) grupos[item.mesa] = [];
+    grupos[item.mesa].push(item);
+  });
+
+  const nomesMesas = Object.keys(grupos);
+
+  if(nomesMesas.length === 0){
     lista.innerHTML = `
       <div class="empty">
-        Nenhum assento organizado ainda. Comece criando a Mesa 1.
+        Nenhuma mesa criada ainda. Configure acima a quantidade de mesas e cadeiras.
       </div>
     `;
 
@@ -414,37 +450,40 @@ async function carregar(){
     return;
   }
 
-  const grupos = {};
-
-  data.forEach(item=>{
-    const mesa = item.mesa || "Sem mesa";
-    if(!grupos[mesa]) grupos[mesa] = [];
-    grupos[mesa].push(item);
-  });
-
   let html = "";
-  let maiorMesa = "";
+  let maiorMesa = "--";
   let maiorQtd = 0;
+  let totalPessoasReal = 0;
 
-  Object.keys(grupos).forEach(mesa=>{
-    if(grupos[mesa].length > maiorQtd){
-      maiorQtd = grupos[mesa].length;
+  nomesMesas.forEach(mesa => {
+    const pessoas = grupos[mesa];
+    const capacidade = config ? config.cadeiras_por_mesa : 8;
+    const ocupadas = pessoas.length;
+
+    if(ocupadas > maiorQtd){
+      maiorQtd = ocupadas;
       maiorMesa = mesa;
     }
+
+    totalPessoasReal += ocupadas;
 
     html += `
       <div class="mesa">
         <h3>
           ${mesa}
-          <span>${grupos[mesa].length}</span>
+          <span>${ocupadas}/${capacidade}</span>
         </h3>
     `;
 
-    grupos[mesa].forEach(p=>{
+    if(pessoas.length === 0){
+      html += `<div class="empty">— mesa disponível —</div>`;
+    }
+
+    pessoas.forEach(p => {
       html += `
         <div class="pessoa">
           <div>
-            <strong>${p.nome}</strong>
+            <strong>${p.nome || '— mesa disponível —'}</strong>
             <small>${p.observacao || "Sem observação"}</small>
           </div>
 
@@ -459,10 +498,48 @@ async function carregar(){
   });
 
   lista.innerHTML = html;
-
-  totalPessoas.innerText = data.length;
-  totalMesas.innerText = Object.keys(grupos).length;
+  totalPessoas.innerText = totalPessoasReal;
+  totalMesas.innerText = nomesMesas.length;
   mesaMaior.innerText = maiorMesa;
+}
+
+async function salvarConfiguracao(){
+  const mesas = Number(document.getElementById('qtdMesas').value);
+  const cadeiras = Number(document.getElementById('qtdCadeiras').value);
+  const layout = document.getElementById('tipoLayout').value;
+
+  if(!mesas || !cadeiras){
+    Swal.fire({
+      icon:'warning',
+      title:'Preencha tudo',
+      text:'Informe quantidade de mesas e cadeiras.',
+      confirmButtonColor:'#EEABAB'
+    });
+    return;
+  }
+
+  const { error } = await supa
+    .from('mesas_assentos')
+    .insert([{
+      usuario_email: email,
+      quantidade_mesas: mesas,
+      cadeiras_por_mesa: cadeiras,
+      tipo_layout: layout
+    }]);
+
+  if(error){
+    Swal.fire('Erro', error.message, 'error');
+    return;
+  }
+
+  Swal.fire({
+    icon:'success',
+    title:'Mesas configuradas',
+    text:'Agora você pode distribuir os convidados.',
+    confirmButtonColor:'#EEABAB'
+  });
+
+  carregar();
 }
 
 async function adicionar(){
@@ -479,12 +556,36 @@ async function adicionar(){
     return;
   }
 
-  await supa.from('assentos').insert([{
+  const config = await carregarConfiguracao();
+  const capacidade = config ? config.cadeiras_por_mesa : 8;
+
+  const { data } = await supa
+    .from('assentos')
+    .select('*')
+    .eq('usuario_email', email)
+    .eq('mesa', mesa);
+
+  if(data && data.length >= capacidade){
+    Swal.fire({
+      icon:'warning',
+      title:'Mesa cheia',
+      text:`Essa mesa já atingiu o limite de ${capacidade} cadeiras.`,
+      confirmButtonColor:'#EEABAB'
+    });
+    return;
+  }
+
+  const { error } = await supa.from('assentos').insert([{
     usuario_email: email,
     mesa,
     nome,
     observacao
   }]);
+
+  if(error){
+    Swal.fire('Erro ao adicionar', error.message, 'error');
+    return;
+  }
 
   document.getElementById('nome').value = "";
   document.getElementById('observacao').value = "";
@@ -504,92 +605,19 @@ async function remover(id){
 
   if(!r.isConfirmed) return;
 
-  await supa.from('assentos').delete().eq('id', id);
+  const { error } = await supa.from('assentos').delete().eq('id', id);
+
+  if(error){
+    Swal.fire('Erro ao remover', error.message, 'error');
+    return;
+  }
+
   carregar();
 }
 
 document.getElementById('observacao').addEventListener("keypress", e=>{
   if(e.key === "Enter") adicionar();
 });
-async function salvarConfiguracao(){
-
-  const mesas = document.getElementById('qtdMesas').value;
-  const cadeiras = document.getElementById('qtdCadeiras').value;
-  const layout = document.getElementById('tipoLayout').value;
-
-  if(!mesas || !cadeiras){
-    Swal.fire({
-      icon:'warning',
-      title:'Preencha tudo',
-      text:'Informe a quantidade de mesas e cadeiras.',
-      confirmButtonColor:'#EEABAB'
-    });
-    return;
-  }
-
-  const { error } = await supa
-    .from('mesas_assentos')
-    .insert([{
-      usuario_email: email,
-      quantidade_mesas: Number(mesas),
-      cadeiras_por_mesa: Number(cadeiras),
-      tipo_layout: layout
-    }]);
-
-  if(error){
-    Swal.fire('Erro', error.message, 'error');
-    return;
-  }
-
-  gerarMesas(Number(mesas), Number(cadeiras), layout);
-}
-
-async function gerarMesas(qtdMesas, cadeiras, layout){
-
-  let lista = [];
-
-  for(let i = 1; i <= qtdMesas; i++){
-
-    let nomeMesa = '';
-
-    if(layout === 'tradicional'){
-      nomeMesa = 'Mesa ' + i;
-    }
-
-    if(layout === 'familia'){
-      nomeMesa = i === 1 ? 'Família dos Noivos' : 'Família ' + i;
-    }
-
-    if(layout === 'premium'){
-      nomeMesa = 'VIP ' + i;
-    }
-
-    lista.push({
-      usuario_email: email,
-      mesa: nomeMesa,
-      nome: 'Mesa vazia',
-      observacao: `Capacidade: ${cadeiras} cadeiras`
-    });
-  }
-
-  const { error } = await supa
-    .from('assentos')
-    .insert(lista);
-
-  if(error){
-    Swal.fire('Erro ao gerar mesas', error.message, 'error');
-    return;
-  }
-
-  Swal.fire({
-    icon:'success',
-    title:'Mesas criadas automaticamente',
-    text:'Agora você pode substituir “Mesa vazia” pelos convidados.',
-    confirmButtonColor:'#EEABAB'
-  });
-
-  carregar();
-}
 
 carregar();
 </script>
