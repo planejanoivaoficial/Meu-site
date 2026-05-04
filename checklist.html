@@ -1,145 +1,479 @@
 <!DOCTYPE html>
 <html lang="pt-br">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Meu Checklist | PlanejaNoiva</title>
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20,400,0,0" />
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
-    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-    <style>
-        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Inter', sans-serif; }
-        body { background-color: #F7EFE4; color: #4A453E; padding-bottom: 50px; }
-        
-        nav { background: white; padding: 15px 5%; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 2px 15px rgba(0,0,0,0.05); position: sticky; top: 0; z-index: 1000; }
-        .nav-logo { height: 45px; mix-blend-mode: multiply; }
-        .btn-voltar { color: #EEABAB; text-decoration: none; font-weight: 700; font-size: 0.9rem; display: flex; align-items: center; gap: 5px; }
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Checklist Premium | PlanejaNoiva</title>
 
-        .container { max-width: 800px; margin: 40px auto; padding: 0 20px; }
-        h2 { font-weight: 700; margin-bottom: 30px; font-size: 1.6rem; text-align: center; }
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" />
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Playfair+Display:wght@700&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
-        .add-task-area { background: white; padding: 25px; border-radius: 25px; margin-bottom: 40px; box-shadow: 0 10px 30px rgba(0,0,0,0.03); display: flex; gap: 10px; border: 1px solid rgba(238, 171, 171, 0.2); }
-        .add-task-area input { flex: 1; padding: 15px; border: 1px solid #E5DED5; border-radius: 12px; outline: none; background: #FCF9F5; font-size: 1rem; }
-        .btn-add { background: #EEABAB; color: white; border: none; padding: 15px 25px; border-radius: 12px; font-weight: 700; cursor: pointer; transition: 0.3s; }
-        
-        .task-card { background: white; padding: 20px; border-radius: 18px; margin-bottom: 12px; display: flex; align-items: center; justify-content: space-between; box-shadow: 0 4px 15px rgba(0,0,0,0.02); border-left: 5px solid transparent; transition: 0.3s; }
-        .task-card.contratado { border-left: 5px solid #EEABAB; }
-        
-        .task-info { display: flex; align-items: center; gap: 15px; flex: 1; }
-        .btn-check { background: none; border: none; cursor: pointer; color: #E5DED5; }
-        .btn-check.done { color: #EEABAB; }
-        .task-text { font-size: 1rem; font-weight: 700; }
-        .task-text.done { color: #B2ACA3; text-decoration: line-through; }
-        
-        .status-label { font-size: 0.7rem; font-weight: 700; margin-top: 2px; }
-        .btn-del { color: #F8D7DA; border: none; background: none; cursor: pointer; transition: 0.2s; }
-        .btn-del:hover { color: #EF4444; }
-    </style>
+<style>
+:root{
+  --rose:#EEABAB;
+  --rose-dark:#D98F8F;
+  --text:#3F3932;
+  --muted:#8F857A;
+  --bg:#FBF6F1;
+  --card:#FFFFFF;
+  --cream:#FFF9F4;
+  --border:#EADFD6;
+  --danger:#D9534F;
+  --shadow:0 18px 50px rgba(63,57,50,.08);
+}
+
+*{margin:0;padding:0;box-sizing:border-box}
+
+body{
+  font-family:'Inter',sans-serif;
+  background:
+    radial-gradient(circle at top left, rgba(238,171,171,.28), transparent 30%),
+    linear-gradient(180deg,#FFF8F3,#FBF6F1);
+  color:var(--text);
+  min-height:100vh;
+}
+
+nav{
+  height:76px;
+  background:rgba(255,255,255,.85);
+  backdrop-filter:blur(16px);
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  padding:0 5%;
+  border-bottom:1px solid var(--border);
+  position:sticky;
+  top:0;
+  z-index:10;
+}
+
+.nav-logo{height:46px;mix-blend-mode:multiply}
+
+.btn-voltar{
+  text-decoration:none;
+  color:var(--text);
+  font-weight:800;
+  display:flex;
+  align-items:center;
+  gap:8px;
+  background:white;
+  border:1px solid var(--border);
+  padding:11px 15px;
+  border-radius:16px;
+}
+
+.container{
+  max-width:980px;
+  margin:34px auto;
+  padding:0 20px 60px;
+}
+
+.hero{
+  background:white;
+  border:1px solid var(--border);
+  border-radius:34px;
+  padding:34px;
+  box-shadow:var(--shadow);
+  margin-bottom:24px;
+}
+
+.badge{
+  display:inline-flex;
+  align-items:center;
+  gap:8px;
+  background:var(--cream);
+  color:var(--rose-dark);
+  border:1px solid var(--border);
+  padding:9px 13px;
+  border-radius:999px;
+  font-size:.82rem;
+  font-weight:900;
+  margin-bottom:16px;
+}
+
+.hero h1{
+  font-family:'Playfair Display',serif;
+  font-size:2.6rem;
+  line-height:1.05;
+}
+
+.hero p{
+  color:var(--muted);
+  line-height:1.7;
+  margin-top:10px;
+}
+
+.stats{
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:14px;
+  margin-top:24px;
+}
+
+.stat{
+  background:var(--cream);
+  border:1px solid var(--border);
+  border-radius:22px;
+  padding:18px;
+}
+
+.stat strong{
+  display:block;
+  font-size:1.6rem;
+  color:var(--rose-dark);
+}
+
+.stat span{
+  color:var(--muted);
+  font-size:.84rem;
+  font-weight:800;
+}
+
+.progress-wrap{
+  margin-top:22px;
+}
+
+.progress-top{
+  display:flex;
+  justify-content:space-between;
+  font-weight:900;
+  margin-bottom:10px;
+}
+
+.progress-bar{
+  height:18px;
+  background:#F0E6DD;
+  border-radius:999px;
+  overflow:hidden;
+}
+
+.progress-fill{
+  height:100%;
+  width:0%;
+  background:linear-gradient(90deg,var(--rose),var(--rose-dark));
+  border-radius:999px;
+  transition:.3s;
+}
+
+.add-box{
+  background:white;
+  border:1px solid var(--border);
+  border-radius:28px;
+  padding:20px;
+  box-shadow:0 12px 35px rgba(63,57,50,.045);
+  display:flex;
+  gap:12px;
+  margin-bottom:22px;
+}
+
+.add-box input{
+  flex:1;
+  padding:15px 16px;
+  border-radius:16px;
+  border:1px solid var(--border);
+  background:var(--cream);
+  outline:none;
+  font-size:1rem;
+}
+
+.add-box button{
+  border:none;
+  background:var(--rose);
+  color:white;
+  padding:0 22px;
+  border-radius:16px;
+  font-weight:900;
+  cursor:pointer;
+}
+
+.task-list{
+  display:flex;
+  flex-direction:column;
+  gap:12px;
+}
+
+.task{
+  background:white;
+  border:1px solid var(--border);
+  border-radius:22px;
+  padding:18px;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:12px;
+  box-shadow:0 10px 28px rgba(63,57,50,.04);
+}
+
+.task-left{
+  display:flex;
+  align-items:center;
+  gap:13px;
+  flex:1;
+}
+
+.check-btn{
+  width:42px;
+  height:42px;
+  border-radius:15px;
+  border:1px solid var(--border);
+  background:var(--cream);
+  color:var(--rose-dark);
+  cursor:pointer;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+}
+
+.task-title{
+  font-weight:800;
+  line-height:1.4;
+}
+
+.task-status{
+  display:block;
+  margin-top:3px;
+  color:var(--muted);
+  font-size:.75rem;
+  font-weight:800;
+  text-transform:uppercase;
+}
+
+.task.done{
+  border-color:rgba(238,171,171,.65);
+  background:linear-gradient(135deg,#fff,#fff7f7);
+}
+
+.task.done .task-title{
+  text-decoration:line-through;
+  color:#aaa098;
+}
+
+.task.done .task-status{
+  color:var(--rose-dark);
+}
+
+.delete-btn{
+  border:none;
+  background:#FFF1F1;
+  color:var(--danger);
+  width:42px;
+  height:42px;
+  border-radius:15px;
+  cursor:pointer;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+}
+
+.empty{
+  background:white;
+  border:1px dashed var(--border);
+  border-radius:24px;
+  padding:28px;
+  text-align:center;
+  color:var(--muted);
+}
+
+@media(max-width:720px){
+  .hero h1{font-size:2.1rem}
+  .stats{grid-template-columns:1fr}
+  .add-box{flex-direction:column}
+  .add-box button{padding:15px}
+}
+</style>
 </head>
+
 <body>
 
-    <nav>
-        <img src="https://i.ibb.co/YTTQXBx8/Logo-Planeja-Noiva.png" class="nav-logo">
-        <a href="dashboard.html" class="btn-voltar">
-            <span class="material-symbols-outlined">arrow_back</span> Voltar ao Painel
-        </a>
-    </nav>
+<nav>
+  <img src="https://i.ibb.co/YTTQXBx8/Logo-Planeja-Noiva.png" class="nav-logo">
+  <a href="dashboard.html" class="btn-voltar">
+    <span class="material-symbols-outlined">arrow_back</span>
+    Painel
+  </a>
+</nav>
 
-    <div class="container">
-        <h2>Checklist de Consultoria 💍</h2>
+<div class="container">
 
-        <div class="add-task-area">
-            <input type="text" id="inputNovaTarefa" placeholder="Adicionar item à sua consultoria...">
-            <button class="btn-add" onclick="adicionarTarefa()">Incluir</button>
-        </div>
-
-        <div id="listaChecklist"></div>
+  <section class="hero">
+    <div class="badge">
+      <span class="material-symbols-outlined">task_alt</span>
+      Checklist premium
     </div>
 
-    <script>
-    const _supabase = supabase.createClient('https://vuiqbdqnfnofwkpvvuqy.supabase.co', 'sb_publishable_LjKm4HF9kyD7m0ch3Eefdw_TJ5SG6w2');
-    const email = localStorage.getItem('usuario_email');
+    <h1>O plano elegante para não esquecer nenhum detalhe.</h1>
+    <p>
+      Marque fornecedores, decisões e preparativos importantes. Cada item concluído deixa o casamento mais perto de sair do papel.
+    </p>
 
-    async function carregarTarefas() {
-        const { data } = await _supabase.from('checklist').select('*').eq('usuario_email', email).order('id', { ascending: true });
-        
-        if (data && data.length === 0) {
-            await carregarEssenciaisConsultoria();
-            return;
-        }
+    <div class="stats">
+      <div class="stat">
+        <strong id="totalTarefas">0</strong>
+        <span>Total de tarefas</span>
+      </div>
 
-        const container = document.getElementById('listaChecklist');
-        container.innerHTML = "";
+      <div class="stat">
+        <strong id="tarefasConcluidas">0</strong>
+        <span>Concluídas</span>
+      </div>
 
-        data.forEach(t => {
-            container.innerHTML += `
-                <div class="task-card ${t.concluida ? 'contratado' : ''}">
-                    <div class="task-info">
-                        <button class="btn-check ${t.concluida ? 'done' : ''}" onclick="toggleTarefa(${t.id}, ${t.concluida})">
-                            <span class="material-symbols-outlined">${t.concluida ? 'verified' : 'radio_button_unchecked'}</span>
-                        </button>
-                        <div style="display: flex; flex-direction: column;">
-                            <span class="task-text ${t.concluida ? 'done' : ''}">${t.tarefa}</span>
-                            <span class="status-label" style="color: ${t.concluida ? '#EEABAB' : '#B2ACA3'}">
-                                ${t.concluida ? 'ITEM CONTRATADO' : 'PENDENTE'}
-                            </span>
-                        </div>
-                    </div>
-                    <button class="btn-del" onclick="excluirTarefa(${t.id})">
-                        <span class="material-symbols-outlined">delete</span>
-                    </button>
-                </div>`;
-        });
-    }
+      <div class="stat">
+        <strong id="tarefasPendentes">0</strong>
+        <span>Pendentes</span>
+      </div>
+    </div>
 
-    async function adicionarTarefa() {
-        const input = document.getElementById('inputNovaTarefa');
-        if (!input.value) return;
-        await _supabase.from('checklist').insert([{ tarefa: input.value, usuario_email: email }]);
-        input.value = "";
-        carregarTarefas();
-    }
+    <div class="progress-wrap">
+      <div class="progress-top">
+        <span>Progresso do checklist</span>
+        <span id="percentual">0%</span>
+      </div>
+      <div class="progress-bar">
+        <div class="progress-fill" id="progress"></div>
+      </div>
+    </div>
+  </section>
 
-    async function excluirTarefa(id) {
-        if (confirm("Remover da lista?")) {
-            await _supabase.from('checklist').delete().eq('id', id);
-            carregarTarefas();
-        }
-    }
+  <div class="add-box">
+    <input type="text" id="nova" placeholder="Ex: confirmar horário da maquiagem...">
+    <button onclick="add()">Adicionar</button>
+  </div>
 
-    async function toggleTarefa(id, st) {
-        await _supabase.from('checklist').update({ concluida: !st }).eq('id', id);
-        carregarTarefas();
-    }
+  <div id="lista" class="task-list"></div>
 
-   async function carregarEssenciaisConsultoria() {
-        const checklistMestre = [
-            // --- CERIMÔNIA E PROTOCOLO ---
-            { tarefa: "💍 Porta-Aliança (Quem entrega e onde fica guardado)", usuario_email: email },
-            { tarefa: "📄 Votos impressos em papel firme (Evite o celular no altar)", usuario_email: email },
-            { tarefa: "🚰 Kit Altar: Água gelada e Lenços (Para o conforto dos noivos)", usuario_email: email },
-            { tarefa: "💒 Reserva e Identificação dos assentos dos pais/avós", usuario_email: email },
-            { tarefa: "🧺 Cestas e adereços para Daminhas/Pajens", usuario_email: email },
-            { tarefa: "👗 Cabide personalizado para a foto do vestido", usuario_email: email },
-            
-            // --- RECEPÇÃO E FESTA ---
-            { tarefa: "🍾 Contagem de Bebidas (Conferir entrada de espumantes/whisky)", usuario_email: email },
-            { tarefa: "👠 Chinelos/Havaianas (Conferir grades e local de entrega)", usuario_email: email },
-            { tarefa: "🎼 Cronograma da Pista (Valsa, Brinde, Buquê e Abertura)", usuario_email: email },
-            { tarefa: "🗺️ Mapa de Assentados (Confirmar mesas reservadas)", usuario_email: email },
-            { tarefa: "🍔 Lanchinho da Madrugada (Confirmar horário de saída)", usuario_email: email },
-            { tarefa: "🎁 Lembrancinhas e Mimos (Conferir contagem e local de entrega)", usuario_email: email },
+</div>
 
-            // --- LOGÍSTICA E SEGURANÇA ---
-            { tarefa: "🚐 Gerador de Energia (Indispensável e testado)", usuario_email: email },
-            { tarefa: "🍽️ Alimentação do Staff (Fotografia, Banda, Cerimonial)", usuario_email: email },
-            { tarefa: "📦 Caixas para sobras de Doces/Bolo e Bem-casados", usuario_email: email },
-            { tarefa: "🧺 Kit Banheiro Completo (Higiene e Primeiros Socorros)", usuario_email: email }
-        ];
-        await _supabase.from('checklist').insert(checklistMestre);
-        carregarTarefas();
-    }
-    carregarTarefas();
+<script>
+const supa = supabase.createClient(
+  'https://vuiqbdqnfnofwkpvvuqy.supabase.co',
+  'sb_publishable_LjKm4HF9kyD7m0ch3Eefdw_TJ5SG6w2'
+);
+
+const email = localStorage.getItem('usuario_email');
+
+if (!email) {
+  window.location.href = 'index.html';
+}
+
+async function load(){
+  const { data, error } = await supa
+    .from('checklist')
+    .select('*')
+    .eq('usuario_email', email)
+    .order('id', { ascending:true });
+
+  if (error) {
+    alert("Erro ao carregar checklist. Tente novamente.");
+    return;
+  }
+
+  if (!data || data.length === 0) {
+    await seed();
+    return;
+  }
+
+  let html = "";
+  let done = 0;
+
+  data.forEach(t => {
+    if (t.concluida) done++;
+
+    html += `
+      <div class="task ${t.concluida ? 'done' : ''}">
+        <div class="task-left">
+          <button class="check-btn" onclick="toggle(${t.id}, ${t.concluida})">
+            <span class="material-symbols-outlined">
+              ${t.concluida ? 'verified' : 'radio_button_unchecked'}
+            </span>
+          </button>
+
+          <div>
+            <span class="task-title">${t.tarefa}</span>
+            <span class="task-status">${t.concluida ? 'Concluído' : 'Pendente'}</span>
+          </div>
+        </div>
+
+        <button class="delete-btn" onclick="del(${t.id})">
+          <span class="material-symbols-outlined">delete</span>
+        </button>
+      </div>
+    `;
+  });
+
+  document.getElementById('lista').innerHTML = html;
+
+  const total = data.length;
+  const pendentes = total - done;
+  const pct = total > 0 ? Math.round((done / total) * 100) : 0;
+
+  document.getElementById('totalTarefas').innerText = total;
+  document.getElementById('tarefasConcluidas').innerText = done;
+  document.getElementById('tarefasPendentes').innerText = pendentes;
+  document.getElementById('percentual').innerText = pct + "%";
+  document.getElementById('progress').style.width = pct + "%";
+}
+
+async function add(){
+  const input = document.getElementById('nova');
+  const valor = input.value.trim();
+
+  if (!valor) return;
+
+  await supa
+    .from('checklist')
+    .insert([{ tarefa: valor, usuario_email: email, concluida:false }]);
+
+  input.value = "";
+  load();
+}
+
+async function del(id){
+  if (!confirm("Remover este item do checklist?")) return;
+
+  await supa
+    .from('checklist')
+    .delete()
+    .eq('id', id);
+
+  load();
+}
+
+async function toggle(id, atual){
+  await supa
+    .from('checklist')
+    .update({ concluida: !atual })
+    .eq('id', id);
+
+  load();
+}
+
+document.getElementById('nova').addEventListener("keypress", function(e){
+  if(e.key === "Enter") add();
+});
+
+async function seed(){
+  const tarefasIniciais = [
+    { tarefa:"💍 Definir data oficial do casamento", usuario_email:email, concluida:false },
+    { tarefa:"🏛️ Reservar local da cerimônia e recepção", usuario_email:email, concluida:false },
+    { tarefa:"🍽️ Fechar buffet", usuario_email:email, concluida:false },
+    { tarefa:"📸 Contratar fotografia e filmagem", usuario_email:email, concluida:false },
+    { tarefa:"👗 Escolher vestido da noiva", usuario_email:email, concluida:false },
+    { tarefa:"🎵 Definir música da cerimônia e festa", usuario_email:email, concluida:false },
+    { tarefa:"💐 Escolher decoração e flores", usuario_email:email, concluida:false },
+    { tarefa:"💌 Enviar convites", usuario_email:email, concluida:false },
+    { tarefa:"🪑 Organizar lista de convidados", usuario_email:email, concluida:false },
+    { tarefa:"🎂 Escolher bolo e doces", usuario_email:email, concluida:false },
+    { tarefa:"🧾 Revisar orçamento final", usuario_email:email, concluida:false },
+    { tarefa:"🕰️ Montar cronograma do grande dia", usuario_email:email, concluida:false }
+  ];
+
+  await supa.from('checklist').insert(tarefasIniciais);
+  load();
+}
+
+load();
 </script>
+
 </body>
 </html>

@@ -1,222 +1,276 @@
 <!DOCTYPE html>
 <html lang="pt-br">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Cronograma Oficial | PlanejaNoiva</title>
-    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,500;1,400&family=Montserrat:wght@200;400;600&display=swap" rel="stylesheet">
-    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-    <style>
-        :root {
-            --cor-tema: #EEABAB; /* Cor padrão que será substituída pela do banco */
-            --cor-texto: #4A453E;
-            --cor-bege: #FDF9F6;
-        }
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Cronograma Oficial | PlanejaNoiva</title>
 
-        * { margin: 0; padding: 0; box-sizing: border-box; }
-        
-        body { 
-            background-color: var(--cor-bege);
-            color: var(--cor-texto); 
-            min-height: 100vh;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            padding: 60px 20px;
-            font-family: 'Cormorant Garamond', serif;
-        }
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,500;1,400&family=Montserrat:wght@200;400;600&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
-        /* Textura de Papel Natural */
-        body::before {
-            content: "";
-            position: fixed;
-            top: 0; left: 0; width: 100%; height: 100%;
-            background-image: url("https://www.transparenttextures.com/patterns/natural-paper.png");
-            opacity: 0.4;
-            z-index: -1;
-            pointer-events: none;
-        }
+<style>
+:root{
+--cor-tema:#EEABAB;
+--texto:#4A453E;
+--bg:#FDF9F6;
+}
 
-        .header { text-align: center; margin-bottom: 50px; max-width: 800px; width: 100%; }
-        
-        .logo-img { 
-            height: 110px; 
-            mix-blend-mode: multiply; 
-            opacity: 0.9;
-            margin-bottom: 15px;
-        }
-        
-        .couple-names {
-            font-family: 'Cormorant Garamond', serif;
-            font-size: clamp(2.5rem, 8vw, 3.5rem);
-            font-style: italic;
-            margin-bottom: 8px;
-            line-height: 1.1;
-            font-weight: 400;
-            transition: color 0.5s ease;
-        }
+*{margin:0;padding:0;box-sizing:border-box}
 
-        .wedding-info {
-            font-family: 'Montserrat', sans-serif;
-            font-size: 0.8rem;
-            letter-spacing: 4px;
-            text-transform: uppercase;
-            font-weight: 600;
-            line-height: 1.8;
-        }
+body{
+background:var(--bg);
+color:var(--texto);
+min-height:100vh;
+display:flex;
+flex-direction:column;
+align-items:center;
+padding:70px 20px;
+font-family:'Cormorant Garamond',serif;
+}
 
-        /* Selo de Identidade (Círculo Único) */
-        .identity-seal {
-            width: 15px;
-            height: 15px;
-            border-radius: 50%;
-            margin: 20px auto;
-            border: 1px solid rgba(0,0,0,0.1);
-            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
-        }
+/* textura */
+body::before{
+content:"";
+position:fixed;
+inset:0;
+background:url("https://www.transparenttextures.com/patterns/natural-paper.png");
+opacity:.4;
+z-index:-1;
+}
 
-        .title-tag { 
-            font-family: 'Montserrat', sans-serif;
-            font-size: 0.65rem; 
-            color: var(--cor-texto); 
-            letter-spacing: 5px;
-            text-transform: uppercase;
-            border-top: 1px solid rgba(0,0,0,0.1);
-            border-bottom: 1px solid rgba(0,0,0,0.1);
-            padding: 12px 40px;
-            display: inline-block;
-            margin-top: 10px;
-        }
+/* HEADER */
+.header{
+text-align:center;
+max-width:700px;
+margin-bottom:60px;
+animation:fade .8s ease;
+}
 
-        .timeline { width: 100%; max-width: 600px; margin-top: 40px; }
+.logo{
+height:110px;
+margin-bottom:15px;
+mix-blend-mode:multiply;
+}
 
-        .item { 
-            display: flex;
-            justify-content: space-between;
-            align-items: baseline;
-            margin-bottom: 25px;
-            border-bottom: 0.5px solid rgba(0,0,0,0.05);
-            padding-bottom: 10px;
-        }
+.names{
+font-size:clamp(2.8rem,7vw,3.8rem);
+font-style:italic;
+font-weight:400;
+line-height:1.1;
+margin-bottom:10px;
+transition:.4s;
+}
 
-        .time { 
-            font-family: 'Montserrat', sans-serif;
-            font-size: 0.95rem; 
-            font-weight: 600;
-            min-width: 85px;
-            transition: color 0.5s ease;
-        }
+.info{
+font-family:'Montserrat';
+font-size:.75rem;
+letter-spacing:4px;
+text-transform:uppercase;
+line-height:1.9;
+font-weight:600;
+}
 
-        .desc { 
-            font-family: 'Cormorant Garamond', serif;
-            font-size: 1.6rem; 
-            color: var(--cor-texto);
-            text-align: right;
-            font-style: italic;
-            flex: 1;
-        }
+.local{
+font-size:.7rem;
+opacity:.6;
+letter-spacing:2px;
+}
 
-        .btn-imprimir { 
-            background: transparent;
-            color: var(--cor-texto); 
-            border: 1px solid var(--cor-texto);
-            padding: 12px 35px; 
-            font-family: 'Montserrat', sans-serif; 
-            font-size: 0.6rem;
-            text-transform: uppercase; 
-            letter-spacing: 3px;
-            cursor: pointer; 
-            margin-top: 60px;
-            transition: 0.4s;
-            opacity: 0.5;
-        }
+.seal{
+width:16px;
+height:16px;
+border-radius:50%;
+margin:22px auto;
+border:1px solid rgba(0,0,0,.1);
+}
 
-        .btn-imprimir:hover { opacity: 1; background: var(--cor-texto); color: white; }
+.tag{
+font-family:'Montserrat';
+font-size:.65rem;
+letter-spacing:5px;
+text-transform:uppercase;
+padding:12px 40px;
+border-top:1px solid rgba(0,0,0,.1);
+border-bottom:1px solid rgba(0,0,0,.1);
+display:inline-block;
+margin-top:10px;
+}
 
-        @media print { 
-            .no-print { display: none; } 
-            body { padding: 30px; background: white; }
-            .item { border-bottom: 0.5px solid #eee; }
-        }
-    </style>
+/* TIMELINE */
+.timeline{
+width:100%;
+max-width:600px;
+}
+
+.item{
+display:flex;
+justify-content:space-between;
+align-items:baseline;
+margin-bottom:30px;
+padding-bottom:10px;
+border-bottom:.5px solid rgba(0,0,0,.05);
+animation:fadeUp .6s ease;
+}
+
+.time{
+font-family:'Montserrat';
+font-size:.95rem;
+font-weight:600;
+min-width:90px;
+}
+
+.desc{
+font-size:1.6rem;
+text-align:right;
+font-style:italic;
+flex:1;
+}
+
+/* EMPTY */
+.empty{
+text-align:center;
+opacity:.4;
+font-style:italic;
+margin-top:30px;
+}
+
+/* BOTÃO */
+.btn{
+margin-top:70px;
+background:transparent;
+border:1px solid var(--texto);
+padding:12px 35px;
+font-family:'Montserrat';
+font-size:.6rem;
+letter-spacing:3px;
+text-transform:uppercase;
+cursor:pointer;
+opacity:.5;
+transition:.3s;
+}
+
+.btn:hover{
+opacity:1;
+background:var(--texto);
+color:white;
+}
+
+/* animações */
+@keyframes fade{
+from{opacity:0}
+to{opacity:1}
+}
+
+@keyframes fadeUp{
+from{opacity:0;transform:translateY(15px)}
+to{opacity:1;transform:translateY(0)}
+}
+
+@media print{
+.btn{display:none}
+body{padding:30px;background:white}
+}
+</style>
 </head>
+
 <body>
 
-    <div class="header">
-        <img src="https://i.ibb.co/YTTQXBx8/Logo-Planeja-Noiva.png" class="logo-img">
-        
-        <div class="couple-names" id="nomesCasal">Orquestrando o Amor</div>
-        
-        <div class="wedding-info">
-            <span id="infoCasamento">A carregar detalhes...</span><br>
-            <span id="localEvento" style="font-size: 0.7rem; opacity: 0.7; letter-spacing: 2px;"></span>
-        </div>
+<div class="header">
 
-        <div class="identity-seal" id="seloCor"></div>
-        
-        <div class="title-tag" id="tagLinha">Cronograma Oficial do Evento</div>
-    </div>
+<img src="https://i.ibb.co/YTTQXBx8/Logo-Planeja-Noiva.png" class="logo">
 
-    <div class="timeline" id="lista"></div>
+<div class="names" id="nomes">Carregando...</div>
 
-    <button class="btn-imprimir no-print" onclick="window.print()">Exportar PDF de Luxo</button>
+<div class="info">
+<span id="dataHora"></span><br>
+<span class="local" id="local"></span>
+</div>
 
-    <script>
-        const _supabase = supabase.createClient('https://vuiqbdqnfnofwkpvvuqy.supabase.co', 'sb_publishable_LjKm4HF9kyD7m0ch3Eefdw_TJ5SG6w2');
-        const urlParams = new URLSearchParams(window.location.search);
-        const noivaEmail = urlParams.get('noiva');
+<div class="seal" id="selo"></div>
 
-        async function carregar() {
-            if (!noivaEmail) return;
-            
-            // 1. Busca dados do usuário (Identidade e Local)
-            const { data: user } = await _supabase.from('usuarios').select('*').eq('email', noivaEmail).single();
-            
-            if (user) {
-                const nomeNoiva = user.nome || "Noiva";
-                const nomeNoivo = user.nome_noivo || "Noivo";
-                document.getElementById('nomesCasal').innerText = `${nomeNoiva} & ${nomeNoivo}`;
-                
-                if (user.data_casamento) {
-                    const dataObj = new Date(user.data_casamento);
-                    const dataFormatada = dataObj.toLocaleDateString('pt-BR');
-                    const horaFormatada = dataObj.toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' });
-                    document.getElementById('infoCasamento').innerText = `${dataFormatada} • às ${horaFormatada}h`;
-                }
+<div class="tag" id="tag">Cronograma Oficial</div>
 
-                if (user.local_casamento) {
-                    document.getElementById('localEvento').innerText = user.local_casamento;
-                }
+</div>
 
-                // APLICAÇÃO DA COR TEMA (SOFISTICAÇÃO)
-                if (user.paleta_cores) {
-                    const corUnica = user.paleta_cores;
-                    document.getElementById('seloCor').style.backgroundColor = corUnica;
-                    document.getElementById('nomesCasal').style.color = corUnica;
-                    document.getElementById('infoCasamento').style.color = corUnica;
-                    document.getElementById('tagLinha').style.borderColor = corUnica;
-                }
-            }
+<div class="timeline" id="lista"></div>
 
-            // 2. Busca itens do cronograma
-            const { data: crono } = await _supabase.from('cronograma').select('*').eq('usuario_email', noivaEmail).order('hora', { ascending: true });
-            
-            const lista = document.getElementById('lista');
-            if (crono && crono.length > 0) {
-                lista.innerHTML = "";
-                crono.forEach(item => {
-                    lista.innerHTML += `
-                        <div class="item">
-                            <span class="time" style="color: ${user.paleta_cores || '#EEABAB'}">${item.hora.substring(0, 5)}h</span>
-                            <span class="desc">${item.descricao}</span>
-                        </div>
-                    `;
-                });
-            } else {
-                lista.innerHTML = "<p style='text-align:center; font-style: italic; opacity: 0.4;'>A definir o roteiro dos sonhos...</p>";
-            }
-        }
-        carregar();
-    </script>
+<button class="btn" onclick="window.print()">Exportar PDF</button>
+
+<script>
+const supa = supabase.createClient(
+'https://vuiqbdqnfnofwkpvvuqy.supabase.co',
+'sb_publishable_LjKm4HF9kyD7m0ch3Eefdw_TJ5SG6w2'
+);
+
+const params = new URLSearchParams(window.location.search);
+const email = params.get('noiva');
+
+async function load(){
+
+if(!email){
+document.getElementById('lista').innerHTML = "<p class='empty'>Link inválido</p>";
+return;
+}
+
+const { data:user } = await supa.from('usuarios').select('*').eq('email',email).single();
+
+if(user){
+
+document.getElementById('nomes').innerText =
+`${user.nome || 'Noiva'} & ${user.nome_noivo || 'Noivo'}`;
+
+if(user.data_casamento){
+const d = new Date(user.data_casamento);
+
+document.getElementById('dataHora').innerText =
+d.toLocaleDateString('pt-BR') + " • " +
+d.toLocaleTimeString('pt-BR',{hour:'2-digit',minute:'2-digit'}) + "h";
+}
+
+document.getElementById('local').innerText =
+user.local_casamento || "";
+
+if(user.paleta_cores){
+document.documentElement.style.setProperty('--cor-tema',user.paleta_cores);
+
+document.getElementById('nomes').style.color = user.paleta_cores;
+document.getElementById('dataHora').style.color = user.paleta_cores;
+document.getElementById('tag').style.borderColor = user.paleta_cores;
+document.getElementById('selo').style.backgroundColor = user.paleta_cores;
+}
+}
+
+const { data:crono } = await supa
+.from('cronograma')
+.select('*')
+.eq('usuario_email',email)
+.order('hora',{ascending:true});
+
+const lista = document.getElementById('lista');
+
+if(!crono || crono.length===0){
+lista.innerHTML = "<p class='empty'>A definir o roteiro dos sonhos...</p>";
+return;
+}
+
+let html="";
+
+crono.forEach(i=>{
+html += `
+<div class="item">
+<span class="time" style="color:var(--cor-tema)">
+${i.hora.substring(0,5)}h
+</span>
+
+<span class="desc">${i.descricao}</span>
+</div>`;
+});
+
+lista.innerHTML = html;
+}
+
+load();
+</script>
+
 </body>
 </html>

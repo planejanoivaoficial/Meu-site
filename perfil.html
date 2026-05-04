@@ -1,219 +1,345 @@
 <!DOCTYPE html>
 <html lang="pt-br">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Meu Perfil | PlanejaNoiva</title>
-    
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20,400,0,0" />
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&family=Montserrat:wght@700&display=swap" rel="stylesheet">
-    
-    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <style>
-        :root {
-            --cor-primaria: #EEABAB;
-            --cor-texto: #4A453E;
-            --cor-fundo: #FDF9F6;
-            --cor-borda: #E5DED5;
-            --cor-dourado: #D4AF37;
-        }
+<title>Minha Identidade | PlanejaNoiva</title>
 
-        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Inter', sans-serif; }
-        body { background-color: var(--cor-fundo); color: var(--cor-texto); padding-bottom: 60px; }
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&family=Playfair+Display:wght@700&display=swap" rel="stylesheet">
 
-        nav { 
-            background: white; padding: 15px 5%; display: flex; justify-content: space-between; 
-            align-items: center; box-shadow: 0 2px 15px rgba(0,0,0,0.05); position: sticky; top: 0; z-index: 1000; 
-        }
-        .nav-logo { height: 40px; mix-blend-mode: multiply; }
-        .btn-voltar { color: var(--cor-primaria); text-decoration: none; font-weight: 700; display: flex; align-items: center; gap: 5px; }
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
-        .container { max-width: 700px; margin: 40px auto; padding: 0 20px; }
+<style>
+:root{
+--rose:#EEABAB;
+--text:#3F3932;
+--muted:#8F857A;
+--bg:#FBF6F1;
+--gold:#D4AF37;
+}
 
-        header { text-align: center; margin-bottom: 40px; }
-        header h1 { font-family: 'Montserrat', sans-serif; font-size: 1.8rem; letter-spacing: -1px; }
-        header p { color: #8C857B; font-size: 0.9rem; margin-top: 5px; }
+*{margin:0;padding:0;box-sizing:border-box;font-family:'Inter'}
 
-        .perfil-card { 
-            background: white; padding: 35px; border-radius: 25px; 
-            box-shadow: 0 10px 30px rgba(0,0,0,0.03); border: 1px solid rgba(238, 171, 171, 0.1);
-            margin-bottom: 30px;
-        }
+body{
+background:linear-gradient(180deg,#FFF8F3,#FBF6F1);
+color:var(--text);
+}
 
-        .section-title { 
-            display: flex; align-items: center; gap: 10px; 
-            font-weight: 700; font-size: 0.85rem; text-transform: uppercase; 
-            letter-spacing: 1px; color: var(--cor-primaria); margin-bottom: 25px;
-            border-bottom: 1px solid var(--cor-fundo); padding-bottom: 10px;
-        }
+/* NAV */
+nav{
+background:white;
+padding:15px 5%;
+display:flex;
+justify-content:space-between;
+align-items:center;
+box-shadow:0 5px 20px rgba(0,0,0,.05);
+position:sticky;
+top:0;
+z-index:100;
+}
 
-        .grid-form { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
-        .full-width { grid-column: span 2; }
+nav img{height:40px}
 
-        .form-group { display: flex; flex-direction: column; gap: 8px; }
-        .form-group label { font-size: 0.75rem; font-weight: 700; color: #8C857B; }
-        .form-group input { 
-            padding: 14px; border: 1px solid var(--cor-borda); border-radius: 12px; 
-            outline: none; background: #FCF9F5; font-size: 1rem; transition: 0.3s;
-        }
-        .form-group input:focus { border-color: var(--cor-primaria); background: white; }
+.voltar{
+color:var(--rose);
+font-weight:700;
+text-decoration:none;
+}
 
-        .color-center { display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 20px 0; }
-        .preview-circle {
-            width: 90px; height: 90px; border-radius: 50%; 
-            background-color: var(--cor-primaria); 
-            border: 3px solid var(--cor-dourado); 
-            box-shadow: 0 10px 25px rgba(0,0,0,0.1); 
-            cursor: pointer; transition: 0.4s; position: relative;
-        }
-        .preview-circle:hover { transform: scale(1.08); }
-        .input-hidden-color { position: absolute; opacity: 0; inset: 0; cursor: pointer; width: 100%; height: 100%; }
+/* CONTAINER */
+.container{
+max-width:750px;
+margin:50px auto;
+padding:20px;
+}
 
-        .btn-save { 
-            width: 100%; background: var(--cor-primaria); color: white; border: none; 
-            padding: 18px; border-radius: 15px; font-weight: 700; cursor: pointer; 
-            transition: 0.4s; font-size: 1rem; margin-top: 10px;
-            box-shadow: 0 10px 20px rgba(238, 171, 171, 0.2);
-        }
-        .btn-save:hover { transform: translateY(-3px); box-shadow: 0 15px 25px rgba(238, 171, 171, 0.3); }
-    </style>
+/* HEADER */
+header{
+text-align:center;
+margin-bottom:35px;
+}
+
+header h1{
+font-family:'Playfair Display';
+font-size:2rem;
+}
+
+header p{
+color:var(--muted);
+margin-top:5px;
+}
+
+/* CARD */
+.card{
+background:white;
+padding:30px;
+border-radius:25px;
+margin-bottom:25px;
+box-shadow:0 15px 40px rgba(0,0,0,.05);
+transition:.3s;
+}
+
+.card:hover{
+transform:translateY(-3px);
+}
+
+/* TITULO */
+.title{
+font-size:.75rem;
+font-weight:700;
+letter-spacing:2px;
+text-transform:uppercase;
+color:var(--rose);
+margin-bottom:20px;
+}
+
+/* FORM */
+.grid{
+display:grid;
+grid-template-columns:1fr 1fr;
+gap:15px;
+}
+
+.full{grid-column:span 2;}
+
+label{
+font-size:.7rem;
+font-weight:700;
+color:var(--muted);
+}
+
+input{
+width:100%;
+padding:14px;
+border-radius:12px;
+border:1px solid #EADFD6;
+background:#FCF9F5;
+outline:none;
+transition:.3s;
+}
+
+input:focus{
+border-color:var(--rose);
+background:white;
+}
+
+/* COR */
+.color-box{
+text-align:center;
+padding:20px 0;
+}
+
+.circle{
+width:90px;
+height:90px;
+border-radius:50%;
+margin:15px auto;
+border:3px solid var(--gold);
+box-shadow:0 10px 25px rgba(0,0,0,.1);
+position:relative;
+cursor:pointer;
+transition:.4s;
+}
+
+.circle:hover{
+transform:scale(1.08);
+}
+
+.circle input{
+position:absolute;
+inset:0;
+opacity:0;
+cursor:pointer;
+}
+
+/* BOTÃO */
+.btn{
+width:100%;
+padding:18px;
+border:none;
+background:var(--rose);
+color:white;
+font-weight:700;
+border-radius:15px;
+cursor:pointer;
+transition:.4s;
+font-size:1rem;
+}
+
+.btn:hover{
+transform:translateY(-2px);
+box-shadow:0 15px 25px rgba(238,171,171,.4);
+}
+
+/* ANIMAÇÃO */
+.container{animation:fade .6s ease}
+
+@keyframes fade{
+from{opacity:0;transform:translateY(20px);}
+to{opacity:1;transform:translateY(0);}
+}
+</style>
 </head>
+
 <body>
 
-    <nav>
-        <img src="https://i.ibb.co/YTTQXBx8/Logo-Planeja-Noiva.png" class="nav-logo">
-        <a href="dashboard.html" class="btn-voltar">
-            <span class="material-symbols-outlined">arrow_back</span> Painel
-        </a>
-    </nav>
+<nav>
+<img src="https://i.ibb.co/YTTQXBx8/Logo-Planeja-Noiva.png">
+<a href="dashboard.html" class="voltar">← Painel</a>
+</nav>
 
-    <div class="container">
-        <header>
-            <h1>Configurações de Identidade</h1>
-            <p>Gerencie os detalhes que tornam seu cronograma oficial e elegante.</p>
-        </header>
+<div class="container">
 
-        <div class="perfil-card">
-            <div class="section-title">
-                <span class="material-symbols-outlined">person</span> Dados da Noiva
-            </div>
-            <div class="grid-form">
-                <div class="form-group full-width">
-                    <label>Seu Nome Completo</label>
-                    <input type="text" id="nomeNoiva" placeholder="Ex: Letícia Gabriely Alves Moura">
-                </div>
-                <div class="form-group full-width">
-                    <label>E-mail de Acesso</label>
-                    <input type="email" id="emailNoiva" disabled style="background-color: #f0f0f0; opacity: 0.7;">
-                </div>
-            </div>
-        </div>
+<header>
+<h1>Sua Identidade 💍</h1>
+<p>Defina os detalhes que vão dar alma ao seu casamento</p>
+</header>
 
-        <div class="perfil-card">
-            <div class="section-title">
-                <span class="material-symbols-outlined">palette</span> Identidade do Casamento
-            </div>
-            
-            <div class="color-center">
-                <label style="font-size: 0.7rem; font-weight: 700; color: #8C857B; margin-bottom: 15px; text-transform: uppercase; letter-spacing: 2px;">Cor Identidade do Grande Dia</label>
-                <div class="preview-circle" id="circleDisplay">
-                    <input type="color" id="corPrincipal" class="input-hidden-color" oninput="document.getElementById('circleDisplay').style.backgroundColor = this.value">
-                </div>
-                <p style="font-size: 0.7rem; color: #B2ACA3; margin-top: 12px; font-style: italic;">Toque no círculo para definir o tom do seu cronograma</p>
-            </div>
+<!-- DADOS -->
+<div class="card">
+<div class="title">Dados da Noiva</div>
 
-            <div class="grid-form">
-                <div class="form-group full-width">
-                    <label>Nome do Noivo (Completo)</label>
-                    <input type="text" id="nomeNoivo" placeholder="Ex: Odesvaldo de Souza Matos Júnior">
-                </div>
-                <div class="form-group">
-                    <label>Data e Horário do Início</label>
-                    <input type="datetime-local" id="dataCasamento">
-                </div>
-                <div class="form-group">
-                    <label>Local do Evento</label>
-                    <input type="text" id="localCasamento" placeholder="Ex: Goiânia, GO">
-                </div>
-            </div>
-        </div>
+<div class="grid">
 
-        <button class="btn-save" onclick="salvarAlteracoes()">Salvar Minha Identidade 💍</button>
-    </div>
+<div class="full">
+<label>Seu nome</label>
+<input id="nome">
+</div>
 
-    <script>
-        const _supabase = supabase.createClient('https://vuiqbdqnfnofwkpvvuqy.supabase.co', 'sb_publishable_LjKm4HF9kyD7m0ch3Eefdw_TJ5SG6w2');
-        const emailLogado = localStorage.getItem('usuario_email');
+<div class="full">
+<label>Email</label>
+<input id="email" disabled style="opacity:.6">
+</div>
 
-        async function carregarPerfil() {
-            if (!emailLogado) return;
+</div>
+</div>
 
-            const { data, error } = await _supabase
-                .from('usuarios')
-                .select('*')
-                .eq('email', emailLogado)
-                .single();
+<!-- IDENTIDADE -->
+<div class="card">
+<div class="title">Identidade do casamento</div>
 
-            if (data) {
-                document.getElementById('nomeNoiva').value = data.nome || "";
-                document.getElementById('emailNoiva').value = data.email || "";
-                document.getElementById('nomeNoivo').value = data.nome_noivo || "";
-                document.getElementById('localCasamento').value = data.local_casamento || "";
-                
-                if (data.data_casamento) {
-                    // Garante que o formato seja aceito pelo input datetime-local
-                    document.getElementById('dataCasamento').value = data.data_casamento.substring(0, 16);
-                }
+<div class="color-box">
+<label>Cor principal</label>
 
-                if (data.paleta_cores) {
-                    document.getElementById('corPrincipal').value = data.paleta_cores;
-                    document.getElementById('circleDisplay').style.backgroundColor = data.paleta_cores;
-                }
-            }
-        }
+<div class="circle" id="preview">
+<input type="color" id="cor"
+oninput="preview.style.backgroundColor=this.value">
+</div>
 
-        async function salvarAlteracoes() {
-            // Pequena validação para evitar salvamentos vazios
-            const nomeNoiva = document.getElementById('nomeNoiva').value;
-            if (!nomeNoiva) {
-                Swal.fire({ icon: 'warning', title: 'Atenção', text: 'O seu nome é obrigatório.' });
-                return;
-            }
+<small style="color:#aaa">Escolha o tom do seu grande dia</small>
+</div>
 
-            const corUnica = document.getElementById('corPrincipal').value;
+<div class="grid">
 
-            const dadosUpdate = {
-                nome: nomeNoiva,
-                nome_noivo: document.getElementById('nomeNoivo').value,
-                data_casamento: document.getElementById('dataCasamento').value,
-                local_casamento: document.getElementById('localCasamento').value,
-                paleta_cores: corUnica 
-            };
+<div class="full">
+<label>Nome do noivo</label>
+<input id="noivo">
+</div>
 
-            const { error } = await _supabase
-                .from('usuarios')
-                .update(dadosUpdate)
-                .eq('email', emailLogado);
+<div>
+<label>Data</label>
+<input type="datetime-local" id="data">
+</div>
 
-            if (!error) {
-                // Atualiza o nome no localStorage para refletir no Dashboard imediatamente
-                localStorage.setItem('usuario_nome', nomeNoiva);
-                
-                Swal.fire({
-                    icon: 'success',
-                    title: 'Identidade Atualizada!',
-                    text: 'Tudo pronto! Seu cronograma já reflete os novos detalhes.',
-                    confirmButtonColor: '#EEABAB'
-                });
-            } else {
-                console.error(error);
-                Swal.fire({ icon: 'error', title: 'Erro ao salvar', text: 'Tente novamente em instantes.' });
-            }
-        }
+<div>
+<label>Local</label>
+<input id="local">
+</div>
 
-        carregarPerfil();
-    </script>
+</div>
+</div>
+
+<button class="btn" onclick="salvar()">Salvar identidade ✨</button>
+
+</div>
+
+<script>
+const supa = supabase.createClient(
+'https://vuiqbdqnfnofwkpvvuqy.supabase.co',
+'sb_publishable_LjKm4HF9kyD7m0ch3Eefdw_TJ5SG6w2'
+);
+
+const email = localStorage.getItem('usuario_email');
+
+/* LOAD */
+async function carregar(){
+
+if(!email) return;
+
+const { data } = await supa
+.from('usuarios')
+.select('*')
+.eq('email',email)
+.single();
+
+if(data){
+nome.value=data.nome||"";
+noivo.value=data.nome_noivo||"";
+local.value=data.local_casamento||"";
+emailInput=data.email;
+
+document.getElementById('email').value=data.email;
+
+if(data.data_casamento){
+dataInput=data.data_casamento.substring(0,16);
+document.getElementById('data').value=dataInput;
+}
+
+if(data.paleta_cores){
+cor.value=data.paleta_cores;
+preview.style.backgroundColor=data.paleta_cores;
+}
+}
+
+}
+
+/* SAVE */
+async function salvar(){
+
+if(!nome.value){
+Swal.fire("Seu nome é obrigatório");
+return;
+}
+
+/* loading premium */
+Swal.fire({
+title:"Salvando...",
+allowOutsideClick:false,
+didOpen:()=>Swal.showLoading()
+});
+
+const { error } = await supa
+.from('usuarios')
+.update({
+nome:nome.value,
+nome_noivo:noivo.value,
+data_casamento:data.value,
+local_casamento:local.value,
+paleta_cores:cor.value
+})
+.eq('email',email);
+
+if(!error){
+
+localStorage.setItem('usuario_nome',nome.value);
+
+Swal.fire({
+icon:'success',
+title:'Atualizado 💍',
+text:'Seu casamento já está refletindo isso!',
+confirmButtonColor:'#EEABAB'
+});
+
+}else{
+Swal.fire("Erro ao salvar");
+}
+
+}
+
+carregar();
+</script>
+
 </body>
 </html>
