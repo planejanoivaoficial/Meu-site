@@ -339,7 +339,10 @@ button{
 
 <div class="form-box">
   <div class="form">
-    <input id="mesa" placeholder="Mesa 1">
+    <select id="mesa">
+      <option value="">Escolha a mesa</option>
+    </select>
+
     <input id="nome" placeholder="Nome do convidado">
     <input id="observacao" placeholder="Observação: família da noiva, padrinho, VIP...">
     <button class="add" onclick="adicionar()">Adicionar</button>
@@ -385,6 +388,24 @@ function nomeMesaPorLayout(i, layout){
   return 'Mesa ' + i;
 }
 
+function preencherSelectMesas(config){
+  const select = document.getElementById('mesa');
+
+  select.innerHTML = '<option value="">Escolha a mesa</option>';
+
+  if(!config) return;
+
+  for(let i = 1; i <= config.quantidade_mesas; i++){
+    const nomeMesa = nomeMesaPorLayout(i, config.tipo_layout);
+
+    const option = document.createElement('option');
+    option.value = nomeMesa;
+    option.textContent = nomeMesa;
+
+    select.appendChild(option);
+  }
+}
+
 async function carregarConfiguracao(){
   const { data } = await supa
     .from('mesas_assentos')
@@ -405,6 +426,7 @@ async function carregar(){
     document.getElementById('qtdCadeiras').value = config.cadeiras_por_mesa || '';
     document.getElementById('tipoLayout').value = config.tipo_layout || 'tradicional';
     mostrarDicaLayout();
+    preencherSelectMesas(config);
   }
 
   const { data, error } = await supa
@@ -543,14 +565,14 @@ async function salvarConfiguracao(){
 }
 
 async function adicionar(){
-  const mesa = document.getElementById('mesa').value.trim();
+  const mesa = document.getElementById('mesa').value;
   const nome = document.getElementById('nome').value.trim();
   const observacao = document.getElementById('observacao').value.trim();
 
   if(!mesa || !nome){
     Swal.fire({
       icon:'warning',
-      title:'Preencha mesa e nome',
+      title:'Escolha a mesa e preencha o nome',
       confirmButtonColor:'#EEABAB'
     });
     return;
