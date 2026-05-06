@@ -1059,7 +1059,6 @@ function montarHTMLPDF(){
 }
 
 function exportarPDF(){
-
   if(!configAtual){
     Swal.fire({
       icon:'warning',
@@ -1071,7 +1070,7 @@ function exportarPDF(){
 
   Swal.fire({
     title:'Gerando PDF...',
-    text:'Aguarde alguns segundos.',
+    text:'Preparando o mapa premium.',
     allowOutsideClick:false,
     didOpen:() => Swal.showLoading()
   });
@@ -1082,46 +1081,26 @@ function exportarPDF(){
   const posicoes = configAtual.posicoes_mesas || {};
 
   const area = document.createElement('div');
-
-  area.style.background = '#FFFFFF';
-  area.style.padding = '24px';
+  area.style.width = '794px';
+  area.style.background = '#FFF8F3';
+  area.style.padding = '34px';
   area.style.fontFamily = 'Inter, Arial, sans-serif';
   area.style.color = '#3F3932';
-  area.style.width = '780px';
 
   let html = `
-    <div style="text-align:center;margin-bottom:24px;">
-      <img src="https://i.ibb.co/YTTQXBx8/Logo-Planeja-Noiva.png"
-        style="height:54px;margin-bottom:12px;">
-
-      <h1 style="
-        font-size:30px;
-        margin:0;
-        color:#3F3932;
-      ">
-        Mapa de Assentos
-      </h1>
-
-      <p style="
-        color:#8F857A;
-        margin-top:8px;
-      ">
-        Organização premium de mesas e convidados
-      </p>
+    <div style="background:white;border:1px solid #EADFD6;border-radius:28px;padding:28px;margin-bottom:24px;text-align:center;">
+      <img src="https://i.ibb.co/YTTQXBx8/Logo-Planeja-Noiva.png" style="height:58px;margin-bottom:14px;">
+      <h1 style="font-family:Georgia,serif;font-size:34px;margin:0;color:#3F3932;">Mapa de Assentos</h1>
+      <p style="color:#8F857A;margin:10px 0 0;font-size:14px;">Organização premium de mesas e convidados</p>
     </div>
 
-    <div style="
-      position:relative;
-      height:430px;
-      border:2px dashed #EADFD6;
-      border-radius:22px;
-      background:#FFF9F4;
-      margin-bottom:28px;
-    ">
+    <div style="background:white;border:1px solid #EADFD6;border-radius:28px;padding:22px;margin-bottom:24px;">
+      <h2 style="font-family:Georgia,serif;font-size:24px;margin:0 0 16px;color:#3F3932;">Mapa visual do salão</h2>
+
+      <div style="position:relative;height:430px;border:2px dashed #EADFD6;border-radius:24px;background:#FFF9F4;overflow:hidden;">
   `;
 
   nomesMesas.forEach((mesa, i) => {
-
     const pessoas = grupos[mesa] || [];
     const ocupadas = pessoas.length;
 
@@ -1135,8 +1114,8 @@ function exportarPDF(){
         position:absolute;
         left:${pos.left}px;
         top:${pos.top}px;
-        width:105px;
-        height:105px;
+        width:108px;
+        height:108px;
         border-radius:50%;
         background:white;
         border:2px solid #EADFD6;
@@ -1145,90 +1124,43 @@ function exportarPDF(){
         align-items:center;
         justify-content:center;
         text-align:center;
-        font-weight:800;
+        box-shadow:0 8px 20px rgba(63,57,50,.08);
       ">
-        <div style="
-          color:#D98F8F;
-          font-size:13px;
-        ">
-          ${mesa}
-        </div>
-
-        <div style="
-          color:#8F857A;
-          font-size:11px;
-          margin-top:4px;
-        ">
-          ${ocupadas}/${capacidade}
-        </div>
+        <div style="color:#D98F8F;font-size:13px;font-weight:900;">${mesa}</div>
+        <div style="color:#8F857A;font-size:11px;margin-top:5px;font-weight:800;">${ocupadas}/${capacidade}</div>
       </div>
     `;
   });
 
-  html += `</div>`;
+  html += `
+      </div>
+    </div>
+
+    <div style="background:white;border:1px solid #EADFD6;border-radius:28px;padding:22px;">
+      <h2 style="font-family:Georgia,serif;font-size:24px;margin:0 0 18px;color:#3F3932;">Convidados por mesa</h2>
+  `;
 
   nomesMesas.forEach(mesa => {
-
     const pessoas = grupos[mesa] || [];
 
     html += `
-      <div style="
-        border:1px solid #EADFD6;
-        border-radius:18px;
-        padding:16px;
-        margin-bottom:14px;
-        background:#FFFFFF;
-      ">
-
-        <h2 style="
-          font-size:18px;
-          margin:0 0 12px;
-          color:#D98F8F;
-        ">
+      <div style="border:1px solid #EADFD6;border-radius:20px;padding:16px;margin-bottom:14px;background:#FFF9F4;">
+        <h3 style="margin:0 0 12px;color:#D98F8F;font-size:18px;">
           ${mesa}
-        </h2>
+          <span style="float:right;color:#8F857A;font-size:13px;">${pessoas.length}/${capacidade}</span>
+        </h3>
     `;
 
     if(pessoas.length === 0){
-      html += `
-        <p style="color:#8F857A;">
-          Mesa disponível
-        </p>
-      `;
+      html += `<p style="color:#8F857A;margin:0;">Mesa disponível</p>`;
     }
 
     pessoas.forEach(p => {
-
       html += `
-        <div style="
-          background:#FFF9F4;
-          border:1px solid #EADFD6;
-          border-radius:14px;
-          padding:10px;
-          margin-bottom:8px;
-        ">
-
+        <div style="background:white;border:1px solid #EADFD6;border-radius:14px;padding:11px;margin-bottom:8px;">
           <strong>${p.nome || 'Sem nome'}</strong>
-
-          <div style="
-            color:#8F857A;
-            font-size:12px;
-            margin-top:3px;
-          ">
-            ${p.observacao || 'Sem observação'}
-          </div>
-
-          ${p.tipo ? `
-            <div style="
-              margin-top:6px;
-              color:#D98F8F;
-              font-size:12px;
-              font-weight:800;
-            ">
-              ${formatarTipo(p.tipo)}
-            </div>
-          ` : ''}
-
+          <div style="color:#8F857A;font-size:12px;margin-top:3px;">${p.observacao || 'Sem observação'}</div>
+          ${p.tipo ? `<div style="margin-top:6px;color:#D98F8F;font-size:12px;font-weight:900;">${formatarTipo(p.tipo)}</div>` : ''}
         </div>
       `;
     });
@@ -1236,30 +1168,21 @@ function exportarPDF(){
     html += `</div>`;
   });
 
+  html += `</div>`;
   area.innerHTML = html;
 
-  const opt = {
-    margin:0.3,
-    filename:'mapa-de-assentos-planejanoiva.pdf',
-    image:{ type:'jpeg', quality:0.85 },
-    html2canvas:{ scale:1, useCORS:true },
-    jsPDF:{ unit:'in', format:'a4', orientation:'portrait' }
-  };
-
   html2pdf()
-    .set(opt)
+    .set({
+      margin:0.25,
+      filename:'mapa-de-assentos-planejanoiva.pdf',
+      image:{ type:'jpeg', quality:0.92 },
+      html2canvas:{ scale:1.4, useCORS:true },
+      jsPDF:{ unit:'in', format:'a4', orientation:'portrait' }
+    })
     .from(area)
     .save()
-    .then(() => {
-      Swal.close();
-    })
-    .catch(() => {
-      Swal.fire(
-        'Erro',
-        'Não foi possível gerar o PDF.',
-        'error'
-      );
-    });
+    .then(() => Swal.close())
+    .catch(() => Swal.fire('Erro','Não foi possível gerar o PDF.','error'));
 }
 function gerarToken(){
   return 'pn_' + Math.random().toString(36).substring(2, 12) + Date.now().toString(36);
@@ -1311,6 +1234,7 @@ async function gerarLinkPublico(){
 }
 
 async function remover(id){
+
   const r = await Swal.fire({
     title:'Remover convidado desta mesa?',
     icon:'warning',
@@ -1322,7 +1246,10 @@ async function remover(id){
 
   if(!r.isConfirmed) return;
 
-  const { error } = await supa.from('assentos').delete().eq('id', id);
+  const { error } = await supa
+    .from('assentos')
+    .delete()
+    .eq('id', id);
 
   if(error){
     Swal.fire('Erro ao remover', error.message, 'error');
