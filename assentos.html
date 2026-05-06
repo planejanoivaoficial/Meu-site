@@ -904,45 +904,6 @@ function soltarMesa(event){
   mesa.style.top = top + 'px';
 }
 
-async function salvarMapa(){
-  if(!configAtual){
-    Swal.fire({
-      icon:'warning',
-      title:'Configure as mesas primeiro',
-      confirmButtonColor:'#EEABAB'
-    });
-    return;
-  }
-
-  const posicoes = {};
-
-  document.querySelectorAll('.mesa-movel').forEach(mesa => {
-    posicoes[mesa.dataset.mesa] = {
-      left: parseInt(mesa.style.left) || 0,
-      top: parseInt(mesa.style.top) || 0
-    };
-  });
-
-  const { error } = await supa
-    .from('mesas_assentos')
-    .update({ posicoes_mesas: posicoes })
-    .eq('id', configAtual.id);
-
-  if(error){
-    Swal.fire('Erro ao salvar mapa', error.message, 'error');
-    return;
-  }
-
-  Swal.fire({
-    icon:'success',
-    title:'Mapa salvo',
-    text:'As posições das mesas foram guardadas.',
-    confirmButtonColor:'#EEABAB'
-  });
-
-  carregar();
-}
-
 async function sugerirDistribuicao(){
   const config = await carregarConfiguracao();
 
