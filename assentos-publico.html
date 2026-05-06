@@ -1,0 +1,386 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Mapa de Assentos | PlanejaNoiva</title>
+
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" />
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&family=Playfair+Display:wght@700&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+<style>
+:root{
+  --rose:#EEABAB;
+  --rose-dark:#D98F8F;
+  --text:#3F3932;
+  --muted:#8F857A;
+  --cream:#FFF9F4;
+  --border:#EADFD6;
+  --shadow:0 18px 50px rgba(63,57,50,.08);
+}
+
+*{margin:0;padding:0;box-sizing:border-box}
+
+body{
+  font-family:'Inter',sans-serif;
+  background:linear-gradient(180deg,#FFF8F3,#FBF6F1);
+  color:var(--text);
+  min-height:100vh;
+}
+
+nav{
+  height:76px;
+  background:rgba(255,255,255,.9);
+  backdrop-filter:blur(16px);
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  padding:0 5%;
+  border-bottom:1px solid var(--border);
+}
+
+.logo{height:46px;mix-blend-mode:multiply}
+
+.container{
+  max-width:1180px;
+  margin:34px auto;
+  padding:0 20px 60px;
+}
+
+.hero,.mesa,.empty,.mapa-box{
+  background:white;
+  border:1px solid var(--border);
+  box-shadow:var(--shadow);
+}
+
+.hero{
+  border-radius:34px;
+  padding:36px;
+  margin-bottom:24px;
+  text-align:center;
+}
+
+.badge{
+  display:inline-flex;
+  align-items:center;
+  gap:8px;
+  background:var(--cream);
+  color:var(--rose-dark);
+  border:1px solid var(--border);
+  padding:9px 13px;
+  border-radius:999px;
+  font-size:.82rem;
+  font-weight:900;
+  margin-bottom:16px;
+}
+
+h1{
+  font-family:'Playfair Display',serif;
+  font-size:2.55rem;
+  line-height:1.05;
+}
+
+.hero p{
+  color:var(--muted);
+  line-height:1.7;
+  margin-top:12px;
+}
+
+.mapa-box{
+  border-radius:28px;
+  padding:22px;
+  margin-bottom:22px;
+}
+
+.config-title{
+  font-weight:900;
+  margin-bottom:8px;
+}
+
+.config-subtitle{
+  color:var(--muted);
+  font-size:.9rem;
+  margin-bottom:16px;
+  line-height:1.5;
+}
+
+.mapa-visual{
+  position:relative;
+  height:460px;
+  border:2px dashed var(--border);
+  border-radius:24px;
+  background:
+    linear-gradient(90deg,rgba(234,223,214,.45) 1px,transparent 1px),
+    linear-gradient(rgba(234,223,214,.45) 1px,transparent 1px),
+    #fff;
+  background-size:28px 28px;
+  overflow:hidden;
+}
+
+.mesa-movel{
+  position:absolute;
+  width:118px;
+  height:118px;
+  background:var(--cream);
+  border:2px solid var(--border);
+  border-radius:50%;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+  font-weight:900;
+  text-align:center;
+  padding:12px;
+  box-shadow:0 12px 30px rgba(63,57,50,.08);
+}
+
+.mesa-movel strong{
+  color:var(--rose-dark);
+  font-size:.92rem;
+}
+
+.mesa-movel span{
+  color:var(--muted);
+  font-size:.78rem;
+  margin-top:5px;
+}
+
+.mesas{
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(300px,1fr));
+  gap:18px;
+}
+
+.mesa{
+  border-radius:28px;
+  padding:22px;
+}
+
+.mesa h3{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  margin-bottom:14px;
+}
+
+.mesa h3 span{
+  color:var(--rose-dark);
+  font-size:.95rem;
+}
+
+.pessoa{
+  background:var(--cream);
+  border:1px solid var(--border);
+  border-radius:18px;
+  padding:14px;
+  margin-bottom:10px;
+}
+
+.pessoa strong{display:block}
+
+.pessoa small{
+  color:var(--muted);
+  display:block;
+  margin-top:3px;
+}
+
+.tag{
+  display:inline-block;
+  margin-top:7px;
+  padding:5px 9px;
+  border-radius:999px;
+  font-size:.72rem;
+  font-weight:900;
+  background:white;
+  border:1px solid var(--border);
+  color:var(--rose-dark);
+}
+
+.empty{
+  border-radius:24px;
+  padding:26px;
+  text-align:center;
+  color:var(--muted);
+  border-style:dashed;
+}
+
+@media(max-width:900px){
+  h1{font-size:2.1rem}
+}
+</style>
+</head>
+
+<body>
+
+<nav>
+  <img src="https://i.ibb.co/YTTQXBx8/Logo-Planeja-Noiva.png" class="logo">
+</nav>
+
+<div class="container">
+
+<section class="hero">
+  <div class="badge">
+    <span class="material-symbols-outlined">event_seat</span>
+    Mapa público de assentos
+  </div>
+
+  <h1>Confira sua mesa no evento.</h1>
+
+  <p>
+    Visualização pública da organização de mesas e convidados.
+  </p>
+</section>
+
+<div class="mapa-box">
+  <div class="config-title">Mapa visual do salão</div>
+  <div class="config-subtitle">
+    Veja a posição das mesas conforme a organização salva pelos noivos.
+  </div>
+
+  <div id="mapaSalao" class="mapa-visual"></div>
+</div>
+
+<div id="lista" class="mesas"></div>
+
+</div>
+
+<script>
+const supa = supabase.createClient(
+  'https://vuiqbdqnfnofwkpvvuqy.supabase.co',
+  'sb_publishable_LjKm4HF9kyD7m0ch3Eefdw_TJ5SG6w2'
+);
+
+const params = new URLSearchParams(window.location.search);
+const token = params.get('token');
+
+function nomeMesaPorLayout(i, layout){
+  if(layout === 'familia'){
+    return i === 1 ? 'Família dos Noivos' : 'Família ' + i;
+  }
+
+  if(layout === 'premium'){
+    return 'VIP ' + i;
+  }
+
+  return 'Mesa ' + i;
+}
+
+function formatarTipo(tipo){
+  if(tipo === 'vip') return '👑 VIP';
+  if(tipo === 'familia') return '👨‍👩‍👧 Família';
+  if(tipo === 'padrinho') return '🤵 Padrinho';
+  if(tipo === 'amigo') return '🎉 Amigo';
+  return '';
+}
+
+function criarGrupos(data, config){
+  const grupos = {};
+
+  for(let i = 1; i <= config.quantidade_mesas; i++){
+    grupos[nomeMesaPorLayout(i, config.tipo_layout)] = [];
+  }
+
+  (data || []).forEach(item => {
+    if(!grupos[item.mesa]) grupos[item.mesa] = [];
+    grupos[item.mesa].push(item);
+  });
+
+  return grupos;
+}
+
+async function carregarPublico(){
+  if(!token){
+    document.getElementById('lista').innerHTML = `
+      <div class="empty">Link público inválido.</div>
+    `;
+    return;
+  }
+
+  const { data: config, error: configError } = await supa
+    .from('mesas_assentos')
+    .select('*')
+    .eq('public_token', token)
+    .maybeSingle();
+
+  if(configError || !config){
+    document.getElementById('lista').innerHTML = `
+      <div class="empty">Mapa não encontrado ou link inválido.</div>
+    `;
+    return;
+  }
+
+  const { data: assentos, error: assentosError } = await supa
+    .from('assentos')
+    .select('*')
+    .eq('usuario_email', config.usuario_email)
+    .order('mesa', { ascending:true });
+
+  if(assentosError){
+    Swal.fire('Erro ao carregar convidados', assentosError.message, 'error');
+    return;
+  }
+
+  renderizarPublico(assentos || [], config);
+}
+
+function renderizarPublico(data, config){
+  const lista = document.getElementById('lista');
+  const mapa = document.getElementById('mapaSalao');
+  const grupos = criarGrupos(data, config);
+  const nomesMesas = Object.keys(grupos);
+  const capacidade = config.cadeiras_por_mesa || 8;
+  const posicoes = config.posicoes_mesas || {};
+
+  mapa.innerHTML = "";
+  lista.innerHTML = "";
+
+  nomesMesas.forEach((mesa, i) => {
+    const pessoas = grupos[mesa] || [];
+    const ocupadas = pessoas.length;
+
+    const pos = posicoes[mesa] || {
+      left: 35 + ((i % 6) * 145),
+      top: 35 + (Math.floor(i / 6) * 145)
+    };
+
+    const div = document.createElement('div');
+    div.className = 'mesa-movel';
+    div.style.left = pos.left + 'px';
+    div.style.top = pos.top + 'px';
+    div.innerHTML = `<strong>${mesa}</strong><span>${ocupadas}/${capacidade}</span>`;
+    mapa.appendChild(div);
+
+    let html = `
+      <div class="mesa">
+        <h3>
+          ${mesa}
+          <span>${ocupadas}/${capacidade}</span>
+        </h3>
+    `;
+
+    if(pessoas.length === 0){
+      html += `<div class="empty">mesa disponível</div>`;
+    }
+
+    pessoas.forEach(p => {
+      html += `
+        <div class="pessoa">
+          <strong>${p.nome || 'Sem nome'}</strong>
+          <small>${p.observacao || 'Sem observação'}</small>
+          ${p.tipo ? `<div class="tag">${formatarTipo(p.tipo)}</div>` : ''}
+        </div>
+      `;
+    });
+
+    html += `</div>`;
+    lista.innerHTML += html;
+  });
+}
+
+carregarPublico();
+</script>
+
+</body>
+</html>
