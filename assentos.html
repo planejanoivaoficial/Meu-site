@@ -709,7 +709,8 @@ function renderMapaLivre(nomesMesas, grupos, config){
   mapa.addEventListener('drop', soltarMesa);
 }
 
-async function salvarConfiguracao(){
+{
+ async function salvarConfiguracao(){
   const mesas = Number(document.getElementById('qtdMesas').value);
   const cadeiras = Number(document.getElementById('qtdCadeiras').value);
   const layout = document.getElementById('tipoLayout').value;
@@ -724,28 +725,44 @@ async function salvarConfiguracao(){
     return;
   }
 
-  const token = gerarToken();
+  const configExistente = await carregarConfiguracao();
 
-  const { error } = await supa
-    .from('mesas_assentos')
-    .insert([{
-      usuario_email: email,
-      quantidade_mesas: mesas,
-      cadeiras_por_mesa: cadeiras,
-      tipo_layout: layout,
-      posicoes_mesas: {},
-      public_token: token
-    }]);
+  if(configExistente){
+    const { error } = await supa
+      .from('mesas_assentos')
+      .update({
+        quantidade_mesas: mesas,
+        cadeiras_por_mesa: cadeiras,
+        tipo_layout: layout
+      })
+      .eq('id', configExistente.id);
 
-  if(error){
-    Swal.fire('Erro', error.message, 'error');
-    return;
+    if(error){
+      Swal.fire('Erro', error.message, 'error');
+      return;
+    }
+  } else {
+    const { error } = await supa
+      .from('mesas_assentos')
+      .insert([{
+        usuario_email: email,
+        quantidade_mesas: mesas,
+        cadeiras_por_mesa: cadeiras,
+        tipo_layout: layout,
+        posicoes_mesas: {},
+        public_token: gerarToken()
+      }]);
+
+    if(error){
+      Swal.fire('Erro', error.message, 'error');
+      return;
+    }
   }
 
   Swal.fire({
     icon:'success',
     title:'Mesas configuradas',
-    text:'Agora você pode distribuir os convidados.',
+    text:'Configuração atualizada com sucesso.',
     confirmButtonColor:'#EEABAB'
   });
 
@@ -1042,6 +1059,7 @@ function montarHTMLPDF(){
 }
 
 function exportarPDF(){
+
   if(!configAtual){
     Swal.fire({
       icon:'warning',
@@ -1051,19 +1069,198 @@ function exportarPDF(){
     return;
   }
 
-  const area = montarHTMLPDF();
+  Swal.fire({
+    title:'Gerando PDF...',
+    text:'Aguarde alguns segundos.',
+    allowOutsideClick:false,
+    didOpen:() => Swal.showLoading()
+  });
+
+  const grupos = criarGrupos(dadosAssentos, configAtual);
+  const nomesMesas = Object.keys(grupos);
+  const capacidade = configAtual.cadeiras_por_mesa || 8;
+  const posicoes = configAtual.posicoes_mesas || {};
+
+  const area = document.createElement('div');
+
+  area.style.background = '#FFFFFF';
+  area.style.padding = '24px';
+  area.style.fontFamily = 'Inter, Arial, sans-serif';
+  area.style.color = '#3F3932';
+  area.style.width = '780px';
+
+  let html = `
+    <div style="text-align:center;margin-bottom:24px;">
+      <img src="https://i.ibb.co/YTTQXBx8/Logo-Planeja-Noiva.png"
+        style="height:54px;margin-bottom:12px;">
+
+      <h1 style="
+        font-size:30px;
+        margin:0;
+        color:#3F3932;
+      ">
+        Mapa de Assentos
+      </h1>
+
+      <p style="
+        color:#8F857A;
+        margin-top:8px;
+      ">
+        Organização premium de mesas e convidados
+      </p>
+    </div>
+
+    <div style="
+      position:relative;
+      height:430px;
+      border:2px dashed #EADFD6;
+      border-radius:22px;
+      background:#FFF9F4;
+      margin-bottom:28px;
+    ">
+  `;
+
+  nomesMesas.forEach((mesa, i) => {
+
+    const pessoas = grupos[mesa] || [];
+    const ocupadas = pessoas.length;
+
+    const pos = posicoes[mesa] || {
+      left: 35 + ((i % 5) * 135),
+      top: 35 + (Math.floor(i / 5) * 135)
+    };
+
+    html += `
+      <div style="
+        position:absolute;
+        left:${pos.left}px;
+        top:${pos.top}px;
+        width:105px;
+        height:105px;
+        border-radius:50%;
+        background:white;
+        border:2px solid #EADFD6;
+        display:flex;
+        flex-direction:column;
+        align-items:center;
+        justify-content:center;
+        text-align:center;
+        font-weight:800;
+      ">
+        <div style="
+          color:#D98F8F;
+          font-size:13px;
+        ">
+          ${mesa}
+        </div>
+
+        <div style="
+          color:#8F857A;
+          font-size:11px;
+          margin-top:4px;
+        ">
+          ${ocupadas}/${capacidade}
+        </div>
+      </div>
+    `;
+  });
+
+  html += `</div>`;
+
+  nomesMesas.forEach(mesa => {
+
+    const pessoas = grupos[mesa] || [];
+
+    html += `
+      <div style="
+        border:1px solid #EADFD6;
+        border-radius:18px;
+        padding:16px;
+        margin-bottom:14px;
+        background:#FFFFFF;
+      ">
+
+        <h2 style="
+          font-size:18px;
+          margin:0 0 12px;
+          color:#D98F8F;
+        ">
+          ${mesa}
+        </h2>
+    `;
+
+    if(pessoas.length === 0){
+      html += `
+        <p style="color:#8F857A;">
+          Mesa disponível
+        </p>
+      `;
+    }
+
+    pessoas.forEach(p => {
+
+      html += `
+        <div style="
+          background:#FFF9F4;
+          border:1px solid #EADFD6;
+          border-radius:14px;
+          padding:10px;
+          margin-bottom:8px;
+        ">
+
+          <strong>${p.nome || 'Sem nome'}</strong>
+
+          <div style="
+            color:#8F857A;
+            font-size:12px;
+            margin-top:3px;
+          ">
+            ${p.observacao || 'Sem observação'}
+          </div>
+
+          ${p.tipo ? `
+            <div style="
+              margin-top:6px;
+              color:#D98F8F;
+              font-size:12px;
+              font-weight:800;
+            ">
+              ${formatarTipo(p.tipo)}
+            </div>
+          ` : ''}
+
+        </div>
+      `;
+    });
+
+    html += `</div>`;
+  });
+
+  area.innerHTML = html;
 
   const opt = {
-    margin: 0.4,
-    filename: 'mapa-de-assentos-planejanoiva.pdf',
-    image: { type: 'jpeg', quality: 0.98 },
-    html2canvas: { scale: 2, useCORS: true },
-    jsPDF: { unit: 'in', format: 'a4', orientation: 'portrait' }
+    margin:0.3,
+    filename:'mapa-de-assentos-planejanoiva.pdf',
+    image:{ type:'jpeg', quality:0.85 },
+    html2canvas:{ scale:1, useCORS:true },
+    jsPDF:{ unit:'in', format:'a4', orientation:'portrait' }
   };
 
-  html2pdf().set(opt).from(area).save();
+  html2pdf()
+    .set(opt)
+    .from(area)
+    .save()
+    .then(() => {
+      Swal.close();
+    })
+    .catch(() => {
+      Swal.fire(
+        'Erro',
+        'Não foi possível gerar o PDF.',
+        'error'
+      );
+    });
 }
-
 function gerarToken(){
   return 'pn_' + Math.random().toString(36).substring(2, 12) + Date.now().toString(36);
 }
@@ -1140,7 +1337,6 @@ document.getElementById('observacao').addEventListener("keypress", e=>{
 });
 
 carregar();
-</script>
 
-</body>
-</html>
+}
+</script>
