@@ -149,12 +149,6 @@ h1{
   line-height:1.5;
 }
 
-.config-mesas{
-  display:grid;
-  grid-template-columns:1fr 1fr 1fr auto;
-  gap:12px;
-}
-
 .form{
   display:grid;
   grid-template-columns:1fr 1.5fr 1.5fr 1fr auto;
@@ -197,16 +191,6 @@ button{
   margin-bottom:16px;
 }
 
-.dica{
-  margin-top:14px;
-  background:var(--cream);
-  border:1px solid var(--border);
-  border-radius:18px;
-  padding:14px;
-  color:var(--muted);
-  line-height:1.5;
-}
-
 .mapa-visual{
   position:relative;
   height:460px;
@@ -225,7 +209,7 @@ button{
   width:118px;
   height:118px;
   background:var(--cream);
-  border:2px solid var(--border);
+  border:3px solid var(--border);
   border-radius:50%;
   display:flex;
   flex-direction:column;
@@ -242,8 +226,8 @@ button{
 .mesa-movel:active{cursor:grabbing}
 
 .mesa-movel strong{
-  color:var(--rose-dark);
-  font-size:.92rem;
+  color:var(--text);
+  font-size:.88rem;
 }
 
 .mesa-movel span{
@@ -335,30 +319,10 @@ button{
   border-style:dashed;
 }
 
-.pdf-area{
-  background:white;
-  padding:30px;
-}
-
-.pdf-header{
-  display:flex;
-  align-items:center;
-  justify-content:space-between;
-  margin-bottom:20px;
-}
-
-.pdf-header img{
-  height:54px;
-}
-
-.pdf-title{
-  font-family:'Playfair Display',serif;
-  font-size:2rem;
-}
-
 @media(max-width:900px){
-  .form,.config-mesas,.stats{grid-template-columns:1fr}
+  .form,.stats{grid-template-columns:1fr}
   h1{font-size:2.1rem}
+  .add,.gerar,.ia-btn,.mapa-btn{width:100%}
 }
 </style>
 </head>
@@ -384,8 +348,8 @@ button{
   <h1>Organize mesas, lugares especiais e convidados importantes.</h1>
 
   <p>
-    Defina mesas, cadeiras e estilo de organização. Depois distribua convidados por tipo, arraste entre mesas,
-    organize o mapa do salão e compartilhe uma versão pública elegante.
+    Crie mesas personalizadas com nome, cor e quantidade de lugares. Depois arraste as mesas no salão,
+    distribua convidados e exporte um PDF elegante.
   </p>
 
   <div class="stats">
@@ -405,37 +369,35 @@ button{
 </section>
 
 <div class="config-box">
-  <div class="config-title">Configuração automática das mesas</div>
-  <div class="config-subtitle">
-    Escolha quantidade de mesas, cadeiras e tipo de layout. O sistema cria o mapa e bloqueia mesas cheias.
+  <div style="display:flex;justify-content:space-between;align-items:center;gap:14px;flex-wrap:wrap;">
+    <div>
+      <div class="config-title">Mesas do evento</div>
+      <div class="config-subtitle">
+        Crie mesas personalizadas com nome, cor e quantidade de lugares.
+      </div>
+    </div>
+
+    <button class="gerar" onclick="abrirNovaMesa()">
+      ➕ Adicionar mesa
+    </button>
   </div>
 
-  <div class="config-mesas">
-    <input id="qtdMesas" type="number" min="1" placeholder="Quantidade de mesas">
-    <input id="qtdCadeiras" type="number" min="1" placeholder="Cadeiras por mesa">
-
-    <select id="tipoLayout" onchange="mostrarDicaLayout()">
-      <option value="tradicional">Tradicional</option>
-      <option value="familia">Familiar</option>
-      <option value="premium">Premium</option>
-    </select>
-
-    <button class="gerar" onclick="salvarConfiguracao()">Gerar mesas</button>
-  </div>
-
-  <div class="dica" id="dicaLayout">
-    Tradicional: mesas numeradas, ideal para casamentos clássicos e organização simples.
-  </div>
+  <div id="listaMesasPersonalizadas" style="
+    margin-top:22px;
+    display:grid;
+    grid-template-columns:repeat(auto-fit,minmax(260px,1fr));
+    gap:14px;
+  "></div>
 </div>
 
 <div class="ia-box">
   <div class="config-title">Ações premium</div>
   <div class="config-subtitle">
-    Organize automaticamente, salve o mapa do salão, gere PDF ou compartilhe um link público.
+    Salve o mapa do salão, gere PDF ou compartilhe um link público.
   </div>
 
   <div class="actions">
-    <button class="ia-btn" onclick="sugerirDistribuicao()">Gerar sugestão inteligente</button>
+    <button class="ia-btn" onclick="sugerirDistribuicao()">Sugestão inteligente</button>
     <button class="mapa-btn" onclick="salvarMapa()">Salvar mapa</button>
     <button class="mapa-btn" onclick="exportarPDF()">Exportar PDF bonito</button>
     <button class="mapa-btn" onclick="gerarLinkPublico()">Gerar link público</button>
@@ -445,7 +407,7 @@ button{
 <div class="mapa-box">
   <div class="config-title">Mapa visual do salão</div>
   <div class="config-subtitle">
-    Arraste as mesas pelo salão e clique em “Salvar mapa” para guardar as posições no banco.
+    Arraste as mesas pelo salão e clique em “Salvar mapa” para guardar as posições.
   </div>
 
   <div id="mapaSalao" class="mapa-visual"></div>
@@ -472,9 +434,7 @@ button{
   </div>
 </div>
 
-<div id="areaPDF">
-  <div id="lista" class="mesas"></div>
-</div>
+<div id="lista" class="mesas"></div>
 
 </div>
 
@@ -485,32 +445,16 @@ const supa = supabase.createClient(
 );
 
 const email = localStorage.getItem('usuario_email');
-let configAtual = null;
+let mesasPersonalizadas = [];
 let dadosAssentos = [];
+let configAtual = null;
 
 if(!email){
   window.location.href = 'index.html';
 }
 
-const dicasLayout = {
-  tradicional: 'Tradicional: mesas numeradas, ideal para casamentos clássicos e organização simples.',
-  familia: 'Familiar: prioriza famílias próximas, pais, avós e pessoas com maior vínculo emocional.',
-  premium: 'Premium: cria mesas VIP, ideal para padrinhos, amigos próximos e convidados estratégicos.'
-};
-
 function gerarToken(){
   return 'pn_' + Math.random().toString(36).substring(2, 12) + Date.now().toString(36);
-}
-
-function mostrarDicaLayout(){
-  const layout = document.getElementById('tipoLayout').value;
-  document.getElementById('dicaLayout').innerText = dicasLayout[layout];
-}
-
-function nomeMesaPorLayout(i, layout){
-  if(layout === 'familia') return i === 1 ? 'Família dos Noivos' : 'Família ' + i;
-  if(layout === 'premium') return 'VIP ' + i;
-  return 'Mesa ' + i;
 }
 
 function formatarTipo(tipo){
@@ -521,35 +465,18 @@ function formatarTipo(tipo){
   return '';
 }
 
-function nomesMesasAtivas(config){
-  if(!config) return [];
-
-  const posicoes = config.posicoes_mesas || {};
-  const excluidas = posicoes._excluidas || [];
-  const nomes = [];
-
-  for(let i = 1; i <= config.quantidade_mesas; i++){
-    const nome = nomeMesaPorLayout(i, config.tipo_layout);
-    if(!excluidas.includes(nome)) nomes.push(nome);
-  }
-
-  return nomes;
+function escapar(texto){
+  return String(texto || '').replace(/[&<>"']/g, s => ({
+    '&':'&amp;',
+    '<':'&lt;',
+    '>':'&gt;',
+    '"':'&quot;',
+    "'":'&#039;'
+  }[s]));
 }
 
-function preencherSelectMesas(config){
-  const select = document.getElementById('mesa');
-  select.innerHTML = '<option value="">Escolha a mesa</option>';
-
-  nomesMesasAtivas(config).forEach(nomeMesa => {
-    const option = document.createElement('option');
-    option.value = nomeMesa;
-    option.textContent = nomeMesa;
-    select.appendChild(option);
-  });
-}
-
-async function carregarConfiguracao(){
-  const { data, error } = await supa
+async function garantirConfig(){
+  const { data } = await supa
     .from('mesas_assentos')
     .select('*')
     .eq('usuario_email', email)
@@ -557,25 +484,167 @@ async function carregarConfiguracao(){
     .limit(1)
     .maybeSingle();
 
+  if(data){
+    configAtual = data;
+    return data;
+  }
+
+  const { data:nova, error } = await supa
+    .from('mesas_assentos')
+    .insert([{
+      usuario_email: email,
+      quantidade_mesas: 0,
+      cadeiras_por_mesa: 8,
+      tipo_layout: 'personalizado',
+      posicoes_mesas: {},
+      public_token: gerarToken()
+    }])
+    .select()
+    .single();
+
   if(error){
-    Swal.fire('Erro ao carregar configuração', error.message, 'error');
+    Swal.fire('Erro', error.message, 'error');
     return null;
   }
 
-  return data;
+  configAtual = nova;
+  return nova;
 }
 
-async function carregar(){
-  configAtual = await carregarConfiguracao();
+async function abrirNovaMesa(){
+  const { value: form } = await Swal.fire({
+    title:'Nova mesa',
+    html:`
+      <input id="mesa_nome" class="swal2-input" placeholder="Ex: Família da Noiva">
+      <input id="mesa_capacidade" type="number" class="swal2-input" value="8" min="1" placeholder="Lugares">
+      <input id="mesa_cor" type="color" value="#EEABAB"
+        style="width:100%;height:50px;border:none;border-radius:12px;margin-top:12px;">
+    `,
+    focusConfirm:false,
+    showCancelButton:true,
+    confirmButtonText:'Criar mesa',
+    cancelButtonText:'Cancelar',
+    confirmButtonColor:'#EEABAB',
+    preConfirm:() => {
+      const nome = document.getElementById('mesa_nome').value.trim();
+      const capacidade = Number(document.getElementById('mesa_capacidade').value);
+      const cor = document.getElementById('mesa_cor').value;
 
-  if(configAtual){
-    document.getElementById('qtdMesas').value = configAtual.quantidade_mesas || '';
-    document.getElementById('qtdCadeiras').value = configAtual.cadeiras_por_mesa || '';
-    document.getElementById('tipoLayout').value = configAtual.tipo_layout || 'tradicional';
-    mostrarDicaLayout();
-    preencherSelectMesas(configAtual);
+      if(!nome){
+        Swal.showValidationMessage('Digite o nome da mesa');
+        return false;
+      }
+
+      return { nome, capacidade, cor };
+    }
+  });
+
+  if(!form) return;
+
+  const jaExiste = mesasPersonalizadas.some(m => m.nome.toLowerCase() === form.nome.toLowerCase());
+
+  if(jaExiste){
+    Swal.fire('Mesa já existe', 'Escolha outro nome para evitar confusão.', 'warning');
+    return;
   }
 
+  const posicao = 45 + (mesasPersonalizadas.length * 30);
+
+  const { error } = await supa
+    .from('mesas_personalizadas')
+    .insert([{
+      usuario_email: email,
+      nome: form.nome,
+      capacidade: form.capacidade || 8,
+      cor: form.cor,
+      posicao_x: posicao,
+      posicao_y: posicao
+    }]);
+
+  if(error){
+    Swal.fire('Erro ao criar mesa', error.message, 'error');
+    return;
+  }
+
+  carregar();
+}
+
+async function editarMesa(id){
+  const mesa = mesasPersonalizadas.find(m => String(m.id) === String(id));
+  if(!mesa) return;
+
+  const { value: form } = await Swal.fire({
+    title:'Editar mesa',
+    html:`
+      <input id="mesa_nome" class="swal2-input" value="${escapar(mesa.nome)}" placeholder="Nome da mesa">
+      <input id="mesa_capacidade" type="number" class="swal2-input" value="${mesa.capacidade || 8}" min="1" placeholder="Lugares">
+      <input id="mesa_cor" type="color" value="${mesa.cor || '#EEABAB'}"
+        style="width:100%;height:50px;border:none;border-radius:12px;margin-top:12px;">
+    `,
+    focusConfirm:false,
+    showCancelButton:true,
+    confirmButtonText:'Salvar',
+    cancelButtonText:'Cancelar',
+    confirmButtonColor:'#EEABAB',
+    preConfirm:() => {
+      const nome = document.getElementById('mesa_nome').value.trim();
+      const capacidade = Number(document.getElementById('mesa_capacidade').value);
+      const cor = document.getElementById('mesa_cor').value;
+
+      if(!nome){
+        Swal.showValidationMessage('Digite o nome da mesa');
+        return false;
+      }
+
+      return { nome, capacidade, cor };
+    }
+  });
+
+  if(!form) return;
+
+  const nomeAntigo = mesa.nome;
+
+  const { error } = await supa
+    .from('mesas_personalizadas')
+    .update({
+      nome: form.nome,
+      capacidade: form.capacidade || 8,
+      cor: form.cor
+    })
+    .eq('id', id);
+
+  if(error){
+    Swal.fire('Erro ao editar mesa', error.message, 'error');
+    return;
+  }
+
+  if(nomeAntigo !== form.nome){
+    await supa
+      .from('assentos')
+      .update({ mesa: form.nome })
+      .eq('usuario_email', email)
+      .eq('mesa', nomeAntigo);
+  }
+
+  carregar();
+}
+
+async function carregarMesas(){
+  const { data, error } = await supa
+    .from('mesas_personalizadas')
+    .select('*')
+    .eq('usuario_email', email)
+    .order('created_at', { ascending:true });
+
+  if(error){
+    Swal.fire('Erro ao carregar mesas', error.message, 'error');
+    return;
+  }
+
+  mesasPersonalizadas = data || [];
+}
+
+async function carregarAssentos(){
   const { data, error } = await supa
     .from('assentos')
     .select('*')
@@ -583,37 +652,113 @@ async function carregar(){
     .order('mesa', { ascending:true });
 
   if(error){
-    Swal.fire('Erro ao carregar assentos', error.message, 'error');
+    Swal.fire('Erro ao carregar convidados', error.message, 'error');
     return;
   }
 
   dadosAssentos = data || [];
-  renderizar(dadosAssentos, configAtual);
 }
 
-function criarGrupos(data, config){
+async function carregar(){
+  await garantirConfig();
+  await carregarMesas();
+  await carregarAssentos();
+
+  preencherSelectMesas();
+  renderizarCardsMesas();
+  renderizar();
+}
+
+function preencherSelectMesas(){
+  const select = document.getElementById('mesa');
+  select.innerHTML = '<option value="">Escolha a mesa</option>';
+
+  mesasPersonalizadas.forEach(mesa => {
+    const option = document.createElement('option');
+    option.value = mesa.nome;
+    option.textContent = `${mesa.nome} (${mesa.capacidade} lugares)`;
+    select.appendChild(option);
+  });
+}
+
+function criarGrupos(){
   const grupos = {};
 
-  nomesMesasAtivas(config).forEach(nome => {
-    grupos[nome] = [];
+  mesasPersonalizadas.forEach(mesa => {
+    grupos[mesa.nome] = [];
   });
 
-  (data || []).forEach(item => {
-    if(grupos[item.mesa]){
-      grupos[item.mesa].push(item);
+  dadosAssentos.forEach(pessoa => {
+    if(grupos[pessoa.mesa]){
+      grupos[pessoa.mesa].push(pessoa);
     }
   });
 
   return grupos;
 }
 
-function renderizar(data, config){
-  const lista = document.getElementById('lista');
-  const grupos = criarGrupos(data, config);
-  const nomesMesas = Object.keys(grupos);
+function renderizarCardsMesas(){
+  const area = document.getElementById('listaMesasPersonalizadas');
 
-  if(nomesMesas.length === 0){
-    lista.innerHTML = `<div class="empty">Nenhuma mesa criada ainda.</div>`;
+  if(!mesasPersonalizadas.length){
+    area.innerHTML = `<div class="empty">Nenhuma mesa criada ainda. Clique em “Adicionar mesa”.</div>`;
+    return;
+  }
+
+  area.innerHTML = '';
+
+  mesasPersonalizadas.forEach(mesa => {
+    const ocupadas = dadosAssentos.filter(p => p.mesa === mesa.nome).length;
+
+    area.innerHTML += `
+      <div style="
+        background:white;
+        border:1px solid #EADFD6;
+        border-radius:24px;
+        padding:18px;
+        box-shadow:0 10px 25px rgba(63,57,50,.06);
+      ">
+        <div style="display:flex;justify-content:space-between;align-items:center;gap:12px;">
+          <div style="display:flex;align-items:center;gap:10px;">
+            <div style="width:18px;height:18px;border-radius:50%;background:${mesa.cor || '#EEABAB'};"></div>
+            <strong>${escapar(mesa.nome)}</strong>
+          </div>
+
+          <div style="display:flex;gap:8px;">
+            <button onclick="editarMesa(${mesa.id})" style="
+              background:#FFF9F4;
+              color:#8F857A;
+              width:36px;
+              height:36px;
+              border-radius:12px;
+              font-weight:900;
+            ">✎</button>
+
+            <button onclick="excluirMesa(${mesa.id}, '${escapar(mesa.nome)}')" style="
+              background:#FFF1F1;
+              color:#EF4444;
+              width:36px;
+              height:36px;
+              border-radius:12px;
+              font-weight:900;
+            ">×</button>
+          </div>
+        </div>
+
+        <div style="margin-top:10px;color:#8F857A;font-weight:800;font-size:.9rem;">
+          ${ocupadas}/${mesa.capacidade} lugares ocupados
+        </div>
+      </div>
+    `;
+  });
+}
+
+function renderizar(){
+  const lista = document.getElementById('lista');
+  const grupos = criarGrupos();
+
+  if(!mesasPersonalizadas.length){
+    lista.innerHTML = `<div class="empty">Crie sua primeira mesa para começar.</div>`;
     document.getElementById('mapaSalao').innerHTML = '';
     document.getElementById('totalPessoas').innerText = 0;
     document.getElementById('totalMesas').innerText = 0;
@@ -622,47 +767,35 @@ function renderizar(data, config){
   }
 
   let html = '';
+  let total = 0;
   let maiorMesa = '--';
   let maiorQtd = 0;
-  let totalPessoasReal = 0;
-  const capacidade = config ? config.cadeiras_por_mesa : 8;
 
-  nomesMesas.forEach(mesa => {
-    const pessoas = grupos[mesa];
+  mesasPersonalizadas.forEach(mesaObj => {
+    const mesa = mesaObj.nome;
+    const pessoas = grupos[mesa] || [];
     const ocupadas = pessoas.length;
+
+    total += ocupadas;
 
     if(ocupadas > maiorQtd){
       maiorQtd = ocupadas;
       maiorMesa = mesa;
     }
 
-    totalPessoasReal += ocupadas;
-
     html += `
       <div class="mesa"
         ondragover="permitirDrop(event)"
         ondragleave="sairDrop(event)"
-        ondrop="soltarConvidado(event, '${mesa}')">
+        ondrop="soltarConvidado(event, '${escapar(mesa)}')">
 
         <h3>
-          ${mesa}
-          <span>${ocupadas}/${capacidade}</span>
+          ${escapar(mesa)}
+          <span>${ocupadas}/${mesaObj.capacidade}</span>
         </h3>
-
-        <button onclick="excluirMesa('${mesa}')" style="
-          width:100%;
-          margin-bottom:12px;
-          padding:10px;
-          border-radius:14px;
-          background:#FFF1F1;
-          color:#EF4444;
-          font-weight:900;
-        ">
-          Excluir mesa
-        </button>
     `;
 
-    if(pessoas.length === 0){
+    if(!pessoas.length){
       html += `<div class="empty">mesa disponível</div>`;
     }
 
@@ -670,8 +803,8 @@ function renderizar(data, config){
       html += `
         <div class="pessoa" draggable="true" ondragstart="arrastarConvidado(event, ${p.id})">
           <div>
-            <strong>${p.nome || 'Sem nome'}</strong>
-            <small>${p.observacao || 'Sem observação'}</small>
+            <strong>${escapar(p.nome) || 'Sem nome'}</strong>
+            <small>${escapar(p.observacao) || 'Sem observação'}</small>
             ${p.tipo ? `<div class="tag">${formatarTipo(p.tipo)}</div>` : ''}
           </div>
 
@@ -686,34 +819,29 @@ function renderizar(data, config){
   });
 
   lista.innerHTML = html;
-  document.getElementById('totalPessoas').innerText = totalPessoasReal;
-  document.getElementById('totalMesas').innerText = nomesMesas.length;
+  document.getElementById('totalPessoas').innerText = total;
+  document.getElementById('totalMesas').innerText = mesasPersonalizadas.length;
   document.getElementById('mesaMaior').innerText = maiorMesa;
 
-  renderMapaLivre(nomesMesas, grupos, config);
+  renderMapa();
 }
 
-function renderMapaLivre(nomesMesas, grupos, config){
+function renderMapa(){
   const mapa = document.getElementById('mapaSalao');
-  const capacidade = config ? config.cadeiras_por_mesa : 8;
-  const posicoes = config && config.posicoes_mesas ? config.posicoes_mesas : {};
-
   mapa.innerHTML = '';
 
-  nomesMesas.forEach((mesa, i) => {
-    const ocupadas = grupos[mesa] ? grupos[mesa].length : 0;
-    const pos = posicoes[mesa] || {
-      left: 35 + ((i % 6) * 145),
-      top: 35 + (Math.floor(i / 6) * 145)
-    };
+  mesasPersonalizadas.forEach(mesa => {
+    const ocupadas = dadosAssentos.filter(p => p.mesa === mesa.nome).length;
 
     const div = document.createElement('div');
     div.className = 'mesa-movel';
     div.draggable = true;
-    div.dataset.mesa = mesa;
-    div.style.left = pos.left + 'px';
-    div.style.top = pos.top + 'px';
-    div.innerHTML = `<strong>${mesa}</strong><span>${ocupadas}/${capacidade}</span>`;
+    div.dataset.id = mesa.id;
+    div.dataset.mesa = mesa.nome;
+    div.style.left = (mesa.posicao_x || 35) + 'px';
+    div.style.top = (mesa.posicao_y || 35) + 'px';
+    div.style.borderColor = mesa.cor || '#EADFD6';
+    div.innerHTML = `<strong>${escapar(mesa.nome)}</strong><span>${ocupadas}/${mesa.capacidade}</span>`;
 
     div.addEventListener('dragstart', arrastarMesa);
     mapa.appendChild(div);
@@ -723,73 +851,13 @@ function renderMapaLivre(nomesMesas, grupos, config){
   mapa.ondrop = soltarMesa;
 }
 
-async function salvarConfiguracao(){
-  const mesas = Number(document.getElementById('qtdMesas').value);
-  const cadeiras = Number(document.getElementById('qtdCadeiras').value);
-  const layout = document.getElementById('tipoLayout').value;
-
-  if(!mesas || !cadeiras){
-    Swal.fire({
-      icon:'warning',
-      title:'Preencha tudo',
-      text:'Informe quantidade de mesas e cadeiras.',
-      confirmButtonColor:'#EEABAB'
-    });
-    return;
-  }
-
-  const configExistente = await carregarConfiguracao();
-
-  if(configExistente){
-    const { error } = await supa
-      .from('mesas_assentos')
-      .update({
-        quantidade_mesas: mesas,
-        cadeiras_por_mesa: cadeiras,
-        tipo_layout: layout,
-        posicoes_mesas: {}
-      })
-      .eq('id', configExistente.id);
-
-    if(error){
-      Swal.fire('Erro', error.message, 'error');
-      return;
-    }
-  } else {
-    const { error } = await supa
-      .from('mesas_assentos')
-      .insert([{
-        usuario_email: email,
-        quantidade_mesas: mesas,
-        cadeiras_por_mesa: cadeiras,
-        tipo_layout: layout,
-        posicoes_mesas: {},
-        public_token: gerarToken()
-      }]);
-
-    if(error){
-      Swal.fire('Erro', error.message, 'error');
-      return;
-    }
-  }
-
-  Swal.fire({
-    icon:'success',
-    title:'Mesas configuradas',
-    text:'Configuração atualizada com sucesso.',
-    confirmButtonColor:'#EEABAB'
-  });
-
-  carregar();
-}
-
 async function adicionar(){
-  const mesa = document.getElementById('mesa').value;
+  const mesaNome = document.getElementById('mesa').value;
   const nome = document.getElementById('nome').value.trim();
   const observacao = document.getElementById('observacao').value.trim();
   const tipo = document.getElementById('tipo').value;
 
-  if(!mesa || !nome){
+  if(!mesaNome || !nome){
     Swal.fire({
       icon:'warning',
       title:'Escolha a mesa e preencha o nome',
@@ -798,20 +866,14 @@ async function adicionar(){
     return;
   }
 
-  const config = await carregarConfiguracao();
-  const capacidade = config ? config.cadeiras_por_mesa : 8;
+  const mesa = mesasPersonalizadas.find(m => m.nome === mesaNome);
+  const ocupadas = dadosAssentos.filter(p => p.mesa === mesaNome).length;
 
-  const { data } = await supa
-    .from('assentos')
-    .select('*')
-    .eq('usuario_email', email)
-    .eq('mesa', mesa);
-
-  if(data && data.length >= capacidade){
+  if(mesa && ocupadas >= mesa.capacidade){
     Swal.fire({
       icon:'warning',
       title:'Mesa cheia',
-      text:`Essa mesa já atingiu o limite de ${capacidade} cadeiras.`,
+      text:`Essa mesa já atingiu o limite de ${mesa.capacidade} lugares.`,
       confirmButtonColor:'#EEABAB'
     });
     return;
@@ -819,7 +881,7 @@ async function adicionar(){
 
   const { error } = await supa.from('assentos').insert([{
     usuario_email: email,
-    mesa,
+    mesa: mesaNome,
     nome,
     observacao,
     tipo
@@ -857,20 +919,14 @@ async function soltarConvidado(event, novaMesa){
   const id = event.dataTransfer.getData('convidadoId');
   if(!id) return;
 
-  const config = await carregarConfiguracao();
-  const capacidade = config ? config.cadeiras_por_mesa : 8;
+  const mesa = mesasPersonalizadas.find(m => m.nome === novaMesa);
+  const ocupadas = dadosAssentos.filter(p => p.mesa === novaMesa).length;
 
-  const { data } = await supa
-    .from('assentos')
-    .select('*')
-    .eq('usuario_email', email)
-    .eq('mesa', novaMesa);
-
-  if(data && data.length >= capacidade){
+  if(mesa && ocupadas >= mesa.capacidade){
     Swal.fire({
       icon:'warning',
       title:'Mesa cheia',
-      text:`Essa mesa já atingiu o limite de ${capacidade} cadeiras.`,
+      text:`Essa mesa já atingiu o limite de ${mesa.capacidade} lugares.`,
       confirmButtonColor:'#EEABAB'
     });
     return;
@@ -890,7 +946,7 @@ async function soltarConvidado(event, novaMesa){
 }
 
 function arrastarMesa(event){
-  event.dataTransfer.setData('mesaNome', event.currentTarget.dataset.mesa);
+  event.dataTransfer.setData('mesaId', event.currentTarget.dataset.id);
 }
 
 function permitirDropMapa(event){
@@ -900,11 +956,10 @@ function permitirDropMapa(event){
 function soltarMesa(event){
   event.preventDefault();
 
-  const mesaNome = event.dataTransfer.getData('mesaNome');
-  if(!mesaNome) return;
-
+  const mesaId = event.dataTransfer.getData('mesaId');
   const mapa = document.getElementById('mapaSalao');
-  const mesa = document.querySelector(`.mesa-movel[data-mesa="${mesaNome}"]`);
+  const mesa = document.querySelector(`.mesa-movel[data-id="${mesaId}"]`);
+
   if(!mesa) return;
 
   const rect = mapa.getBoundingClientRect();
@@ -919,88 +974,75 @@ function soltarMesa(event){
 }
 
 async function salvarMapa(){
-  if(!configAtual){
-    Swal.fire({ icon:'warning', title:'Configure as mesas primeiro', confirmButtonColor:'#EEABAB' });
-    return;
-  }
-
-  const posicoes = { ...(configAtual.posicoes_mesas || {}) };
+  const updates = [];
 
   document.querySelectorAll('.mesa-movel').forEach(mesa => {
-    posicoes[mesa.dataset.mesa] = {
-      left: parseInt(mesa.style.left) || 0,
-      top: parseInt(mesa.style.top) || 0
-    };
+    updates.push({
+      id: mesa.dataset.id,
+      posicao_x: parseInt(mesa.style.left) || 0,
+      posicao_y: parseInt(mesa.style.top) || 0
+    });
   });
 
-  const { error } = await supa
-    .from('mesas_assentos')
-    .update({ posicoes_mesas: posicoes })
-    .eq('id', configAtual.id);
-
-  if(error){
-    Swal.fire('Erro ao salvar mapa', error.message, 'error');
-    return;
+  for(const item of updates){
+    await supa
+      .from('mesas_personalizadas')
+      .update({
+        posicao_x: item.posicao_x,
+        posicao_y: item.posicao_y
+      })
+      .eq('id', item.id);
   }
 
-  Swal.fire({ icon:'success', title:'Mapa salvo', confirmButtonColor:'#EEABAB' });
+  Swal.fire({
+    icon:'success',
+    title:'Mapa salvo',
+    text:'As posições das mesas foram atualizadas.',
+    confirmButtonColor:'#EEABAB'
+  });
+
   carregar();
 }
 
-async function excluirMesa(nomeMesa){
-  if(!configAtual) return;
-
-  const pessoasNaMesa = dadosAssentos.filter(p => p.mesa === nomeMesa);
+async function excluirMesa(id, nomeMesa){
+  const pessoas = dadosAssentos.filter(p => p.mesa === nomeMesa);
 
   const r = await Swal.fire({
     icon:'warning',
     title:`Excluir ${nomeMesa}?`,
-    text: pessoasNaMesa.length
-      ? 'Essa mesa possui convidados. Eles também serão removidos.'
-      : 'Essa mesa será removida da visualização.',
+    text:pessoas.length ? 'Essa mesa possui convidados. Eles também serão removidos.' : 'Essa mesa será removida.',
     showCancelButton:true,
     confirmButtonText:'Sim, excluir',
     cancelButtonText:'Cancelar',
-    confirmButtonColor:'#EEABAB'
+    confirmButtonColor:'#EF4444'
   });
 
   if(!r.isConfirmed) return;
 
-  if(pessoasNaMesa.length){
-    const ids = pessoasNaMesa.map(p => p.id);
+  if(pessoas.length){
+    const ids = pessoas.map(p => p.id);
 
-    const { error: erroDelete } = await supa
+    const { error: erroConvidados } = await supa
       .from('assentos')
       .delete()
       .in('id', ids);
 
-    if(erroDelete){
-      Swal.fire('Erro ao excluir convidados', erroDelete.message, 'error');
+    if(erroConvidados){
+      Swal.fire('Erro', erroConvidados.message, 'error');
       return;
     }
   }
 
-  const posicoes = { ...(configAtual.posicoes_mesas || {}) };
-  const excluidas = posicoes._excluidas || [];
-
-  if(!excluidas.includes(nomeMesa)){
-    excluidas.push(nomeMesa);
-  }
-
-  delete posicoes[nomeMesa];
-  posicoes._excluidas = excluidas;
-
   const { error } = await supa
-    .from('mesas_assentos')
-    .update({ posicoes_mesas: posicoes })
-    .eq('id', configAtual.id);
+    .from('mesas_personalizadas')
+    .delete()
+    .eq('id', id);
 
   if(error){
     Swal.fire('Erro ao excluir mesa', error.message, 'error');
     return;
   }
 
-  Swal.fire({ icon:'success', title:'Mesa excluída', confirmButtonColor:'#EEABAB' });
   carregar();
 }
 
@@ -1008,16 +1050,16 @@ async function sugerirDistribuicao(){
   Swal.fire({
     icon:'info',
     title:'Sugestão inteligente',
-    text:'Organize família com família, padrinhos e VIPs nas primeiras mesas, e amigos por afinidade.',
+    text:'Crie mesas por afinidade: família, padrinhos, amigos próximos e VIPs. Depois arraste os convidados para ajustar.',
     confirmButtonColor:'#EEABAB'
   });
 }
 
 function exportarPDF(){
-  if(!configAtual){
+  if(!mesasPersonalizadas.length){
     Swal.fire({
       icon:'warning',
-      title:'Configure as mesas primeiro',
+      title:'Crie pelo menos uma mesa',
       confirmButtonColor:'#EEABAB'
     });
     return;
@@ -1025,62 +1067,120 @@ function exportarPDF(){
 
   Swal.fire({
     title:'Gerando PDF premium...',
-    text:'Preparando o mapa do salão.',
+    text:'Montando uma versão elegante do mapa.',
     allowOutsideClick:false,
     didOpen:() => Swal.showLoading()
   });
 
-  const grupos = criarGrupos(dadosAssentos, configAtual);
-  const nomesMesas = Object.keys(grupos);
-  const capacidade = configAtual.cadeiras_por_mesa || 8;
-  const posicoes = configAtual.posicoes_mesas || {};
-
+  const grupos = criarGrupos();
+  const totalLugares = mesasPersonalizadas.reduce((s,m)=>s + Number(m.capacidade || 0),0);
   const area = document.createElement('div');
+
   area.style.width = '794px';
-  area.style.background = '#FFF8F3';
-  area.style.padding = '34px';
+  area.style.minHeight = '1123px';
+  area.style.background = 'linear-gradient(180deg,#FFF8F3,#FBF6F1)';
+  area.style.padding = '38px';
   area.style.fontFamily = 'Inter, Arial, sans-serif';
   area.style.color = '#3F3932';
 
   let html = `
-    <div style="background:white;border:1px solid #EADFD6;border-radius:30px;padding:30px;margin-bottom:24px;text-align:center;">
-      <img src="https://i.ibb.co/YTTQXBx8/Logo-Planeja-Noiva.png" style="height:60px;margin-bottom:14px;">
-      <h1 style="font-family:Georgia,serif;font-size:36px;margin:0;color:#3F3932;">Mapa de Assentos</h1>
-      <p style="color:#8F857A;margin:10px 0 0;font-size:14px;">Organização premium de mesas e convidados</p>
+    <div style="
+      position:relative;
+      background:linear-gradient(135deg,#FFFFFF 0%,#FFF2F2 100%);
+      border:1px solid #EADFD6;
+      border-radius:36px;
+      padding:38px 34px;
+      text-align:center;
+      margin-bottom:24px;
+      overflow:hidden;
+    ">
+      <div style="
+        position:absolute;
+        width:180px;
+        height:180px;
+        border-radius:50%;
+        background:rgba(238,171,171,.20);
+        top:-70px;
+        right:-60px;
+      "></div>
+
+      <div style="
+        position:absolute;
+        width:130px;
+        height:130px;
+        border-radius:50%;
+        background:rgba(238,171,171,.12);
+        bottom:-55px;
+        left:-45px;
+      "></div>
+
+      <img src="https://i.ibb.co/YTTQXBx8/Logo-Planeja-Noiva.png" style="height:64px;margin-bottom:16px;position:relative;">
+      <div style="font-size:12px;letter-spacing:4px;text-transform:uppercase;color:#D98F8F;font-weight:900;margin-bottom:8px;position:relative;">
+        PlanejaNoiva
+      </div>
+      <h1 style="font-family:Georgia,serif;font-size:44px;line-height:1;margin:0;color:#3F3932;position:relative;">
+        Mapa de Assentos
+      </h1>
+      <p style="color:#8F857A;font-size:14px;margin:14px 0 0;position:relative;">
+        Organização elegante das mesas e convidados do evento.
+      </p>
     </div>
 
-    <div style="background:white;border:1px solid #EADFD6;border-radius:28px;padding:24px;margin-bottom:24px;">
-      <h2 style="font-family:Georgia,serif;font-size:24px;margin:0 0 16px;color:#3F3932;">Mapa visual do salão</h2>
-      <div style="position:relative;height:430px;border:2px dashed #EADFD6;border-radius:24px;background:#FFF9F4;overflow:hidden;">
+    <div style="
+      display:grid;
+      grid-template-columns:repeat(3,1fr);
+      gap:12px;
+      margin-bottom:24px;
+    ">
+      <div style="background:white;border:1px solid #EADFD6;border-radius:24px;padding:17px;text-align:center;">
+        <strong style="display:block;font-size:28px;color:#D98F8F;">${dadosAssentos.length}</strong>
+        <span style="font-size:11px;color:#8F857A;font-weight:900;letter-spacing:1px;">CONVIDADOS</span>
+      </div>
+      <div style="background:white;border:1px solid #EADFD6;border-radius:24px;padding:17px;text-align:center;">
+        <strong style="display:block;font-size:28px;color:#D98F8F;">${mesasPersonalizadas.length}</strong>
+        <span style="font-size:11px;color:#8F857A;font-weight:900;letter-spacing:1px;">MESAS</span>
+      </div>
+      <div style="background:white;border:1px solid #EADFD6;border-radius:24px;padding:17px;text-align:center;">
+        <strong style="display:block;font-size:28px;color:#D98F8F;">${totalLugares}</strong>
+        <span style="font-size:11px;color:#8F857A;font-weight:900;letter-spacing:1px;">LUGARES</span>
+      </div>
+    </div>
+
+    <div style="background:white;border:1px solid #EADFD6;border-radius:32px;padding:26px;margin-bottom:24px;">
+      <div style="display:flex;justify-content:space-between;align-items:flex-end;margin-bottom:16px;">
+        <div>
+          <div style="color:#D98F8F;font-size:12px;font-weight:900;letter-spacing:2px;text-transform:uppercase;">Salão</div>
+          <h2 style="font-family:Georgia,serif;font-size:28px;margin:4px 0 0;color:#3F3932;">Mapa visual</h2>
+        </div>
+        <div style="color:#8F857A;font-size:12px;font-weight:800;">Arranjo das mesas</div>
+      </div>
+
+      <div style="position:relative;height:460px;border:2px dashed #EADFD6;border-radius:28px;background:#FFF9F4;overflow:hidden;">
   `;
 
-  nomesMesas.forEach((mesa, i) => {
-    const pessoas = grupos[mesa] || [];
-    const ocupadas = pessoas.length;
-    const pos = posicoes[mesa] || {
-      left: 35 + ((i % 5) * 135),
-      top: 35 + (Math.floor(i / 5) * 135)
-    };
+  mesasPersonalizadas.forEach(mesa => {
+    const pessoas = grupos[mesa.nome] || [];
 
     html += `
       <div style="
         position:absolute;
-        left:${pos.left}px;
-        top:${pos.top}px;
-        width:108px;
-        height:108px;
+        left:${mesa.posicao_x || 35}px;
+        top:${mesa.posicao_y || 35}px;
+        width:112px;
+        height:112px;
         border-radius:50%;
         background:white;
-        border:2px solid #EADFD6;
+        border:3px solid ${mesa.cor || '#EEABAB'};
         display:flex;
         flex-direction:column;
         align-items:center;
         justify-content:center;
         text-align:center;
-        box-shadow:0 8px 20px rgba(63,57,50,.08);
+        box-shadow:0 10px 24px rgba(63,57,50,.10);
+        padding:10px;
       ">
-        <div style="color:#D98F8F;font-size:13px;font-weight:900;">${mesa}</div>
-        <div style="color:#8F857A;font-size:11px;margin-top:5px;font-weight:800;">${ocupadas}/${capacidade}</div>
+        <div style="color:#3F3932;font-size:13px;font-weight:900;">${escapar(mesa.nome)}</div>
+        <div style="color:#8F857A;font-size:11px;margin-top:5px;font-weight:800;">${pessoas.length}/${mesa.capacidade}</div>
       </div>
     `;
   });
@@ -1089,31 +1189,32 @@ function exportarPDF(){
       </div>
     </div>
 
-    <div style="background:white;border:1px solid #EADFD6;border-radius:28px;padding:24px;">
-      <h2 style="font-family:Georgia,serif;font-size:24px;margin:0 0 18px;color:#3F3932;">Convidados por mesa</h2>
+    <div style="background:white;border:1px solid #EADFD6;border-radius:32px;padding:26px;">
+      <div style="color:#D98F8F;font-size:12px;font-weight:900;letter-spacing:2px;text-transform:uppercase;">Convidados</div>
+      <h2 style="font-family:Georgia,serif;font-size:28px;margin:4px 0 18px;color:#3F3932;">Lista por mesa</h2>
   `;
 
-  nomesMesas.forEach(mesa => {
-    const pessoas = grupos[mesa] || [];
+  mesasPersonalizadas.forEach(mesa => {
+    const pessoas = grupos[mesa.nome] || [];
 
     html += `
-      <div style="border:1px solid #EADFD6;border-radius:20px;padding:16px;margin-bottom:14px;background:#FFF9F4;">
-        <h3 style="margin:0 0 12px;color:#D98F8F;font-size:18px;">
-          ${mesa}
-          <span style="float:right;color:#8F857A;font-size:13px;">${pessoas.length}/${capacidade}</span>
+      <div style="border:1px solid #EADFD6;border-radius:24px;padding:16px;margin-bottom:14px;background:#FFF9F4;">
+        <h3 style="margin:0 0 12px;color:${mesa.cor || '#D98F8F'};font-size:18px;">
+          ${escapar(mesa.nome)}
+          <span style="float:right;color:#8F857A;font-size:13px;">${pessoas.length}/${mesa.capacidade}</span>
         </h3>
     `;
 
-    if(pessoas.length === 0){
+    if(!pessoas.length){
       html += `<p style="color:#8F857A;margin:0;">Mesa disponível</p>`;
     }
 
     pessoas.forEach(p => {
       html += `
-        <div style="background:white;border:1px solid #EADFD6;border-radius:14px;padding:11px;margin-bottom:8px;">
-          <strong>${p.nome || 'Sem nome'}</strong>
-          <div style="color:#8F857A;font-size:12px;margin-top:3px;">${p.observacao || 'Sem observação'}</div>
-          ${p.tipo ? `<div style="margin-top:6px;color:#D98F8F;font-size:12px;font-weight:900;">${formatarTipo(p.tipo)}</div>` : ''}
+        <div style="background:white;border:1px solid #EADFD6;border-radius:16px;padding:12px;margin-bottom:8px;">
+          <strong>${escapar(p.nome) || 'Sem nome'}</strong>
+          <div style="color:#8F857A;font-size:12px;margin-top:4px;">${escapar(p.observacao) || 'Sem observação'}</div>
+          ${p.tipo ? `<div style="margin-top:7px;color:#D98F8F;font-size:12px;font-weight:900;">${formatarTipo(p.tipo)}</div>` : ''}
         </div>
       `;
     });
@@ -1126,10 +1227,10 @@ function exportarPDF(){
 
   html2pdf()
     .set({
-      margin:0.25,
+      margin:0.18,
       filename:'mapa-de-assentos-planejanoiva.pdf',
-      image:{ type:'jpeg', quality:0.95 },
-      html2canvas:{ scale:1.5, useCORS:true },
+      image:{ type:'jpeg', quality:0.98 },
+      html2canvas:{ scale:1.8, useCORS:true },
       jsPDF:{ unit:'in', format:'a4', orientation:'portrait' }
     })
     .from(area)
@@ -1139,12 +1240,10 @@ function exportarPDF(){
 }
 
 async function gerarLinkPublico(){
-  if(!configAtual){
-    Swal.fire({ icon:'warning', title:'Configure as mesas primeiro', confirmButtonColor:'#EEABAB' });
-    return;
-  }
+  const config = await garantirConfig();
+  if(!config) return;
 
-  let token = configAtual.public_token;
+  let token = config.public_token;
 
   if(!token){
     token = gerarToken();
@@ -1152,7 +1251,7 @@ async function gerarLinkPublico(){
     const { error } = await supa
       .from('mesas_assentos')
       .update({ public_token: token })
-      .eq('id', configAtual.id);
+      .eq('id', config.id);
 
     if(error){
       Swal.fire('Erro ao gerar link', error.message, 'error');
@@ -1173,13 +1272,11 @@ async function gerarLinkPublico(){
     text:link,
     confirmButtonColor:'#EEABAB'
   });
-
-  carregar();
 }
 
 async function remover(id){
   const r = await Swal.fire({
-    title:'Remover convidado desta mesa?',
+    title:'Remover convidado?',
     icon:'warning',
     showCancelButton:true,
     confirmButtonText:'Sim, remover',
@@ -1208,3 +1305,6 @@ document.getElementById('observacao').addEventListener('keypress', e=>{
 
 carregar();
 </script>
+
+</body>
+</html>
