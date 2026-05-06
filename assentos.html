@@ -1233,6 +1233,85 @@ async function gerarLinkPublico(){
   carregar();
 }
 
+async function salvarMapa(){
+  if(!configAtual){
+    Swal.fire({ icon:'warning', title:'Configure as mesas primeiro', confirmButtonColor:'#EEABAB' });
+    return;
+  }
+
+  const posicoes = {};
+
+  document.querySelectorAll('.mesa-movel').forEach(mesa => {
+    posicoes[mesa.dataset.mesa] = {
+      left: parseInt(mesa.style.left) || 0,
+      top: parseInt(mesa.style.top) || 0
+    };
+  });
+
+  const { error } = await supa
+    .from('mesas_assentos')
+    .update({ posicoes_mesas: posicoes })
+    .eq('id', configAtual.id);
+
+  if(error){
+    Swal.fire('Erro ao salvar mapa', error.message, 'error');
+    return;
+  }
+
+  Swal.fire({ icon:'success', title:'Mapa salvo', confirmButtonColor:'#EEABAB' });
+  carregar();
+}
+
+async function sugerirDistribuicao(){
+  Swal.fire({
+    icon:'info',
+    title:'Sugestão inteligente',
+    text:'Organize família com família, padrinhos e VIPs nas primeiras mesas, e amigos por afinidade.',
+    confirmButtonColor:'#EEABAB'
+  });
+}
+
+function gerarToken(){
+  return 'pn_' + Math.random().toString(36).substring(2, 12) + Date.now().toString(36);
+}
+
+async function gerarLinkPublico(){
+  if(!configAtual){
+    Swal.fire({ icon:'warning', title:'Configure as mesas primeiro', confirmButtonColor:'#EEABAB' });
+    return;
+  }
+
+  let token = configAtual.public_token;
+
+  if(!token){
+    token = gerarToken();
+
+    const { error } = await supa
+      .from('mesas_assentos')
+      .update({ public_token: token })
+      .eq('id', configAtual.id);
+
+    if(error){
+      Swal.fire('Erro ao gerar link', error.message, 'error');
+      return;
+    }
+  }
+
+  const base = window.location.href.split('?')[0];
+  const link = base + '?token=' + token;
+
+  await navigator.clipboard.writeText(link);
+
+  Swal.fire({
+    icon:'success',
+    title:'Link público copiado',
+    text:link,
+    confirmButtonColor:'#EEABAB'
+  });
+
+  carregar();
+}
+
 async function remover(id){
 
   const r = await Swal.fire({
