@@ -271,9 +271,10 @@ nav{
 
 .progress-fill{
   height:100%;
-  width:60%;
+  width:0%;
   background:linear-gradient(90deg,var(--rose),var(--rose-dark));
   border-radius:999px;
+  transition:.4s ease;
 }
 
 .grid{
@@ -394,7 +395,7 @@ nav{
 <body>
 
 <nav>
-  <img src="https://i.ibb.co/YTTQXBx8/Logo-Planeja-Noiva.png" class="nav-logo">
+  <img src="https://vuiqbdqnfnofwkpvvuqy.supabase.co/storage/v1/object/public/logos/logo.png" class="nav-logo" alt="PlanejaNoiva">
 
   <div class="nav-actions">
     <a href="perfil.html" class="nav-link">Meu Perfil</a>
@@ -492,7 +493,7 @@ nav{
         <strong>Progresso estimado</strong>
         <p style="color:var(--muted);margin-top:4px;">Quanto mais tarefas concluídas, mais o plano ganha forma.</p>
       </div>
-      <strong id="progressText">60%</strong>
+      <strong id="progressText">0%</strong>
     </div>
 
     <div class="progress-bar">
@@ -569,7 +570,7 @@ nav{
       <div class="icon"><span class="material-symbols-outlined">event_seat</span></div>
       <h3>Protocolo de assentos</h3>
       <p>Organize mesas, lugares especiais, familiares, padrinhos e convidados estratégicos com elegância.</p>
-     <a href="assentos.html">Organizar assentos</a>
+      <a href="assentos.html">Organizar assentos</a>
     </div>
 
     <div class="card">
@@ -622,14 +623,46 @@ const _supabase = supabase.createClient(
   'sb_publishable_LjKm4HF9kyD7m0ch3Eefdw_TJ5SG6w2'
 );
 
-const nome = localStorage.getItem('usuario_nome');
-const email = localStorage.getItem('usuario_email');
+let usuarioLogado = null;
+let email = null;
 
-if (!email) {
-  window.location.href = 'index.html';
-} else {
-  document.getElementById('txtBoasVindas').innerText =
-    `Olá, ${nome ? nome.split(' ')[0] : 'Noiva'} 💍`;
+async function iniciarDashboard() {
+  const { data, error } = await _supabase.auth.getSession();
+
+  if (error || !data.session) {
+    localStorage.clear();
+    window.location.href = 'index.html';
+    return;
+  }
+
+  usuarioLogado = data.session.user;
+  email = usuarioLogado.email;
+
+  localStorage.setItem('usuario_email', email);
+
+  await carregarPerfil();
+  await carregarDadosDashboard();
+  await carregarCronometro();
+}
+
+async function carregarPerfil() {
+  try {
+    const { data } = await _supabase
+      .from('usuarios')
+      .select('nome')
+      .eq('id', usuarioLogado.id)
+      .single();
+
+    const nome = data?.nome || localStorage.getItem('usuario_nome') || 'Noiva';
+
+    localStorage.setItem('usuario_nome', nome);
+
+    document.getElementById('txtBoasVindas').innerText =
+      `Olá, ${nome.split(' ')[0]} 💍`;
+
+  } catch (erro) {
+    document.getElementById('txtBoasVindas').innerText = 'Olá, Noiva 💍';
+  }
 }
 
 async function carregarDadosDashboard() {
@@ -675,7 +708,7 @@ async function carregarCronometro() {
     const { data } = await _supabase
       .from('usuarios')
       .select('data_casamento')
-      .eq('email', email)
+      .eq('id', usuarioLogado.id)
       .single();
 
     if (!data || !data.data_casamento) return;
@@ -716,20 +749,20 @@ function copiarLinkRSVP() {
     window.location.origin +
     window.location.pathname.replace('dashboard.html', 'confirmar.html');
 
-  const linkFinal = `${linkBase}?noiva=${email}`;
+  const linkFinal = `${linkBase}?noiva=${encodeURIComponent(email)}`;
 
   navigator.clipboard.writeText(linkFinal).then(() => {
     alert("Link de confirmação copiado! Envie para seus convidados. 💍");
   });
 }
 
-function logout() {
+async function logout() {
+  await _supabase.auth.signOut();
   localStorage.clear();
   window.location.href = 'index.html';
 }
 
-carregarDadosDashboard();
-carregarCronometro();
+iniciarDashboard();
 </script>
 
 </body>

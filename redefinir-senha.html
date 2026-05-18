@@ -7,7 +7,7 @@
 <title>Nova Senha | PlanejaNoiva</title>
 
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" />
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&family=Playfair+Display:wght@700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Playfair+Display:wght@600;700&display=swap" rel="stylesheet">
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
@@ -15,105 +15,234 @@
 <style>
 :root{
   --rose:#EEABAB;
+  --rose-hover:#E59A9A;
   --text:#3F3932;
   --muted:#8F857A;
   --bg:#FBF6F1;
   --border:#EADFD6;
 }
 
-*{margin:0;padding:0;box-sizing:border-box;font-family:'Inter'}
+*{
+  margin:0;
+  padding:0;
+  box-sizing:border-box;
+  font-family:'Inter',sans-serif;
+}
 
 body{
-  background:linear-gradient(180deg,#FFF8F3,#FBF6F1);
+  min-height:100vh;
+  padding:24px;
   display:flex;
   justify-content:center;
   align-items:center;
-  min-height:100vh;
-  padding:20px;
+  background:
+    radial-gradient(circle at top left, rgba(238,171,171,.22), transparent 32%),
+    radial-gradient(circle at bottom right, rgba(255,255,255,.9), transparent 30%),
+    linear-gradient(180deg,#FFF8F3,#FBF6F1);
 }
 
 .card{
-  background:white;
-  padding:45px;
-  border-radius:28px;
-  max-width:420px;
+  position:relative;
   width:100%;
+  max-width:430px;
+  padding:44px;
   text-align:center;
-  box-shadow:0 20px 50px rgba(0,0,0,.06);
+  background:rgba(255,255,255,.9);
+  border:1px solid rgba(238,171,171,.2);
+  border-radius:30px;
+  box-shadow:0 24px 60px rgba(63,57,50,.08);
+  backdrop-filter:blur(12px);
   animation:fade .6s ease;
 }
 
 .logo{
-  height:70px;
+  height:76px;
   margin-bottom:20px;
+  mix-blend-mode:multiply;
 }
 
 h1{
-  font-family:'Playfair Display';
-  font-size:1.8rem;
+  font-family:'Playfair Display',serif;
+  font-size:1.85rem;
   margin-bottom:10px;
+  color:var(--text);
 }
 
 .sub{
   color:var(--muted);
-  margin-bottom:25px;
-  font-size:.95rem;
+  margin-bottom:28px;
+  font-size:.94rem;
+  line-height:1.55;
+}
+
+.form{
+  text-align:left;
+}
+
+.input-group{
+  margin-bottom:16px;
+}
+
+label{
+  display:block;
+  margin-bottom:7px;
+  font-size:.72rem;
+  font-weight:800;
+  letter-spacing:.45px;
+  text-transform:uppercase;
+  color:var(--muted);
+}
+
+.password-wrapper{
+  position:relative;
 }
 
 .input{
   width:100%;
-  padding:14px;
-  border-radius:12px;
+  padding:15px 50px 15px 16px;
+  border-radius:14px;
   border:1px solid var(--border);
   background:#FCF9F5;
-  margin-bottom:15px;
+  color:var(--text);
+  outline:none;
+  transition:.25s;
+  font-size:.95rem;
 }
 
 .input:focus{
   border-color:var(--rose);
   background:white;
-  outline:none;
+  box-shadow:0 0 0 4px rgba(238,171,171,.12);
+}
+
+.toggle{
+  position:absolute;
+  right:15px;
+  top:50%;
+  transform:translateY(-50%);
+  color:var(--rose);
+  cursor:pointer;
+  user-select:none;
 }
 
 .btn{
   width:100%;
+  min-height:52px;
   padding:16px;
+  margin-top:8px;
   border:none;
-  background:var(--rose);
+  background:linear-gradient(135deg,var(--rose),var(--rose-hover));
   color:white;
-  border-radius:14px;
-  font-weight:700;
+  border-radius:15px;
+  font-weight:800;
+  font-size:1rem;
   cursor:pointer;
   transition:.3s;
+  box-shadow:0 12px 26px rgba(238,171,171,.34);
 }
 
 .btn:hover{
   transform:translateY(-2px);
-  box-shadow:0 10px 25px rgba(238,171,171,.4);
+  box-shadow:0 16px 32px rgba(238,171,171,.4);
+}
+
+.btn:disabled{
+  opacity:.72;
+  cursor:not-allowed;
+  transform:none;
+}
+
+.back{
+  margin-top:22px;
+  text-align:center;
+  font-size:.86rem;
+  color:var(--muted);
+}
+
+.back a{
+  color:var(--rose);
+  font-weight:700;
+  text-decoration:none;
+}
+
+.back a:hover{
+  text-decoration:underline;
+}
+
+@media(max-width:480px){
+  body{
+    align-items:flex-start;
+    padding-top:42px;
+  }
+
+  .card{
+    padding:34px 24px;
+    border-radius:24px;
+  }
+
+  h1{
+    font-size:1.55rem;
+  }
 }
 
 @keyframes fade{
-from{opacity:0;transform:translateY(20px);}
-to{opacity:1;transform:translateY(0);}
+from{
+  opacity:0;
+  transform:translateY(20px);
+}
+to{
+  opacity:1;
+  transform:translateY(0);
+}
 }
 </style>
 </head>
 
 <body>
 
-<div class="card">
+<main class="card">
 
-<img src="https://vuiqbdqnfnofwkpvvuqy.supabase.co/storage/v1/object/public/logos/logo.png" class="logo">
+<img 
+src="https://vuiqbdqnfnofwkpvvuqy.supabase.co/storage/v1/object/public/logos/logo.png"
+class="logo"
+alt="PlanejaNoiva"
+>
 
 <h1>Definir nova senha 🔐</h1>
-<p class="sub">Escolha uma senha segura para continuar seu planejamento</p>
 
-<input type="password" id="senha" class="input" placeholder="Nova senha">
-<input type="password" id="confirmar" class="input" placeholder="Confirmar senha">
+<p class="sub">
+Escolha uma nova senha segura para continuar seu planejamento com tranquilidade.
+</p>
 
-<button class="btn" onclick="atualizar()">Salvar nova senha</button>
+<form id="senhaForm" class="form">
 
+<div class="input-group">
+<label for="senha">Nova senha</label>
+<div class="password-wrapper">
+<input type="password" id="senha" class="input" placeholder="Mínimo 6 caracteres" required>
+<span class="material-symbols-outlined toggle" onclick="toggleSenha('senha', this)">visibility</span>
 </div>
+</div>
+
+<div class="input-group">
+<label for="confirmar">Confirmar senha</label>
+<div class="password-wrapper">
+<input type="password" id="confirmar" class="input" placeholder="Repita a nova senha" required>
+<span class="material-symbols-outlined toggle" onclick="toggleSenha('confirmar', this)">visibility</span>
+</div>
+</div>
+
+<button class="btn" id="btnSalvar" type="submit">
+Salvar nova senha
+</button>
+
+</form>
+
+<div class="back">
+Lembrou sua senha? <a href="index.html">Voltar ao login</a>
+</div>
+
+</main>
 
 <script>
 const supa = supabase.createClient(
@@ -121,17 +250,27 @@ const supa = supabase.createClient(
 'sb_publishable_LjKm4HF9kyD7m0ch3Eefdw_TJ5SG6w2'
 );
 
-window.onload = async () => {
-  const { data } = await supa.auth.getSession();
+const form = document.getElementById('senhaForm');
+const btnSalvar = document.getElementById('btnSalvar');
 
-  if(!data.session){
-    Swal.fire({
-      icon:'error',
-      title:'Link inválido',
-      text:'Solicite um novo e-mail de recuperação.',
-      confirmButtonColor:'#EEABAB'
-    });
-  }
+form.addEventListener('submit', function(e){
+  e.preventDefault();
+  atualizar();
+});
+
+window.onload = async () => {
+  setTimeout(async () => {
+    const { data } = await supa.auth.getSession();
+
+    if(!data.session){
+      Swal.fire({
+        icon:'error',
+        title:'Link inválido ou expirado',
+        text:'Solicite um novo e-mail de recuperação de senha.',
+        confirmButtonColor:'#EEABAB'
+      });
+    }
+  }, 800);
 };
 
 async function atualizar(){
@@ -152,39 +291,65 @@ async function atualizar(){
     Swal.fire({
       icon:'warning',
       title:'Senhas diferentes',
-      text:'Confirme corretamente.',
+      text:'As duas senhas precisam ser iguais.',
       confirmButtonColor:'#EEABAB'
     });
     return;
   }
 
-  Swal.fire({
-    title:'Atualizando senha...',
-    allowOutsideClick:false,
-    didOpen:()=>Swal.showLoading()
-  });
+  btnSalvar.disabled = true;
+  btnSalvar.innerText = 'Atualizando...';
+
+  const { data } = await supa.auth.getSession();
+
+  if(!data.session){
+    btnSalvar.disabled = false;
+    btnSalvar.innerText = 'Salvar nova senha';
+
+    Swal.fire({
+      icon:'error',
+      title:'Sessão não encontrada',
+      text:'O link pode ter expirado. Solicite um novo e-mail de recuperação.',
+      confirmButtonColor:'#EEABAB'
+    });
+    return;
+  }
 
   const { error } = await supa.auth.updateUser({
     password:senha
   });
 
+  btnSalvar.disabled = false;
+  btnSalvar.innerText = 'Salvar nova senha';
+
   if(error){
     Swal.fire({
       icon:'error',
-      title:'Erro',
+      title:'Erro ao atualizar',
       text:error.message,
       confirmButtonColor:'#EEABAB'
     });
-  }else{
-    Swal.fire({
-      icon:'success',
-      title:'Senha atualizada 💍',
-      text:'Agora você pode acessar normalmente.',
-      confirmButtonColor:'#EEABAB'
-    }).then(()=>{
-      window.location.href = 'index.html';
-    });
+    return;
   }
+
+  await supa.auth.signOut();
+
+  Swal.fire({
+    icon:'success',
+    title:'Senha atualizada 💍',
+    text:'Agora você pode acessar normalmente com sua nova senha.',
+    confirmButtonColor:'#EEABAB'
+  }).then(()=>{
+    window.location.href = 'index.html';
+  });
+}
+
+function toggleSenha(id, el){
+  const input = document.getElementById(id);
+
+  const oculto = input.type === 'password';
+  input.type = oculto ? 'text' : 'password';
+  el.innerText = oculto ? 'visibility_off' : 'visibility';
 }
 </script>
 

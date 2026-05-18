@@ -3,240 +3,652 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
 <title>Fornecedores Premium | PlanejaNoiva</title>
 
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&family=Playfair+Display:wght@700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" />
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Playfair+Display:wght@700&display=swap" rel="stylesheet">
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
 <style>
+:root{
+  --rose:#EEABAB;
+  --rose-dark:#D98F8F;
+  --text:#3F3932;
+  --muted:#8F857A;
+  --cream:#FFF9F4;
+  --border:#EADFD6;
+  --green:#25D366;
+  --red:#EF4444;
+  --shadow:0 18px 50px rgba(63,57,50,.08);
+}
+
+*{
+  margin:0;
+  padding:0;
+  box-sizing:border-box;
+}
+
 body{
-font-family:'Inter';
-background:linear-gradient(180deg,#FFF8F3,#FBF6F1);
-color:#3F3932;
+  font-family:'Inter',sans-serif;
+  background:
+    radial-gradient(circle at top left, rgba(238,171,171,.24), transparent 30%),
+    linear-gradient(180deg,#FFF8F3,#FBF6F1);
+  color:var(--text);
+  min-height:100vh;
+}
+
+nav{
+  height:76px;
+  background:rgba(255,255,255,.88);
+  backdrop-filter:blur(16px);
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  padding:0 5%;
+  border-bottom:1px solid var(--border);
+  position:sticky;
+  top:0;
+  z-index:20;
+}
+
+.logo{
+  height:46px;
+  mix-blend-mode:multiply;
+}
+
+.btn-voltar{
+  text-decoration:none;
+  color:var(--text);
+  font-weight:800;
+  background:white;
+  border:1px solid var(--border);
+  padding:11px 15px;
+  border-radius:16px;
+  display:flex;
+  align-items:center;
+  gap:8px;
 }
 
 .container{
-max-width:1100px;
-margin:40px auto;
-padding:20px;
+  max-width:1100px;
+  margin:34px auto;
+  padding:0 20px 60px;
 }
 
-/* HEADER */
 .header{
-background:white;
-padding:30px;
-border-radius:25px;
-margin-bottom:30px;
+  background:white;
+  border:1px solid var(--border);
+  box-shadow:var(--shadow);
+  border-radius:34px;
+  padding:34px;
+  margin-bottom:24px;
+}
+
+.badge{
+  display:inline-flex;
+  align-items:center;
+  gap:8px;
+  background:var(--cream);
+  color:var(--rose-dark);
+  border:1px solid var(--border);
+  padding:9px 13px;
+  border-radius:999px;
+  font-size:.82rem;
+  font-weight:900;
+  margin-bottom:16px;
 }
 
 h1{
-font-family:'Playfair Display';
-font-size:2.5rem;
+  font-family:'Playfair Display',serif;
+  font-size:2.7rem;
+  line-height:1.05;
 }
 
 .subtitle{
-color:#8F857A;
-margin-top:10px;
+  color:var(--muted);
+  margin-top:12px;
+  line-height:1.7;
 }
 
-/* FORM */
+.stats{
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:14px;
+  margin-top:24px;
+}
+
+.stat{
+  background:var(--cream);
+  border:1px solid var(--border);
+  border-radius:22px;
+  padding:18px;
+}
+
+.stat strong{
+  display:block;
+  color:var(--rose-dark);
+  font-size:1.7rem;
+}
+
+.stat span{
+  color:var(--muted);
+  font-size:.84rem;
+  font-weight:800;
+}
+
 .form{
-background:white;
-padding:25px;
-border-radius:20px;
-margin-bottom:30px;
-display:grid;
-gap:15px;
+  background:white;
+  border:1px solid var(--border);
+  box-shadow:0 12px 35px rgba(63,57,50,.045);
+  padding:24px;
+  border-radius:28px;
+  margin-bottom:26px;
+}
+
+.form-title{
+  display:flex;
+  align-items:center;
+  gap:10px;
+  margin-bottom:18px;
+}
+
+.form-title span{
+  color:var(--rose-dark);
+}
+
+.form-title h2{
+  font-size:1.1rem;
 }
 
 .inputs{
-display:grid;
-grid-template-columns:repeat(auto-fit,minmax(200px,1fr));
-gap:10px;
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:14px;
+}
+
+.input-group{
+  display:flex;
+  flex-direction:column;
+}
+
+label{
+  font-size:.72rem;
+  font-weight:800;
+  text-transform:uppercase;
+  letter-spacing:.8px;
+  color:var(--muted);
+  margin-bottom:8px;
 }
 
 input{
-padding:14px;
-border-radius:10px;
-border:1px solid #EADFD6;
-background:#FCF9F5;
+  width:100%;
+  padding:15px 16px;
+  border-radius:16px;
+  border:1px solid var(--border);
+  background:var(--cream);
+  outline:none;
+  font-size:.95rem;
+  color:var(--text);
+  transition:.25s;
+}
+
+input:focus{
+  border-color:var(--rose);
+  background:white;
+  box-shadow:0 0 0 4px rgba(238,171,171,.12);
 }
 
 .btn{
-background:#EEABAB;
-color:white;
-border:none;
-padding:15px;
-border-radius:12px;
-font-weight:700;
-cursor:pointer;
+  width:100%;
+  margin-top:18px;
+  background:linear-gradient(135deg,var(--rose),var(--rose-dark));
+  color:white;
+  border:none;
+  padding:16px;
+  border-radius:18px;
+  font-weight:900;
+  cursor:pointer;
+  transition:.25s;
+  box-shadow:0 14px 28px rgba(238,171,171,.28);
 }
 
-/* GRID */
+.btn:hover{
+  transform:translateY(-2px);
+}
+
+.btn:disabled{
+  opacity:.72;
+  cursor:not-allowed;
+  transform:none;
+}
+
 .grid{
-display:grid;
-grid-template-columns:repeat(auto-fit,minmax(300px,1fr));
-gap:20px;
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(300px,1fr));
+  gap:18px;
 }
 
-/* CARD */
 .card{
-background:white;
-padding:20px;
-border-radius:20px;
-position:relative;
-border-left:5px solid #EEABAB;
-transition:.3s;
+  background:white;
+  border:1px solid var(--border);
+  border-left:5px solid var(--rose);
+  box-shadow:0 10px 28px rgba(63,57,50,.045);
+  padding:22px;
+  border-radius:24px;
+  position:relative;
+  transition:.25s;
 }
 
 .card:hover{
-transform:translateY(-5px);
+  transform:translateY(-4px);
+  box-shadow:var(--shadow);
 }
 
 .cat{
-font-size:0.7rem;
-font-weight:700;
-color:#EEABAB;
-text-transform:uppercase;
+  font-size:.72rem;
+  font-weight:900;
+  color:var(--rose-dark);
+  text-transform:uppercase;
+  letter-spacing:.8px;
+  padding-right:40px;
 }
 
 .nome{
-font-size:1.2rem;
-font-weight:700;
-margin:10px 0;
+  font-size:1.2rem;
+  font-weight:900;
+  margin:12px 0 8px;
+  line-height:1.35;
 }
 
-/* ACTIONS */
+.tel{
+  color:var(--muted);
+  font-weight:700;
+  font-size:.9rem;
+}
+
 .actions{
-display:flex;
-gap:10px;
-margin-top:15px;
+  display:flex;
+  gap:10px;
+  margin-top:18px;
 }
 
 .wpp{
-flex:1;
-background:#25D366;
-color:white;
-padding:10px;
-border-radius:10px;
-text-align:center;
-text-decoration:none;
-font-weight:600;
+  flex:1;
+  background:var(--green);
+  color:white;
+  padding:12px;
+  border-radius:14px;
+  text-align:center;
+  text-decoration:none;
+  font-weight:900;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  gap:8px;
 }
 
 .del{
-position:absolute;
-top:15px;
-right:15px;
-cursor:pointer;
-color:#ccc;
+  position:absolute;
+  top:16px;
+  right:16px;
+  width:40px;
+  height:40px;
+  border:none;
+  background:#FFF1F1;
+  color:var(--red);
+  border-radius:14px;
+  cursor:pointer;
+  display:flex;
+  align-items:center;
+  justify-content:center;
 }
 
-.del:hover{
-color:#EF4444;
+.empty{
+  background:white;
+  border:1px dashed var(--border);
+  border-radius:26px;
+  padding:34px;
+  text-align:center;
+  color:var(--muted);
+  grid-column:1/-1;
+}
+
+.empty span{
+  display:block;
+  color:var(--rose-dark);
+  font-size:2.8rem;
+  margin-bottom:12px;
+}
+
+@media(max-width:760px){
+  nav{
+    padding:0 18px;
+  }
+
+  h1{
+    font-size:2.15rem;
+  }
+
+  .stats{
+    grid-template-columns:1fr;
+  }
+
+  .inputs{
+    grid-template-columns:1fr;
+  }
 }
 </style>
 </head>
 
 <body>
 
+<nav>
+  <img src="https://vuiqbdqnfnofwkpvvuqy.supabase.co/storage/v1/object/public/logos/logo.png" class="logo" alt="PlanejaNoiva">
+
+  <a href="dashboard.html" class="btn-voltar">
+    <span class="material-symbols-outlined">arrow_back</span>
+    Painel
+  </a>
+</nav>
+
 <div class="container">
 
-<div class="header">
-<h1>Seus Fornecedores 💐</h1>
-<p class="subtitle">Organize todos os profissionais do seu casamento em um só lugar</p>
-</div>
+  <section class="header">
+    <div class="badge">
+      <span class="material-symbols-outlined">contact_phone</span>
+      Fornecedores premium
+    </div>
 
-<div class="form">
-<div class="inputs">
-<input type="text" id="nome" placeholder="Nome do fornecedor">
-<input type="text" id="categoria" placeholder="Categoria (ex: fotógrafo)">
-<input type="text" id="telefone" placeholder="WhatsApp com DDD">
-</div>
-<button class="btn" onclick="add()">Salvar fornecedor</button>
-</div>
+    <h1>Todos os profissionais do casamento em um só lugar.</h1>
 
-<div class="grid" id="lista"></div>
+    <p class="subtitle">
+      Organize contatos, categorias e WhatsApp dos fornecedores para não depender de conversas perdidas.
+    </p>
+
+    <div class="stats">
+      <div class="stat">
+        <strong id="totalFornecedores">0</strong>
+        <span>Total de fornecedores</span>
+      </div>
+
+      <div class="stat">
+        <strong id="totalCategorias">0</strong>
+        <span>Categorias cadastradas</span>
+      </div>
+
+      <div class="stat">
+        <strong id="statusAgenda">Ativa</strong>
+        <span>Agenda de contatos</span>
+      </div>
+    </div>
+  </section>
+
+  <section class="form">
+    <div class="form-title">
+      <span class="material-symbols-outlined">add_circle</span>
+      <h2>Novo fornecedor</h2>
+    </div>
+
+    <div class="inputs">
+      <div class="input-group">
+        <label>Nome do fornecedor</label>
+        <input type="text" id="nome" placeholder="Ex: Foto Prime">
+      </div>
+
+      <div class="input-group">
+        <label>Categoria</label>
+        <input type="text" id="categoria" placeholder="Ex: Fotógrafo">
+      </div>
+
+      <div class="input-group">
+        <label>WhatsApp com DDD</label>
+        <input type="text" id="telefone" placeholder="Ex: 62999998888">
+      </div>
+    </div>
+
+    <button class="btn" id="btnSalvar" onclick="add()">Salvar fornecedor 💐</button>
+  </section>
+
+  <div class="grid" id="lista"></div>
 
 </div>
 
 <script>
 const supa = supabase.createClient(
-'https://vuiqbdqnfnofwkpvvuqy.supabase.co',
-'sb_publishable_LjKm4HF9kyD7m0ch3Eefdw_TJ5SG6w2'
+  'https://vuiqbdqnfnofwkpvvuqy.supabase.co',
+  'sb_publishable_LjKm4HF9kyD7m0ch3Eefdw_TJ5SG6w2'
 );
 
-const email = localStorage.getItem('usuario_email');
+let usuarioLogado = null;
+let email = null;
+
+const inputNome = document.getElementById('nome');
+const inputCategoria = document.getElementById('categoria');
+const inputTelefone = document.getElementById('telefone');
+const btnSalvar = document.getElementById('btnSalvar');
+const lista = document.getElementById('lista');
+
+async function iniciar(){
+  const { data, error } = await supa.auth.getSession();
+
+  if(error || !data.session){
+    localStorage.clear();
+    window.location.href = 'index.html';
+    return;
+  }
+
+  usuarioLogado = data.session.user;
+  email = usuarioLogado.email;
+
+  localStorage.setItem('usuario_email', email);
+
+  await load();
+}
+
+function escaparHTML(texto){
+  const div = document.createElement('div');
+  div.innerText = texto || '';
+  return div.innerHTML;
+}
+
+function limparTelefone(telefone){
+  return String(telefone || '').replace(/\D/g,'');
+}
+
+function linkWhatsApp(telefone){
+  const numero = limparTelefone(telefone);
+
+  if(numero.startsWith('55')){
+    return `https://wa.me/${numero}`;
+  }
+
+  return `https://wa.me/55${numero}`;
+}
 
 async function load(){
-let {data} = await supa.from('fornecedores')
-.select('*')
-.eq('usuario_email',email)
-.order('id',{ascending:false});
+  const { data, error } = await supa
+    .from('fornecedores')
+    .select('*')
+    .eq('usuario_email', email)
+    .order('id', { ascending:false });
 
-let html="";
+  if(error){
+    Swal.fire({
+      icon:'error',
+      title:'Erro ao carregar',
+      text:'Não foi possível carregar os fornecedores.',
+      confirmButtonColor:'#EEABAB'
+    });
+    return;
+  }
 
-data.forEach(f=>{
-html+=`
-<div class="card">
-<span class="del" onclick="del(${f.id})">🗑</span>
+  const fornecedores = data || [];
 
-<div class="cat">${f.categoria || 'Serviço'}</div>
-<div class="nome">${f.nome}</div>
+  const categorias = new Set(
+    fornecedores.map(f => (f.categoria || '').trim().toLowerCase()).filter(Boolean)
+  );
 
-<div class="actions">
-<a href="https://wa.me/55${f.telefone}" target="_blank" class="wpp">
-WhatsApp
-</a>
-</div>
-</div>`;
-});
+  document.getElementById('totalFornecedores').innerText = fornecedores.length;
+  document.getElementById('totalCategorias').innerText = categorias.size;
 
-document.getElementById('lista').innerHTML=html;
+  if(fornecedores.length === 0){
+    lista.innerHTML = `
+      <div class="empty">
+        <span class="material-symbols-outlined">contact_page</span>
+        Nenhum fornecedor cadastrado ainda.<br>
+        Comece por fotografia, buffet, decoração ou cerimonial.
+      </div>
+    `;
+    return;
+  }
+
+  let html = '';
+
+  fornecedores.forEach(f => {
+    html += `
+      <div class="card">
+        <button class="del" onclick="del(${f.id})">
+          <span class="material-symbols-outlined">delete</span>
+        </button>
+
+        <div class="cat">${escaparHTML(f.categoria || 'Serviço')}</div>
+
+        <div class="nome">${escaparHTML(f.nome)}</div>
+
+        <div class="tel">
+          WhatsApp: ${escaparHTML(f.telefone || 'Não informado')}
+        </div>
+
+        <div class="actions">
+          <a href="${linkWhatsApp(f.telefone)}" target="_blank" class="wpp">
+            <span class="material-symbols-outlined">chat</span>
+            Chamar no WhatsApp
+          </a>
+        </div>
+      </div>
+    `;
+  });
+
+  lista.innerHTML = html;
 }
 
 async function add(){
-let nome=document.getElementById('nome').value;
-let categoria=document.getElementById('categoria').value;
-let telefone=document.getElementById('telefone').value;
+  const nome = inputNome.value.trim();
+  const categoria = inputCategoria.value.trim();
+  const telefone = limparTelefone(inputTelefone.value);
 
-if(!nome || !categoria || !telefone){
-Swal.fire("Preencha tudo ✨");
-return;
-}
+  if(!nome || !categoria || !telefone){
+    Swal.fire({
+      icon:'warning',
+      title:'Preencha tudo',
+      text:'Informe nome, categoria e WhatsApp do fornecedor.',
+      confirmButtonColor:'#EEABAB'
+    });
+    return;
+  }
 
-await supa.from('fornecedores').insert([{
-nome,
-categoria,
-telefone,
-usuario_email:email
-}]);
+  if(telefone.length < 10){
+    Swal.fire({
+      icon:'warning',
+      title:'Telefone incompleto',
+      text:'Digite o WhatsApp com DDD.',
+      confirmButtonColor:'#EEABAB'
+    });
+    return;
+  }
 
-Swal.fire("Salvo 💐");
+  btnSalvar.disabled = true;
+  btnSalvar.innerText = 'Salvando...';
 
-document.getElementById('nome').value="";
-document.getElementById('categoria').value="";
-document.getElementById('telefone').value="";
+  const { error } = await supa
+    .from('fornecedores')
+    .insert([{
+      nome,
+      categoria,
+      telefone,
+      usuario_email: email
+    }]);
 
-load();
+  btnSalvar.disabled = false;
+  btnSalvar.innerText = 'Salvar fornecedor 💐';
+
+  if(error){
+    Swal.fire({
+      icon:'error',
+      title:'Erro ao salvar',
+      text:'Não foi possível salvar o fornecedor.',
+      confirmButtonColor:'#EEABAB'
+    });
+    return;
+  }
+
+  inputNome.value = '';
+  inputCategoria.value = '';
+  inputTelefone.value = '';
+
+  Swal.fire({
+    icon:'success',
+    title:'Fornecedor salvo 💐',
+    text:'Contato adicionado à sua agenda.',
+    confirmButtonColor:'#EEABAB'
+  });
+
+  await load();
 }
 
 async function del(id){
-const confirm = await Swal.fire({
-title:"Remover fornecedor?",
-showCancelButton:true,
-confirmButtonText:"Sim"
+  const resposta = await Swal.fire({
+    title:'Remover fornecedor?',
+    text:'Esse contato será apagado da sua agenda.',
+    icon:'warning',
+    showCancelButton:true,
+    confirmButtonText:'Sim, remover',
+    cancelButtonText:'Cancelar',
+    confirmButtonColor:'#D9534F',
+    cancelButtonColor:'#EADFD6'
+  });
+
+  if(!resposta.isConfirmed) return;
+
+  const { error } = await supa
+    .from('fornecedores')
+    .delete()
+    .eq('id', id)
+    .eq('usuario_email', email);
+
+  if(error){
+    Swal.fire({
+      icon:'error',
+      title:'Erro ao remover',
+      text:'Não foi possível remover esse fornecedor.',
+      confirmButtonColor:'#EEABAB'
+    });
+    return;
+  }
+
+  await load();
+}
+
+inputTelefone.addEventListener('input', function(){
+  this.value = this.value.replace(/[^\d\s()+-]/g,'');
 });
 
-if(confirm.isConfirmed){
-await supa.from('fornecedores').delete().eq('id',id);
-load();
-}
-}
+inputTelefone.addEventListener('keypress', function(e){
+  if(e.key === 'Enter') add();
+});
 
-load();
+inputNome.addEventListener('keypress', function(e){
+  if(e.key === 'Enter') inputCategoria.focus();
+});
+
+inputCategoria.addEventListener('keypress', function(e){
+  if(e.key === 'Enter') inputTelefone.focus();
+});
+
+iniciar();
 </script>
 
 </body>

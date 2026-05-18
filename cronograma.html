@@ -7,6 +7,7 @@
 
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" />
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Playfair+Display:wght@700&display=swap" rel="stylesheet">
+
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
@@ -27,7 +28,9 @@
 
 body{
   font-family:'Inter',sans-serif;
-  background:linear-gradient(180deg,#FFF8F3,#FBF6F1);
+  background:
+    radial-gradient(circle at top left, rgba(238,171,171,.25), transparent 30%),
+    linear-gradient(180deg,#FFF8F3,#FBF6F1);
   color:var(--text);
   min-height:100vh;
 }
@@ -146,6 +149,13 @@ input{
   background:var(--cream);
   outline:none;
   font-size:.95rem;
+  color:var(--text);
+}
+
+input:focus{
+  border-color:var(--rose);
+  background:white;
+  box-shadow:0 0 0 4px rgba(238,171,171,.12);
 }
 
 .add{
@@ -156,6 +166,11 @@ input{
   border-radius:16px;
   font-weight:900;
   cursor:pointer;
+}
+
+.add:disabled{
+  opacity:.7;
+  cursor:not-allowed;
 }
 
 .timeline{
@@ -253,7 +268,7 @@ input{
 <body>
 
 <nav>
-  <img src="https://i.ibb.co/YTTQXBx8/Logo-Planeja-Noiva.png" class="nav-logo">
+  <img src="https://vuiqbdqnfnofwkpvvuqy.supabase.co/storage/v1/object/public/logos/logo.png" class="nav-logo" alt="PlanejaNoiva">
   <a href="dashboard.html" class="btn-voltar">
     <span class="material-symbols-outlined">arrow_back</span>
     Painel
@@ -290,7 +305,7 @@ input{
   <div class="form">
     <input type="time" id="hora">
     <input type="text" id="descricao" placeholder="Ex: Entrada da noiva">
-    <button class="add" onclick="add()">Adicionar</button>
+    <button class="add" id="btnAdicionar" onclick="add()">Adicionar</button>
   </div>
 </div>
 
@@ -304,25 +319,53 @@ const supa = supabase.createClient(
   'sb_publishable_LjKm4HF9kyD7m0ch3Eefdw_TJ5SG6w2'
 );
 
-const email = localStorage.getItem('usuario_email');
+let usuarioLogado = null;
+let email = null;
 
-if (!email) {
-  window.location.href = 'index.html';
+const hora = document.getElementById('hora');
+const descricao = document.getElementById('descricao');
+const lista = document.getElementById('lista');
+const btnAdicionar = document.getElementById('btnAdicionar');
+
+async function iniciarCronograma(){
+  const { data, error } = await supa.auth.getSession();
+
+  if(error || !data.session){
+    localStorage.clear();
+    window.location.href = 'index.html';
+    return;
+  }
+
+  usuarioLogado = data.session.user;
+  email = usuarioLogado.email;
+
+  localStorage.setItem('usuario_email', email);
+
+  await load();
+}
+
+function escaparHTML(texto){
+  const div = document.createElement('div');
+  div.innerText = texto || '';
+  return div.innerHTML;
 }
 
 async function load(){
   const { data, error } = await supa
     .from('cronograma')
     .select('*')
-    .eq('usuario_email',email)
-    .order('hora',{ascending:true});
+    .eq('usuario_email', email)
+    .order('hora', { ascending:true });
 
   if(error){
-    Swal.fire("Erro ao carregar cronograma");
+    Swal.fire({
+      icon:'error',
+      title:'Erro ao carregar',
+      text:'Não foi possível carregar o cronograma.',
+      confirmButtonColor:'#EEABAB'
+    });
     return;
   }
-
-  const lista = document.getElementById('lista');
 
   if(!data || data.length === 0){
     lista.innerHTML = `
@@ -333,16 +376,16 @@ async function load(){
     return;
   }
 
-  let html = "";
+  let html = '';
 
-  data.forEach(e=>{
+  data.forEach(e => {
     html += `
       <div class="item">
         <div class="dot"></div>
 
         <div class="content">
-          <span class="time">${e.hora.substring(0,5)}h</span>
-          <span class="desc">${e.descricao}</span>
+          <span class="time">${escaparHTML((e.hora || '').substring(0,5))}h</span>
+          <span class="desc">${escaparHTML(e.descricao)}</span>
 
           <button class="del" onclick="del(${e.id})">
             <span class="material-symbols-outlined">delete</span>
@@ -356,8 +399,8 @@ async function load(){
 }
 
 async function add(){
-  const h = document.getElementById('hora').value;
-  const d = document.getElementById('descricao').value.trim();
+  const h = hora.value;
+  const d = descricao.value.trim();
 
   if(!h || !d){
     Swal.fire({
@@ -369,30 +412,63 @@ async function add(){
     return;
   }
 
-  await supa
+  btnAdicionar.disabled = true;
+  btnAdicionar.innerText = 'Adicionando...';
+
+  const { error } = await supa
     .from('cronograma')
-    .insert([{hora:h, descricao:d, usuario_email:email}]);
+    .insert([{ hora:h, descricao:d, usuario_email:email }]);
 
-  document.getElementById('hora').value = "";
-  document.getElementById('descricao').value = "";
+  btnAdicionar.disabled = false;
+  btnAdicionar.innerText = 'Adicionar';
 
-  load();
+  if(error){
+    Swal.fire({
+      icon:'error',
+      title:'Erro ao adicionar',
+      text:'Não foi possível salvar esse horário.',
+      confirmButtonColor:'#EEABAB'
+    });
+    return;
+  }
+
+  hora.value = '';
+  descricao.value = '';
+
+  await load();
 }
 
 async function del(id){
   const r = await Swal.fire({
     title:'Remover horário?',
+    text:'Esse item sairá do cronograma.',
     icon:'warning',
     showCancelButton:true,
     confirmButtonText:'Sim, remover',
     cancelButtonText:'Cancelar',
-    confirmButtonColor:'#EEABAB'
+    confirmButtonColor:'#D9534F',
+    cancelButtonColor:'#EADFD6'
   });
 
   if(!r.isConfirmed) return;
 
-  await supa.from('cronograma').delete().eq('id',id);
-  load();
+  const { error } = await supa
+    .from('cronograma')
+    .delete()
+    .eq('id', id)
+    .eq('usuario_email', email);
+
+  if(error){
+    Swal.fire({
+      icon:'error',
+      title:'Erro ao remover',
+      text:'Não foi possível apagar esse horário.',
+      confirmButtonColor:'#EEABAB'
+    });
+    return;
+  }
+
+  await load();
 }
 
 function linkPublico(){
@@ -401,14 +477,18 @@ function linkPublico(){
 
 function compartilharWhatsApp(){
   const link = linkPublico();
-  window.open(`https://wa.me/?text=${encodeURIComponent("Veja o cronograma oficial do casamento: " + link)}`,'_blank');
+  window.open(`https://wa.me/?text=${encodeURIComponent("Veja o cronograma oficial do casamento: " + link)}`, '_blank');
 }
 
 function abrirImpressao(){
-  window.open(linkPublico(),'_blank');
+  window.open(linkPublico(), '_blank');
 }
 
-load();
+descricao.addEventListener('keypress', e => {
+  if(e.key === 'Enter') add();
+});
+
+iniciarCronograma();
 </script>
 
 </body>

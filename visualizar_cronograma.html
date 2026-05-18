@@ -3,9 +3,11 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
 <title>Cronograma Oficial | PlanejaNoiva</title>
 
-<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,500;1,400&family=Montserrat:wght@200;400;600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,500;1,400&family=Montserrat:wght@200;400;600;700&display=swap" rel="stylesheet">
+
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
 <style>
@@ -13,9 +15,14 @@
 --cor-tema:#EEABAB;
 --texto:#4A453E;
 --bg:#FDF9F6;
+--border:rgba(0,0,0,.08);
 }
 
-*{margin:0;padding:0;box-sizing:border-box}
+*{
+margin:0;
+padding:0;
+box-sizing:border-box;
+}
 
 body{
 background:var(--bg);
@@ -26,6 +33,7 @@ flex-direction:column;
 align-items:center;
 padding:70px 20px;
 font-family:'Cormorant Garamond',serif;
+overflow-x:hidden;
 }
 
 /* textura */
@@ -34,30 +42,45 @@ content:"";
 position:fixed;
 inset:0;
 background:url("https://www.transparenttextures.com/patterns/natural-paper.png");
-opacity:.4;
+opacity:.35;
+z-index:-1;
+}
+
+/* brilho */
+body::after{
+content:"";
+position:fixed;
+width:500px;
+height:500px;
+border-radius:50%;
+background:radial-gradient(circle,var(--cor-tema),transparent 70%);
+opacity:.08;
+top:-220px;
+right:-180px;
 z-index:-1;
 }
 
 /* HEADER */
 .header{
 text-align:center;
-max-width:700px;
-margin-bottom:60px;
+max-width:760px;
+margin-bottom:70px;
 animation:fade .8s ease;
 }
 
 .logo{
 height:110px;
-margin-bottom:15px;
+margin-bottom:18px;
 mix-blend-mode:multiply;
 }
 
 .names{
-font-size:clamp(2.8rem,7vw,3.8rem);
+font-size:clamp(2.7rem,7vw,4.2rem);
 font-style:italic;
 font-weight:400;
-line-height:1.1;
-margin-bottom:10px;
+line-height:1.08;
+margin-bottom:14px;
+color:var(--cor-tema);
 transition:.4s;
 }
 
@@ -66,109 +89,239 @@ font-family:'Montserrat';
 font-size:.75rem;
 letter-spacing:4px;
 text-transform:uppercase;
-line-height:1.9;
-font-weight:600;
+line-height:2;
+font-weight:700;
 }
 
 .local{
-font-size:.7rem;
-opacity:.6;
+font-size:.72rem;
+opacity:.58;
 letter-spacing:2px;
+margin-top:6px;
+display:block;
 }
 
 .seal{
-width:16px;
-height:16px;
+width:18px;
+height:18px;
 border-radius:50%;
-margin:22px auto;
-border:1px solid rgba(0,0,0,.1);
+margin:24px auto;
+background:var(--cor-tema);
+box-shadow:0 0 0 10px rgba(238,171,171,.10);
 }
 
 .tag{
 font-family:'Montserrat';
-font-size:.65rem;
+font-size:.63rem;
 letter-spacing:5px;
 text-transform:uppercase;
-padding:12px 40px;
-border-top:1px solid rgba(0,0,0,.1);
-border-bottom:1px solid rgba(0,0,0,.1);
+padding:12px 38px;
+border-top:1px solid var(--cor-tema);
+border-bottom:1px solid var(--cor-tema);
 display:inline-block;
-margin-top:10px;
+margin-top:8px;
+font-weight:700;
 }
 
 /* TIMELINE */
 .timeline{
 width:100%;
-max-width:600px;
+max-width:720px;
+position:relative;
+}
+
+.timeline::before{
+content:'';
+position:absolute;
+left:22px;
+top:0;
+bottom:0;
+width:1px;
+background:rgba(0,0,0,.08);
 }
 
 .item{
+position:relative;
+display:flex;
+gap:28px;
+margin-bottom:26px;
+padding-left:65px;
+animation:fadeUp .6s ease;
+}
+
+.dot{
+position:absolute;
+left:12px;
+top:8px;
+width:20px;
+height:20px;
+border-radius:50%;
+background:var(--cor-tema);
+box-shadow:
+0 0 0 7px rgba(238,171,171,.10),
+0 10px 25px rgba(0,0,0,.08);
+}
+
+.content{
+background:rgba(255,255,255,.78);
+backdrop-filter:blur(10px);
+border:1px solid rgba(255,255,255,.6);
+box-shadow:0 15px 40px rgba(0,0,0,.04);
+border-radius:28px;
+padding:24px;
+width:100%;
 display:flex;
 justify-content:space-between;
-align-items:baseline;
-margin-bottom:30px;
-padding-bottom:10px;
-border-bottom:.5px solid rgba(0,0,0,.05);
-animation:fadeUp .6s ease;
+align-items:center;
+gap:20px;
 }
 
 .time{
 font-family:'Montserrat';
-font-size:.95rem;
-font-weight:600;
+font-size:.92rem;
+font-weight:700;
 min-width:90px;
+color:var(--cor-tema);
+letter-spacing:1px;
 }
 
 .desc{
-font-size:1.6rem;
+font-size:1.7rem;
 text-align:right;
 font-style:italic;
+line-height:1.2;
 flex:1;
 }
 
 /* EMPTY */
 .empty{
 text-align:center;
-opacity:.4;
+opacity:.45;
 font-style:italic;
-margin-top:30px;
+margin-top:40px;
+font-size:1.5rem;
 }
 
 /* BOTÃO */
 .btn{
 margin-top:70px;
-background:transparent;
-border:1px solid var(--texto);
-padding:12px 35px;
+background:white;
+border:1px solid var(--border);
+padding:14px 38px;
+border-radius:999px;
 font-family:'Montserrat';
-font-size:.6rem;
+font-size:.62rem;
 letter-spacing:3px;
 text-transform:uppercase;
 cursor:pointer;
-opacity:.5;
 transition:.3s;
+font-weight:700;
+box-shadow:0 10px 25px rgba(0,0,0,.04);
 }
 
 .btn:hover{
-opacity:1;
-background:var(--texto);
+transform:translateY(-2px);
+background:var(--cor-tema);
+border-color:var(--cor-tema);
 color:white;
+}
+
+/* loading */
+.loading{
+font-family:'Montserrat';
+font-size:.8rem;
+letter-spacing:3px;
+text-transform:uppercase;
+opacity:.5;
 }
 
 /* animações */
 @keyframes fade{
-from{opacity:0}
-to{opacity:1}
+from{
+opacity:0;
+transform:translateY(15px);
+}
+to{
+opacity:1;
+transform:translateY(0);
+}
 }
 
 @keyframes fadeUp{
-from{opacity:0;transform:translateY(15px)}
-to{opacity:1;transform:translateY(0)}
+from{
+opacity:0;
+transform:translateY(18px);
+}
+to{
+opacity:1;
+transform:translateY(0);
+}
+}
+
+/* mobile */
+@media(max-width:700px){
+
+body{
+padding:40px 18px;
+}
+
+.logo{
+height:84px;
+}
+
+.names{
+font-size:2.45rem;
+}
+
+.content{
+flex-direction:column;
+align-items:flex-start;
+gap:10px;
+padding:20px;
+}
+
+.desc{
+text-align:left;
+font-size:1.45rem;
+}
+
+.time{
+min-width:auto;
+}
+
+.timeline::before{
+left:14px;
+}
+
+.item{
+padding-left:45px;
+}
+
+.dot{
+left:4px;
+}
 }
 
 @media print{
-.btn{display:none}
-body{padding:30px;background:white}
+
+body{
+padding:30px;
+background:white;
+}
+
+.btn{
+display:none;
+}
+
+.content{
+box-shadow:none;
+border:1px solid #eee;
+}
+
+body::before,
+body::after{
+display:none;
+}
 }
 </style>
 </head>
@@ -179,22 +332,34 @@ body{padding:30px;background:white}
 
 <img src="https://i.ibb.co/YTTQXBx8/Logo-Planeja-Noiva.png" class="logo">
 
-<div class="names" id="nomes">Carregando...</div>
+<div class="names" id="nomes">
+Carregando...
+</div>
 
 <div class="info">
-<span id="dataHora"></span><br>
+<span id="dataHora"></span>
 <span class="local" id="local"></span>
 </div>
 
-<div class="seal" id="selo"></div>
+<div class="seal"></div>
 
-<div class="tag" id="tag">Cronograma Oficial</div>
+<div class="tag">
+Cronograma Oficial
+</div>
 
 </div>
 
-<div class="timeline" id="lista"></div>
+<div class="timeline" id="lista">
 
-<button class="btn" onclick="window.print()">Exportar PDF</button>
+<div class="loading">
+Carregando cronograma...
+</div>
+
+</div>
+
+<button class="btn" onclick="window.print()">
+Exportar PDF
+</button>
 
 <script>
 const supa = supabase.createClient(
@@ -203,16 +368,48 @@ const supa = supabase.createClient(
 );
 
 const params = new URLSearchParams(window.location.search);
-const email = params.get('noiva');
+
+const token = params.get('token');
 
 async function load(){
 
-if(!email){
-document.getElementById('lista').innerHTML = "<p class='empty'>Link inválido</p>";
+const lista = document.getElementById('lista');
+
+if(!token){
+lista.innerHTML = `
+<p class="empty">
+Link inválido
+</p>
+`;
 return;
 }
 
-const { data:user } = await supa.from('usuarios').select('*').eq('email',email).single();
+/* busca token */
+const { data:config, error:configError } = await supa
+.from('mesas_assentos')
+.select('*')
+.eq('public_token', token)
+.single();
+
+if(configError || !config){
+
+lista.innerHTML = `
+<p class="empty">
+Esse link não existe mais
+</p>
+`;
+
+return;
+}
+
+const email = config.usuario_email;
+
+/* usuário */
+const { data:user } = await supa
+.from('usuarios')
+.select('*')
+.eq('email', email)
+.single();
 
 if(user){
 
@@ -220,50 +417,87 @@ document.getElementById('nomes').innerText =
 `${user.nome || 'Noiva'} & ${user.nome_noivo || 'Noivo'}`;
 
 if(user.data_casamento){
+
 const d = new Date(user.data_casamento);
 
 document.getElementById('dataHora').innerText =
-d.toLocaleDateString('pt-BR') + " • " +
-d.toLocaleTimeString('pt-BR',{hour:'2-digit',minute:'2-digit'}) + "h";
+d.toLocaleDateString('pt-BR') +
+' • ' +
+d.toLocaleTimeString('pt-BR',{
+hour:'2-digit',
+minute:'2-digit'
+}) +
+'h';
+
 }
 
 document.getElementById('local').innerText =
-user.local_casamento || "";
+user.local_casamento || '';
 
 if(user.paleta_cores){
-document.documentElement.style.setProperty('--cor-tema',user.paleta_cores);
 
-document.getElementById('nomes').style.color = user.paleta_cores;
-document.getElementById('dataHora').style.color = user.paleta_cores;
-document.getElementById('tag').style.borderColor = user.paleta_cores;
-document.getElementById('selo').style.backgroundColor = user.paleta_cores;
-}
+document.documentElement.style.setProperty(
+'--cor-tema',
+user.paleta_cores
+);
+
 }
 
-const { data:crono } = await supa
+}
+
+/* cronograma */
+const { data:crono, error } = await supa
 .from('cronograma')
 .select('*')
-.eq('usuario_email',email)
-.order('hora',{ascending:true});
+.eq('usuario_email', email)
+.order('hora', { ascending:true });
 
-const lista = document.getElementById('lista');
+if(error){
 
-if(!crono || crono.length===0){
-lista.innerHTML = "<p class='empty'>A definir o roteiro dos sonhos...</p>";
+lista.innerHTML = `
+<p class="empty">
+Erro ao carregar cronograma
+</p>
+`;
+
 return;
 }
 
-let html="";
+if(!crono || crono.length === 0){
 
-crono.forEach(i=>{
+lista.innerHTML = `
+<p class="empty">
+A definir o roteiro dos sonhos...
+</p>
+`;
+
+return;
+}
+
+let html = '';
+
+crono.forEach((item,index)=>{
+
 html += `
-<div class="item">
-<span class="time" style="color:var(--cor-tema)">
-${i.hora.substring(0,5)}h
-</span>
+<div class="item" style="animation-delay:${index * .06}s">
 
-<span class="desc">${i.descricao}</span>
-</div>`;
+<div class="dot"></div>
+
+<div class="content">
+
+<div class="time">
+${item.hora.substring(0,5)}h
+</div>
+
+<div class="desc">
+${item.descricao}
+</div>
+
+</div>
+
+</div>
+`;
+
 });
 
 lista.innerHTML = html;

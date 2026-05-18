@@ -7,7 +7,9 @@
 
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" />
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Playfair+Display:wght@700&display=swap" rel="stylesheet">
+
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
 <style>
 :root{
@@ -16,7 +18,6 @@
   --text:#3F3932;
   --muted:#8F857A;
   --bg:#FBF6F1;
-  --card:#FFFFFF;
   --cream:#FFF9F4;
   --border:#EADFD6;
   --danger:#D9534F;
@@ -130,9 +131,7 @@ nav{
   font-weight:800;
 }
 
-.progress-wrap{
-  margin-top:22px;
-}
+.progress-wrap{margin-top:22px}
 
 .progress-top{
   display:flex;
@@ -187,6 +186,11 @@ nav{
   cursor:pointer;
 }
 
+.add-box button:disabled{
+  opacity:.7;
+  cursor:not-allowed;
+}
+
 .task-list{
   display:flex;
   flex-direction:column;
@@ -223,6 +227,7 @@ nav{
   display:flex;
   align-items:center;
   justify-content:center;
+  flex-shrink:0;
 }
 
 .task-title{
@@ -249,9 +254,7 @@ nav{
   color:#aaa098;
 }
 
-.task.done .task-status{
-  color:var(--rose-dark);
-}
+.task.done .task-status{color:var(--rose-dark)}
 
 .delete-btn{
   border:none;
@@ -264,6 +267,7 @@ nav{
   display:flex;
   align-items:center;
   justify-content:center;
+  flex-shrink:0;
 }
 
 .empty{
@@ -280,6 +284,7 @@ nav{
   .stats{grid-template-columns:1fr}
   .add-box{flex-direction:column}
   .add-box button{padding:15px}
+  .task{align-items:flex-start}
 }
 </style>
 </head>
@@ -287,7 +292,7 @@ nav{
 <body>
 
 <nav>
-  <img src="https://i.ibb.co/YTTQXBx8/Logo-Planeja-Noiva.png" class="nav-logo">
+  <img src="https://vuiqbdqnfnofwkpvvuqy.supabase.co/storage/v1/object/public/logos/logo.png" class="nav-logo" alt="PlanejaNoiva">
   <a href="dashboard.html" class="btn-voltar">
     <span class="material-symbols-outlined">arrow_back</span>
     Painel
@@ -337,7 +342,7 @@ nav{
 
   <div class="add-box">
     <input type="text" id="nova" placeholder="Ex: confirmar horário da maquiagem...">
-    <button onclick="add()">Adicionar</button>
+    <button id="btnAdicionar" onclick="add()">Adicionar</button>
   </div>
 
   <div id="lista" class="task-list"></div>
@@ -350,10 +355,34 @@ const supa = supabase.createClient(
   'sb_publishable_LjKm4HF9kyD7m0ch3Eefdw_TJ5SG6w2'
 );
 
-const email = localStorage.getItem('usuario_email');
+let usuarioLogado = null;
+let email = null;
 
-if (!email) {
-  window.location.href = 'index.html';
+const lista = document.getElementById('lista');
+const nova = document.getElementById('nova');
+const btnAdicionar = document.getElementById('btnAdicionar');
+
+async function iniciarChecklist(){
+  const { data, error } = await supa.auth.getSession();
+
+  if(error || !data.session){
+    localStorage.clear();
+    window.location.href = 'index.html';
+    return;
+  }
+
+  usuarioLogado = data.session.user;
+  email = usuarioLogado.email;
+
+  localStorage.setItem('usuario_email', email);
+
+  await load();
+}
+
+function escaparHTML(texto){
+  const div = document.createElement('div');
+  div.innerText = texto || '';
+  return div.innerHTML;
 }
 
 async function load(){
@@ -363,21 +392,30 @@ async function load(){
     .eq('usuario_email', email)
     .order('id', { ascending:true });
 
-  if (error) {
-    alert("Erro ao carregar checklist. Tente novamente.");
+  if(error){
+    Swal.fire({
+      icon:'error',
+      title:'Erro ao carregar',
+      text:'Não conseguimos carregar seu checklist agora.',
+      confirmButtonColor:'#EEABAB'
+    });
     return;
   }
 
-  if (!data || data.length === 0) {
+  if(!data || data.length === 0){
     await seed();
     return;
   }
 
-  let html = "";
+  renderizar(data);
+}
+
+function renderizar(data){
+  let html = '';
   let done = 0;
 
   data.forEach(t => {
-    if (t.concluida) done++;
+    if(t.concluida) done++;
 
     html += `
       <div class="task ${t.concluida ? 'done' : ''}">
@@ -389,7 +427,7 @@ async function load(){
           </button>
 
           <div>
-            <span class="task-title">${t.tarefa}</span>
+            <span class="task-title">${escaparHTML(t.tarefa)}</span>
             <span class="task-status">${t.concluida ? 'Concluído' : 'Pendente'}</span>
           </div>
         </div>
@@ -401,7 +439,11 @@ async function load(){
     `;
   });
 
-  document.getElementById('lista').innerHTML = html;
+  lista.innerHTML = html || `
+    <div class="empty">
+      Seu checklist ainda está vazio. Adicione o primeiro item para começar.
+    </div>
+  `;
 
   const total = data.length;
   const pendentes = total - done;
@@ -410,69 +452,136 @@ async function load(){
   document.getElementById('totalTarefas').innerText = total;
   document.getElementById('tarefasConcluidas').innerText = done;
   document.getElementById('tarefasPendentes').innerText = pendentes;
-  document.getElementById('percentual').innerText = pct + "%";
-  document.getElementById('progress').style.width = pct + "%";
+  document.getElementById('percentual').innerText = pct + '%';
+  document.getElementById('progress').style.width = pct + '%';
 }
 
 async function add(){
-  const input = document.getElementById('nova');
-  const valor = input.value.trim();
+  const valor = nova.value.trim();
 
-  if (!valor) return;
+  if(!valor){
+    Swal.fire({
+      icon:'warning',
+      title:'Digite uma tarefa',
+      text:'Adicione um item para entrar no checklist.',
+      confirmButtonColor:'#EEABAB'
+    });
+    return;
+  }
 
-  await supa
+  btnAdicionar.disabled = true;
+  btnAdicionar.innerText = 'Adicionando...';
+
+  const { error } = await supa
     .from('checklist')
     .insert([{ tarefa: valor, usuario_email: email, concluida:false }]);
 
-  input.value = "";
-  load();
+  btnAdicionar.disabled = false;
+  btnAdicionar.innerText = 'Adicionar';
+
+  if(error){
+    Swal.fire({
+      icon:'error',
+      title:'Erro ao adicionar',
+      text:'Não foi possível salvar essa tarefa.',
+      confirmButtonColor:'#EEABAB'
+    });
+    return;
+  }
+
+  nova.value = '';
+  await load();
 }
 
 async function del(id){
-  if (!confirm("Remover este item do checklist?")) return;
+  const resultado = await Swal.fire({
+    icon:'warning',
+    title:'Remover item?',
+    text:'Essa tarefa será apagada do checklist.',
+    showCancelButton:true,
+    confirmButtonText:'Sim, remover',
+    cancelButtonText:'Cancelar',
+    confirmButtonColor:'#D9534F',
+    cancelButtonColor:'#EADFD6'
+  });
 
-  await supa
+  if(!resultado.isConfirmed) return;
+
+  const { error } = await supa
     .from('checklist')
     .delete()
-    .eq('id', id);
+    .eq('id', id)
+    .eq('usuario_email', email);
 
-  load();
+  if(error){
+    Swal.fire({
+      icon:'error',
+      title:'Erro ao remover',
+      text:'Não foi possível apagar essa tarefa.',
+      confirmButtonColor:'#EEABAB'
+    });
+    return;
+  }
+
+  await load();
 }
 
 async function toggle(id, atual){
-  await supa
+  const { error } = await supa
     .from('checklist')
     .update({ concluida: !atual })
-    .eq('id', id);
+    .eq('id', id)
+    .eq('usuario_email', email);
 
-  load();
+  if(error){
+    Swal.fire({
+      icon:'error',
+      title:'Erro ao atualizar',
+      text:'Não foi possível alterar o status da tarefa.',
+      confirmButtonColor:'#EEABAB'
+    });
+    return;
+  }
+
+  await load();
 }
 
-document.getElementById('nova').addEventListener("keypress", function(e){
-  if(e.key === "Enter") add();
+nova.addEventListener('keypress', function(e){
+  if(e.key === 'Enter') add();
 });
 
 async function seed(){
   const tarefasIniciais = [
-    { tarefa:"💍 Definir data oficial do casamento", usuario_email:email, concluida:false },
-    { tarefa:"🏛️ Reservar local da cerimônia e recepção", usuario_email:email, concluida:false },
-    { tarefa:"🍽️ Fechar buffet", usuario_email:email, concluida:false },
-    { tarefa:"📸 Contratar fotografia e filmagem", usuario_email:email, concluida:false },
-    { tarefa:"👗 Escolher vestido da noiva", usuario_email:email, concluida:false },
-    { tarefa:"🎵 Definir música da cerimônia e festa", usuario_email:email, concluida:false },
-    { tarefa:"💐 Escolher decoração e flores", usuario_email:email, concluida:false },
-    { tarefa:"💌 Enviar convites", usuario_email:email, concluida:false },
-    { tarefa:"🪑 Organizar lista de convidados", usuario_email:email, concluida:false },
-    { tarefa:"🎂 Escolher bolo e doces", usuario_email:email, concluida:false },
-    { tarefa:"🧾 Revisar orçamento final", usuario_email:email, concluida:false },
-    { tarefa:"🕰️ Montar cronograma do grande dia", usuario_email:email, concluida:false }
-  ];
+    '💍 Definir data oficial do casamento',
+    '🏛️ Reservar local da cerimônia e recepção',
+    '🍽️ Fechar buffet',
+    '📸 Contratar fotografia e filmagem',
+    '👗 Escolher vestido da noiva',
+    '🎵 Definir música da cerimônia e festa',
+    '💐 Escolher decoração e flores',
+    '💌 Enviar convites',
+    '🪑 Organizar lista de convidados',
+    '🎂 Escolher bolo e doces',
+    '🧾 Revisar orçamento final',
+    '🕰️ Montar cronograma do grande dia'
+  ].map(tarefa => ({
+    tarefa,
+    usuario_email: email,
+    concluida: false
+  }));
 
-  await supa.from('checklist').insert(tarefasIniciais);
-  load();
+  const { error } = await supa.from('checklist').insert(tarefasIniciais);
+
+  if(error){
+    console.log('Erro ao criar checklist inicial:', error);
+    renderizar([]);
+    return;
+  }
+
+  await load();
 }
 
-load();
+iniciarChecklist();
 </script>
 
 </body>

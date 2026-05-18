@@ -3,10 +3,13 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
 <title>Mapa de Assentos | PlanejaNoiva</title>
 
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" />
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&family=Playfair+Display:wght@700&display=swap" rel="stylesheet">
+
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Playfair+Display:wght@700&display=swap" rel="stylesheet">
+
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
@@ -16,32 +19,48 @@
   --rose-dark:#D98F8F;
   --text:#3F3932;
   --muted:#8F857A;
+  --bg:#FBF6F1;
   --cream:#FFF9F4;
   --border:#EADFD6;
   --shadow:0 18px 50px rgba(63,57,50,.08);
 }
 
-*{margin:0;padding:0;box-sizing:border-box}
+*{
+  margin:0;
+  padding:0;
+  box-sizing:border-box;
+}
 
 body{
   font-family:'Inter',sans-serif;
-  background:linear-gradient(180deg,#FFF8F3,#FBF6F1);
+  background:
+    radial-gradient(circle at top left, rgba(238,171,171,.22), transparent 30%),
+    linear-gradient(180deg,#FFF8F3,#FBF6F1);
   color:var(--text);
   min-height:100vh;
 }
+
+/* NAV */
 
 nav{
   height:76px;
   background:rgba(255,255,255,.9);
   backdrop-filter:blur(16px);
+  border-bottom:1px solid var(--border);
   display:flex;
   align-items:center;
   justify-content:center;
-  padding:0 5%;
-  border-bottom:1px solid var(--border);
+  position:sticky;
+  top:0;
+  z-index:50;
 }
 
-.logo{height:46px;mix-blend-mode:multiply}
+.logo{
+  height:46px;
+  mix-blend-mode:multiply;
+}
+
+/* CONTAINER */
 
 .container{
   max-width:1180px;
@@ -49,17 +68,40 @@ nav{
   padding:0 20px 60px;
 }
 
-.hero,.mesa,.empty,.mapa-box{
-  background:white;
-  border:1px solid var(--border);
-  box-shadow:var(--shadow);
-}
+/* HERO */
 
 .hero{
+  background:white;
+  border:1px solid var(--border);
   border-radius:34px;
-  padding:36px;
-  margin-bottom:24px;
+  padding:38px;
+  box-shadow:var(--shadow);
   text-align:center;
+  margin-bottom:24px;
+  position:relative;
+  overflow:hidden;
+}
+
+.hero::before{
+  content:'';
+  position:absolute;
+  width:240px;
+  height:240px;
+  border-radius:50%;
+  background:rgba(238,171,171,.12);
+  top:-120px;
+  right:-100px;
+}
+
+.hero::after{
+  content:'';
+  position:absolute;
+  width:180px;
+  height:180px;
+  border-radius:50%;
+  background:rgba(238,171,171,.08);
+  bottom:-90px;
+  left:-80px;
 }
 
 .badge{
@@ -67,107 +109,127 @@ nav{
   align-items:center;
   gap:8px;
   background:var(--cream);
-  color:var(--rose-dark);
   border:1px solid var(--border);
-  padding:9px 13px;
+  color:var(--rose-dark);
+  padding:9px 14px;
   border-radius:999px;
   font-size:.82rem;
   font-weight:900;
-  margin-bottom:16px;
+  margin-bottom:18px;
+  position:relative;
+  z-index:2;
 }
 
-h1{
+.hero h1{
   font-family:'Playfair Display',serif;
-  font-size:2.55rem;
+  font-size:2.8rem;
   line-height:1.05;
+  position:relative;
+  z-index:2;
 }
 
 .hero p{
   color:var(--muted);
+  margin-top:14px;
   line-height:1.7;
-  margin-top:12px;
+  max-width:700px;
+  margin-inline:auto;
+  position:relative;
+  z-index:2;
 }
 
+/* MAPA */
+
 .mapa-box{
-  border-radius:28px;
-  padding:22px;
-  margin-bottom:22px;
+  background:white;
+  border:1px solid var(--border);
+  border-radius:30px;
+  padding:24px;
+  box-shadow:var(--shadow);
+  margin-bottom:26px;
 }
 
 .config-title{
+  font-size:1.1rem;
   font-weight:900;
-  margin-bottom:8px;
+  margin-bottom:6px;
 }
 
 .config-subtitle{
   color:var(--muted);
-  font-size:.9rem;
-  margin-bottom:16px;
-  line-height:1.5;
+  line-height:1.6;
+  margin-bottom:18px;
+  font-size:.92rem;
 }
 
 .mapa-visual{
   position:relative;
-  height:460px;
+  height:520px;
   border:2px dashed var(--border);
-  border-radius:24px;
+  border-radius:28px;
+  overflow:hidden;
   background:
     linear-gradient(90deg,rgba(234,223,214,.45) 1px,transparent 1px),
     linear-gradient(rgba(234,223,214,.45) 1px,transparent 1px),
     #fff;
   background-size:28px 28px;
-  overflow:hidden;
 }
 
 .mesa-movel{
   position:absolute;
-  width:118px;
-  height:118px;
-  background:var(--cream);
-  border:2px solid var(--border);
+  width:120px;
+  height:120px;
   border-radius:50%;
+  background:white;
+  border:3px solid var(--rose);
   display:flex;
   flex-direction:column;
   align-items:center;
   justify-content:center;
-  font-weight:900;
   text-align:center;
-  padding:12px;
-  box-shadow:0 12px 30px rgba(63,57,50,.08);
+  padding:10px;
+  box-shadow:0 12px 28px rgba(63,57,50,.12);
 }
 
 .mesa-movel strong{
-  color:var(--rose-dark);
   font-size:.92rem;
+  color:var(--text);
 }
 
 .mesa-movel span{
+  margin-top:6px;
   color:var(--muted);
   font-size:.78rem;
-  margin-top:5px;
+  font-weight:800;
 }
+
+/* LISTA */
 
 .mesas{
   display:grid;
-  grid-template-columns:repeat(auto-fit,minmax(300px,1fr));
+  grid-template-columns:repeat(auto-fit,minmax(320px,1fr));
   gap:18px;
 }
 
 .mesa{
+  background:white;
+  border:1px solid var(--border);
   border-radius:28px;
   padding:22px;
+  box-shadow:0 10px 28px rgba(63,57,50,.05);
 }
 
 .mesa h3{
   display:flex;
   align-items:center;
   justify-content:space-between;
-  margin-bottom:14px;
+  margin-bottom:16px;
+  font-size:1.1rem;
 }
 
 .mesa h3 span{
   color:var(--rose-dark);
-  font-size:.95rem;
+  font-size:.9rem;
 }
 
 .pessoa{
@@ -178,36 +240,93 @@ h1{
   margin-bottom:10px;
 }
 
-.pessoa strong{display:block}
+.pessoa strong{
+  display:block;
+  line-height:1.4;
+}
 
 .pessoa small{
-  color:var(--muted);
   display:block;
-  margin-top:3px;
+  margin-top:4px;
+  color:var(--muted);
 }
 
 .tag{
   display:inline-block;
-  margin-top:7px;
-  padding:5px 9px;
+  margin-top:8px;
+  padding:5px 10px;
   border-radius:999px;
-  font-size:.72rem;
-  font-weight:900;
   background:white;
   border:1px solid var(--border);
   color:var(--rose-dark);
+  font-size:.72rem;
+  font-weight:900;
 }
 
 .empty{
+  background:white;
+  border:1px dashed var(--border);
   border-radius:24px;
-  padding:26px;
+  padding:28px;
   text-align:center;
   color:var(--muted);
-  border-style:dashed;
 }
 
+/* FOOTER */
+
+.footer{
+  margin-top:40px;
+  text-align:center;
+  color:var(--muted);
+  font-size:.82rem;
+}
+
+/* RESPONSIVO */
+
 @media(max-width:900px){
-  h1{font-size:2.1rem}
+
+  .hero h1{
+    font-size:2.15rem;
+  }
+
+  .mapa-visual{
+    height:420px;
+  }
+
+  .mesa-movel{
+    width:95px;
+    height:95px;
+    font-size:.78rem;
+  }
+}
+
+@media(max-width:600px){
+
+  .hero{
+    padding:28px;
+  }
+
+  .hero h1{
+    font-size:1.9rem;
+  }
+
+  .mapa-visual{
+    height:360px;
+  }
+
+  .mesa-movel{
+    width:82px;
+    height:82px;
+    padding:6px;
+  }
+
+  .mesa-movel strong{
+    font-size:.7rem;
+  }
+
+  .mesa-movel span{
+    font-size:.62rem;
+  }
 }
 </style>
 </head>
@@ -215,34 +334,47 @@ h1{
 <body>
 
 <nav>
-  <img src="https://i.ibb.co/YTTQXBx8/Logo-Planeja-Noiva.png" class="logo">
+  <img
+    src="https://i.ibb.co/YTTQXBx8/Logo-Planeja-Noiva.png"
+    class="logo">
 </nav>
 
 <div class="container">
 
 <section class="hero">
+
   <div class="badge">
     <span class="material-symbols-outlined">event_seat</span>
-    Mapa público de assentos
+    Mapa oficial do evento
   </div>
 
-  <h1>Confira sua mesa no evento.</h1>
+  <h1>Confira sua mesa no grande dia ✨</h1>
 
   <p>
-    Visualização pública da organização de mesas e convidados.
+    Aqui você pode visualizar a organização oficial das mesas e convidados preparada pelos noivos.
   </p>
+
 </section>
 
 <div class="mapa-box">
-  <div class="config-title">Mapa visual do salão</div>
+
+  <div class="config-title">
+    Mapa visual do salão
+  </div>
+
   <div class="config-subtitle">
-    Veja a posição das mesas conforme a organização salva pelos noivos.
+    Visualize as mesas e a disposição do salão conforme definido no PlanejaNoiva.
   </div>
 
   <div id="mapaSalao" class="mapa-visual"></div>
+
 </div>
 
 <div id="lista" class="mesas"></div>
+
+<div class="footer">
+  PlanejaNoiva • Organização elegante para o grande dia 💍
+</div>
 
 </div>
 
@@ -253,128 +385,176 @@ const supa = supabase.createClient(
 );
 
 const params = new URLSearchParams(window.location.search);
+
 const token = params.get('token');
 
-function nomeMesaPorLayout(i, layout){
-  if(layout === 'familia'){
-    return i === 1 ? 'Família dos Noivos' : 'Família ' + i;
-  }
-
-  if(layout === 'premium'){
-    return 'VIP ' + i;
-  }
-
-  return 'Mesa ' + i;
-}
-
 function formatarTipo(tipo){
+
   if(tipo === 'vip') return '👑 VIP';
   if(tipo === 'familia') return '👨‍👩‍👧 Família';
   if(tipo === 'padrinho') return '🤵 Padrinho';
   if(tipo === 'amigo') return '🎉 Amigo';
+
   return '';
 }
 
-function criarGrupos(data, config){
-  const grupos = {};
+function escapar(texto){
 
-  for(let i = 1; i <= config.quantidade_mesas; i++){
-    grupos[nomeMesaPorLayout(i, config.tipo_layout)] = [];
-  }
-
-  (data || []).forEach(item => {
-    if(!grupos[item.mesa]) grupos[item.mesa] = [];
-    grupos[item.mesa].push(item);
-  });
-
-  return grupos;
+  return String(texto || '').replace(/[&<>"']/g, s => ({
+    '&':'&amp;',
+    '<':'&lt;',
+    '>':'&gt;',
+    '"':'&quot;',
+    "'":'&#039;'
+  }[s]));
 }
 
 async function carregarPublico(){
+
   if(!token){
+
     document.getElementById('lista').innerHTML = `
-      <div class="empty">Link público inválido.</div>
+      <div class="empty">
+        Link público inválido.
+      </div>
     `;
+
     return;
   }
 
-  const { data: config, error: configError } = await supa
+  const { data:config } = await supa
     .from('mesas_assentos')
     .select('*')
     .eq('public_token', token)
     .maybeSingle();
 
-  if(configError || !config){
+  if(!config){
+
     document.getElementById('lista').innerHTML = `
-      <div class="empty">Mapa não encontrado ou link inválido.</div>
+      <div class="empty">
+        Mapa não encontrado.
+      </div>
     `;
+
     return;
   }
 
-  const { data: assentos, error: assentosError } = await supa
+  const email = config.usuario_email;
+
+  const { data:mesas } = await supa
+    .from('mesas_personalizadas')
+    .select('*')
+    .eq('usuario_email', email)
+    .order('created_at', { ascending:true });
+
+  const { data:assentos } = await supa
     .from('assentos')
     .select('*')
-    .eq('usuario_email', config.usuario_email)
+    .eq('usuario_email', email)
     .order('mesa', { ascending:true });
 
-  if(assentosError){
-    Swal.fire('Erro ao carregar convidados', assentosError.message, 'error');
+  renderizarPublico(
+    mesas || [],
+    assentos || []
+  );
+}
+
+function renderizarPublico(mesas, assentos){
+
+  const lista =
+    document.getElementById('lista');
+
+  const mapa =
+    document.getElementById('mapaSalao');
+
+  lista.innerHTML = '';
+  mapa.innerHTML = '';
+
+  if(!mesas.length){
+
+    lista.innerHTML = `
+      <div class="empty">
+        Nenhuma mesa disponível no momento.
+      </div>
+    `;
+
     return;
   }
 
-  renderizarPublico(assentos || [], config);
-}
+  mesas.forEach((mesa, i) => {
 
-function renderizarPublico(data, config){
-  const lista = document.getElementById('lista');
-  const mapa = document.getElementById('mapaSalao');
-  const grupos = criarGrupos(data, config);
-  const nomesMesas = Object.keys(grupos);
-  const capacidade = config.cadeiras_por_mesa || 8;
-  const posicoes = config.posicoes_mesas || {};
+    const pessoas =
+      assentos.filter(p => p.mesa === mesa.nome);
 
-  mapa.innerHTML = "";
-  lista.innerHTML = "";
-
-  nomesMesas.forEach((mesa, i) => {
-    const pessoas = grupos[mesa] || [];
     const ocupadas = pessoas.length;
 
-    const pos = posicoes[mesa] || {
-      left: 35 + ((i % 6) * 145),
-      top: 35 + (Math.floor(i / 6) * 145)
-    };
+    mapa.innerHTML += `
+      <div
+        class="mesa-movel"
+        style="
+          left:${mesa.posicao_x || 35}px;
+          top:${mesa.posicao_y || 35}px;
+          border-color:${mesa.cor || '#EEABAB'};
+        ">
 
-    const div = document.createElement('div');
-    div.className = 'mesa-movel';
-    div.style.left = pos.left + 'px';
-    div.style.top = pos.top + 'px';
-    div.innerHTML = `<strong>${mesa}</strong><span>${ocupadas}/${capacidade}</span>`;
-    mapa.appendChild(div);
+        <strong>
+          ${escapar(mesa.nome)}
+        </strong>
+
+        <span>
+          ${ocupadas}/${mesa.capacidade}
+        </span>
+
+      </div>
+    `;
 
     let html = `
       <div class="mesa">
+
         <h3>
-          ${mesa}
-          <span>${ocupadas}/${capacidade}</span>
+          ${escapar(mesa.nome)}
+
+          <span>
+            ${ocupadas}/${mesa.capacidade}
+          </span>
+
         </h3>
     `;
 
-    if(pessoas.length === 0){
-      html += `<div class="empty">mesa disponível</div>`;
+    if(!pessoas.length){
+
+      html += `
+        <div class="empty">
+          Mesa disponível
+        </div>
+      `;
     }
 
     pessoas.forEach(p => {
+
       html += `
         <div class="pessoa">
-          <strong>${p.nome || 'Sem nome'}</strong>
-          <small>${p.observacao || 'Sem observação'}</small>
-          ${p.tipo ? `<div class="tag">${formatarTipo(p.tipo)}</div>` : ''}
+
+          <strong>
+            ${escapar(p.nome)}
+          </strong>
+
+          <small>
+            ${escapar(p.observacao || 'Sem observação')}
+          </small>
+
+          ${
+            p.tipo
+            ? `<div class="tag">${formatarTipo(p.tipo)}</div>`
+            : ''
+          }
+
         </div>
       `;
     });
 
     html += `</div>`;
+
     lista.innerHTML += html;
   });
 }

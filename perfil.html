@@ -6,7 +6,8 @@
 
 <title>Minha Identidade | PlanejaNoiva</title>
 
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&family=Playfair+Display:wght@700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" />
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Playfair+Display:wght@700&display=swap" rel="stylesheet">
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
@@ -14,137 +15,180 @@
 <style>
 :root{
 --rose:#EEABAB;
+--rose-dark:#D98F8F;
 --text:#3F3932;
 --muted:#8F857A;
 --bg:#FBF6F1;
+--cream:#FFF9F4;
+--border:#EADFD6;
 --gold:#D4AF37;
+--shadow:0 20px 60px rgba(63,57,50,.08);
 }
 
-*{margin:0;padding:0;box-sizing:border-box;font-family:'Inter'}
+*{
+margin:0;
+padding:0;
+box-sizing:border-box;
+font-family:'Inter',sans-serif;
+}
 
 body{
-background:linear-gradient(180deg,#FFF8F3,#FBF6F1);
+min-height:100vh;
+background:
+radial-gradient(circle at top left, rgba(238,171,171,.24), transparent 32%),
+linear-gradient(180deg,#FFF8F3,#FBF6F1);
 color:var(--text);
 }
 
-/* NAV */
 nav{
-background:white;
-padding:15px 5%;
+height:76px;
+background:rgba(255,255,255,.84);
+backdrop-filter:blur(16px);
+padding:0 5%;
 display:flex;
 justify-content:space-between;
 align-items:center;
-box-shadow:0 5px 20px rgba(0,0,0,.05);
+border-bottom:1px solid rgba(234,223,214,.75);
 position:sticky;
 top:0;
 z-index:100;
 }
 
-nav img{height:40px}
+nav img{
+height:46px;
+mix-blend-mode:multiply;
+}
 
 .voltar{
-color:var(--rose);
-font-weight:700;
+color:var(--rose-dark);
+font-weight:800;
 text-decoration:none;
+background:white;
+border:1px solid var(--border);
+padding:11px 15px;
+border-radius:14px;
 }
 
-/* CONTAINER */
 .container{
-max-width:750px;
-margin:50px auto;
-padding:20px;
+max-width:820px;
+margin:42px auto;
+padding:0 20px 60px;
+animation:fade .6s ease;
 }
 
-/* HEADER */
 header{
 text-align:center;
-margin-bottom:35px;
+margin-bottom:32px;
 }
 
 header h1{
-font-family:'Playfair Display';
-font-size:2rem;
+font-family:'Playfair Display',serif;
+font-size:2.35rem;
+line-height:1.1;
 }
 
 header p{
 color:var(--muted);
-margin-top:5px;
+margin-top:8px;
+line-height:1.6;
 }
 
-/* CARD */
 .card{
-background:white;
+background:rgba(255,255,255,.92);
 padding:30px;
-border-radius:25px;
-margin-bottom:25px;
-box-shadow:0 15px 40px rgba(0,0,0,.05);
-transition:.3s;
+border-radius:28px;
+margin-bottom:24px;
+border:1px solid rgba(234,223,214,.85);
+box-shadow:0 14px 38px rgba(63,57,50,.055);
+transition:.25s;
 }
 
 .card:hover{
 transform:translateY(-3px);
+box-shadow:var(--shadow);
 }
 
-/* TITULO */
 .title{
-font-size:.75rem;
-font-weight:700;
-letter-spacing:2px;
+display:flex;
+align-items:center;
+gap:8px;
+font-size:.76rem;
+font-weight:900;
+letter-spacing:1.8px;
 text-transform:uppercase;
-color:var(--rose);
-margin-bottom:20px;
+color:var(--rose-dark);
+margin-bottom:22px;
 }
 
-/* FORM */
 .grid{
 display:grid;
 grid-template-columns:1fr 1fr;
-gap:15px;
+gap:17px;
 }
 
-.full{grid-column:span 2;}
+.full{
+grid-column:span 2;
+}
 
 label{
-font-size:.7rem;
-font-weight:700;
+font-size:.72rem;
+font-weight:800;
 color:var(--muted);
+text-transform:uppercase;
+letter-spacing:.45px;
+margin-bottom:7px;
+display:block;
 }
 
 input{
 width:100%;
-padding:14px;
-border-radius:12px;
-border:1px solid #EADFD6;
+padding:15px 16px;
+border-radius:14px;
+border:1px solid var(--border);
 background:#FCF9F5;
 outline:none;
-transition:.3s;
+transition:.25s;
+font-size:.95rem;
+color:var(--text);
 }
 
 input:focus{
 border-color:var(--rose);
 background:white;
+box-shadow:0 0 0 4px rgba(238,171,171,.12);
 }
 
-/* COR */
+input:disabled{
+opacity:.65;
+cursor:not-allowed;
+}
+
 .color-box{
 text-align:center;
-padding:20px 0;
+padding:22px 0 28px;
+background:var(--cream);
+border:1px dashed rgba(238,171,171,.55);
+border-radius:22px;
+margin-bottom:22px;
 }
 
 .circle{
-width:90px;
-height:90px;
+width:92px;
+height:92px;
 border-radius:50%;
 margin:15px auto;
-border:3px solid var(--gold);
-box-shadow:0 10px 25px rgba(0,0,0,.1);
+border:4px solid rgba(212,175,55,.72);
+box-shadow:
+0 12px 28px rgba(238,171,171,.22),
+inset 0 2px 7px rgba(255,255,255,.5);
 position:relative;
 cursor:pointer;
-transition:.4s;
+transition:.3s;
+background:var(--rose);
 }
 
 .circle:hover{
-transform:scale(1.08);
+transform:scale(1.06);
 }
 
 .circle input{
@@ -154,31 +198,72 @@ opacity:0;
 cursor:pointer;
 }
 
-/* BOTÃO */
+.hint{
+color:#A1968A;
+font-size:.82rem;
+}
+
 .btn{
 width:100%;
 padding:18px;
 border:none;
-background:var(--rose);
+background:linear-gradient(135deg,var(--rose),var(--rose-dark));
 color:white;
-font-weight:700;
-border-radius:15px;
+font-weight:900;
+border-radius:17px;
 cursor:pointer;
-transition:.4s;
+transition:.3s;
 font-size:1rem;
+box-shadow:0 14px 28px rgba(238,171,171,.34);
 }
 
 .btn:hover{
 transform:translateY(-2px);
-box-shadow:0 15px 25px rgba(238,171,171,.4);
+box-shadow:0 18px 34px rgba(238,171,171,.42);
 }
 
-/* ANIMAÇÃO */
-.container{animation:fade .6s ease}
+.btn:disabled{
+opacity:.72;
+cursor:not-allowed;
+transform:none;
+}
+
+@media(max-width:650px){
+nav{
+padding:0 18px;
+}
+
+.container{
+margin-top:30px;
+}
+
+header h1{
+font-size:1.9rem;
+}
+
+.card{
+padding:24px 20px;
+border-radius:24px;
+}
+
+.grid{
+grid-template-columns:1fr;
+}
+
+.full{
+grid-column:span 1;
+}
+}
 
 @keyframes fade{
-from{opacity:0;transform:translateY(20px);}
-to{opacity:1;transform:translateY(0);}
+from{
+opacity:0;
+transform:translateY(20px);
+}
+to{
+opacity:1;
+transform:translateY(0);
+}
 }
 </style>
 </head>
@@ -186,7 +271,7 @@ to{opacity:1;transform:translateY(0);}
 <body>
 
 <nav>
-<img src="https://i.ibb.co/YTTQXBx8/Logo-Planeja-Noiva.png">
+<img src="https://vuiqbdqnfnofwkpvvuqy.supabase.co/storage/v1/object/public/logos/logo.png" alt="PlanejaNoiva">
 <a href="dashboard.html" class="voltar">← Painel</a>
 </nav>
 
@@ -194,64 +279,67 @@ to{opacity:1;transform:translateY(0);}
 
 <header>
 <h1>Sua Identidade 💍</h1>
-<p>Defina os detalhes que vão dar alma ao seu casamento</p>
+<p>Defina os detalhes que dão alma, cor e direção ao seu casamento.</p>
 </header>
 
-<!-- DADOS -->
 <div class="card">
-<div class="title">Dados da Noiva</div>
+<div class="title">
+<span class="material-symbols-outlined">person</span>
+Dados da Noiva
+</div>
 
 <div class="grid">
 
 <div class="full">
-<label>Seu nome</label>
-<input id="nome">
+<label for="nome">Seu nome</label>
+<input id="nome" placeholder="Ex: Gabriey Moura">
 </div>
 
 <div class="full">
-<label>Email</label>
-<input id="email" disabled style="opacity:.6">
+<label for="email">Email</label>
+<input id="email" disabled>
 </div>
 
 </div>
 </div>
 
-<!-- IDENTIDADE -->
 <div class="card">
-<div class="title">Identidade do casamento</div>
+<div class="title">
+<span class="material-symbols-outlined">favorite</span>
+Identidade do casamento
+</div>
 
 <div class="color-box">
 <label>Cor principal</label>
 
 <div class="circle" id="preview">
-<input type="color" id="cor"
-oninput="preview.style.backgroundColor=this.value">
+<input type="color" id="cor" value="#EEABAB">
 </div>
 
-<small style="color:#aaa">Escolha o tom do seu grande dia</small>
+<div class="hint">Escolha o tom visual do seu grande dia.</div>
 </div>
 
 <div class="grid">
 
 <div class="full">
-<label>Nome do noivo</label>
-<input id="noivo">
+<label for="noivo">Nome do noivo</label>
+<input id="noivo" placeholder="Ex: Junior">
 </div>
 
 <div>
-<label>Data</label>
+<label for="data">Data</label>
 <input type="datetime-local" id="data">
 </div>
 
 <div>
-<label>Local</label>
-<input id="local">
+<label for="local">Local</label>
+<input id="local" placeholder="Ex: Goiânia - GO">
 </div>
 
 </div>
 </div>
 
-<button class="btn" onclick="salvar()">Salvar identidade ✨</button>
+<button class="btn" id="btnSalvar" onclick="salvar()">Salvar identidade ✨</button>
 
 </div>
 
@@ -261,84 +349,120 @@ const supa = supabase.createClient(
 'sb_publishable_LjKm4HF9kyD7m0ch3Eefdw_TJ5SG6w2'
 );
 
-const email = localStorage.getItem('usuario_email');
+let usuarioLogado = null;
 
-/* LOAD */
-async function carregar(){
+const nome = document.getElementById('nome');
+const emailInput = document.getElementById('email');
+const noivo = document.getElementById('noivo');
+const dataInput = document.getElementById('data');
+const localInput = document.getElementById('local');
+const cor = document.getElementById('cor');
+const preview = document.getElementById('preview');
+const btnSalvar = document.getElementById('btnSalvar');
 
-if(!email) return;
+cor.addEventListener('input', function(){
+preview.style.backgroundColor = this.value;
+});
 
-const { data } = await supa
-.from('usuarios')
-.select('*')
-.eq('email',email)
-.single();
+async function iniciar(){
+const { data, error } = await supa.auth.getSession();
 
-if(data){
-nome.value=data.nome||"";
-noivo.value=data.nome_noivo||"";
-local.value=data.local_casamento||"";
-emailInput=data.email;
-
-document.getElementById('email').value=data.email;
-
-if(data.data_casamento){
-dataInput=data.data_casamento.substring(0,16);
-document.getElementById('data').value=dataInput;
-}
-
-if(data.paleta_cores){
-cor.value=data.paleta_cores;
-preview.style.backgroundColor=data.paleta_cores;
-}
-}
-
-}
-
-/* SAVE */
-async function salvar(){
-
-if(!nome.value){
-Swal.fire("Seu nome é obrigatório");
+if(error || !data.session){
+localStorage.clear();
+window.location.href = 'index.html';
 return;
 }
 
-/* loading premium */
+usuarioLogado = data.session.user;
+localStorage.setItem('usuario_email', usuarioLogado.email);
+
+await carregar();
+}
+
+async function carregar(){
+const { data, error } = await supa
+.from('usuarios')
+.select('*')
+.eq('id', usuarioLogado.id)
+.single();
+
+if(error){
+console.log('Erro ao carregar perfil:', error);
+return;
+}
+
+if(data){
+nome.value = data.nome || '';
+emailInput.value = data.email || usuarioLogado.email || '';
+noivo.value = data.nome_noivo || '';
+localInput.value = data.local_casamento || '';
+
+if(data.data_casamento){
+dataInput.value = data.data_casamento.substring(0,16);
+}
+
+if(data.paleta_cores){
+cor.value = data.paleta_cores;
+preview.style.backgroundColor = data.paleta_cores;
+}
+}
+}
+
+async function salvar(){
+const nomeValor = nome.value.trim();
+const noivoValor = noivo.value.trim();
+const localValor = localInput.value.trim();
+const corValor = cor.value;
+const dataValor = dataInput.value || null;
+
+if(!nomeValor){
 Swal.fire({
-title:"Salvando...",
-allowOutsideClick:false,
-didOpen:()=>Swal.showLoading()
+icon:'warning',
+title:'Nome obrigatório',
+text:'Informe seu nome para salvar sua identidade.',
+confirmButtonColor:'#EEABAB'
 });
+return;
+}
+
+btnSalvar.disabled = true;
+btnSalvar.innerText = 'Salvando...';
 
 const { error } = await supa
 .from('usuarios')
 .update({
-nome:nome.value,
-nome_noivo:noivo.value,
-data_casamento:data.value,
-local_casamento:local.value,
-paleta_cores:cor.value
+nome:nomeValor,
+nome_noivo:noivoValor,
+data_casamento:dataValor,
+local_casamento:localValor,
+paleta_cores:corValor
 })
-.eq('email',email);
+.eq('id', usuarioLogado.id);
 
-if(!error){
+btnSalvar.disabled = false;
+btnSalvar.innerText = 'Salvar identidade ✨';
 
-localStorage.setItem('usuario_nome',nome.value);
+if(error){
+Swal.fire({
+icon:'error',
+title:'Erro ao salvar',
+text:'Não foi possível atualizar sua identidade agora.',
+confirmButtonColor:'#EEABAB'
+});
+return;
+}
+
+localStorage.setItem('usuario_nome', nomeValor);
 
 Swal.fire({
 icon:'success',
-title:'Atualizado 💍',
-text:'Seu casamento já está refletindo isso!',
+title:'Identidade atualizada 💍',
+text:'Seu casamento já está refletindo essas escolhas.',
 confirmButtonColor:'#EEABAB'
 });
-
-}else{
-Swal.fire("Erro ao salvar");
 }
 
-}
-
-carregar();
+iniciar();
 </script>
 
 </body>

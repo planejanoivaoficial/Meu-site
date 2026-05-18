@@ -7,6 +7,7 @@
 
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" />
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Playfair+Display:wght@700&display=swap" rel="stylesheet">
+
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
@@ -27,7 +28,9 @@
 
 body{
   font-family:'Inter',sans-serif;
-  background:linear-gradient(180deg,#FFF8F3,#FBF6F1);
+  background:
+    radial-gradient(circle at top left, rgba(238,171,171,.25), transparent 30%),
+    linear-gradient(180deg,#FFF8F3,#FBF6F1);
   color:var(--text);
   min-height:100vh;
 }
@@ -147,6 +150,13 @@ nav{
   background:var(--cream);
   outline:none;
   font-size:1rem;
+  color:var(--text);
+}
+
+.add-box input:focus{
+  border-color:var(--rose);
+  background:white;
+  box-shadow:0 0 0 4px rgba(238,171,171,.12);
 }
 
 .add-box button{
@@ -157,6 +167,11 @@ nav{
   border-radius:16px;
   font-weight:900;
   cursor:pointer;
+}
+
+.add-box button:disabled{
+  opacity:.7;
+  cursor:not-allowed;
 }
 
 .guest-list{
@@ -193,11 +208,13 @@ nav{
   align-items:center;
   justify-content:center;
   font-weight:900;
+  flex-shrink:0;
 }
 
 .guest-name{
   font-weight:900;
   display:block;
+  line-height:1.35;
 }
 
 .status{
@@ -269,7 +286,7 @@ nav{
 <body>
 
 <nav>
-  <img src="https://i.ibb.co/YTTQXBx8/Logo-Planeja-Noiva.png" class="nav-logo">
+  <img src="https://vuiqbdqnfnofwkpvvuqy.supabase.co/storage/v1/object/public/logos/logo.png" class="nav-logo" alt="PlanejaNoiva">
   <a href="dashboard.html" class="btn-voltar">
     <span class="material-symbols-outlined">arrow_back</span>
     Painel
@@ -309,7 +326,7 @@ nav{
 
   <div class="add-box">
     <input id="nome" placeholder="Ex: Tia Maria, João e família...">
-    <button onclick="add()">Adicionar convidado</button>
+    <button id="btnAdicionar" onclick="add()">Adicionar convidado</button>
   </div>
 
   <div id="lista" class="guest-list"></div>
@@ -322,14 +339,38 @@ const supa = supabase.createClient(
   'sb_publishable_LjKm4HF9kyD7m0ch3Eefdw_TJ5SG6w2'
 );
 
-const email = localStorage.getItem('usuario_email');
+let usuarioLogado = null;
+let email = null;
 
-if (!email) {
-  window.location.href = 'index.html';
+const inputNome = document.getElementById('nome');
+const btnAdicionar = document.getElementById('btnAdicionar');
+const lista = document.getElementById('lista');
+
+async function iniciarConvidados(){
+  const { data, error } = await supa.auth.getSession();
+
+  if(error || !data.session){
+    localStorage.clear();
+    window.location.href = 'index.html';
+    return;
+  }
+
+  usuarioLogado = data.session.user;
+  email = usuarioLogado.email;
+
+  localStorage.setItem('usuario_email', email);
+
+  await load();
+}
+
+function escaparHTML(texto){
+  const div = document.createElement('div');
+  div.innerText = texto || '';
+  return div.innerHTML;
 }
 
 function inicial(nome){
-  return nome ? nome.trim().charAt(0).toUpperCase() : "C";
+  return nome ? nome.trim().charAt(0).toUpperCase() : 'C';
 }
 
 async function load(){
@@ -339,39 +380,40 @@ async function load(){
     .eq('usuario_email', email)
     .order('nome', { ascending:true });
 
-  if (error) {
-    Swal.fire("Erro ao carregar convidados");
+  if(error){
+    Swal.fire({
+      icon:'error',
+      title:'Erro ao carregar',
+      text:'Não foi possível carregar sua lista de convidados.',
+      confirmButtonColor:'#EEABAB'
+    });
     return;
   }
 
-  const lista = document.getElementById('lista');
-
-  if (!data || data.length === 0) {
+  if(!data || data.length === 0){
     lista.innerHTML = `
       <div class="empty">
         Nenhum convidado cadastrado ainda. Comece adicionando os nomes principais da família.
       </div>
     `;
 
-    document.getElementById('total').innerText = 0;
-    document.getElementById('confirmados').innerText = 0;
-    document.getElementById('pendentes').innerText = 0;
+    atualizarStats(0, 0);
     return;
   }
 
   let confirmados = 0;
-  let html = "";
+  let html = '';
 
   data.forEach(c => {
-    if (c.confirmado) confirmados++;
+    if(c.confirmado) confirmados++;
 
     html += `
       <div class="guest">
         <div class="guest-left">
-          <div class="avatar">${inicial(c.nome)}</div>
+          <div class="avatar">${escaparHTML(inicial(c.nome))}</div>
 
           <div>
-            <span class="guest-name">${c.nome}</span>
+            <span class="guest-name">${escaparHTML(c.nome)}</span>
             <span class="status ${c.confirmado ? 'ok' : 'pending'}">
               ${c.confirmado ? 'Confirmado' : 'Pendente'}
             </span>
@@ -394,61 +436,110 @@ async function load(){
   });
 
   lista.innerHTML = html;
+  atualizarStats(data.length, confirmados);
+}
 
-  document.getElementById('total').innerText = data.length;
+function atualizarStats(total, confirmados){
+  document.getElementById('total').innerText = total;
   document.getElementById('confirmados').innerText = confirmados;
-  document.getElementById('pendentes').innerText = data.length - confirmados;
+  document.getElementById('pendentes').innerText = total - confirmados;
 }
 
 async function add(){
-  const input = document.getElementById('nome');
-  const nome = input.value.trim();
+  const nome = inputNome.value.trim();
 
-  if (!nome) return;
+  if(!nome){
+    Swal.fire({
+      icon:'warning',
+      title:'Digite um nome',
+      text:'Informe o nome do convidado antes de adicionar.',
+      confirmButtonColor:'#EEABAB'
+    });
+    return;
+  }
 
-  await supa.from('convidados').insert([
-    { nome:nome, usuario_email:email, confirmado:false }
-  ]);
+  btnAdicionar.disabled = true;
+  btnAdicionar.innerText = 'Adicionando...';
 
-  input.value = "";
-  load();
+  const { error } = await supa
+    .from('convidados')
+    .insert([{ nome:nome, usuario_email:email, confirmado:false }]);
+
+  btnAdicionar.disabled = false;
+  btnAdicionar.innerText = 'Adicionar convidado';
+
+  if(error){
+    Swal.fire({
+      icon:'error',
+      title:'Erro ao adicionar',
+      text:'Não foi possível salvar esse convidado.',
+      confirmButtonColor:'#EEABAB'
+    });
+    return;
+  }
+
+  inputNome.value = '';
+  await load();
 }
 
 async function toggle(id, status){
-  await supa
+  const { error } = await supa
     .from('convidados')
     .update({ confirmado: !status })
-    .eq('id', id);
+    .eq('id', id)
+    .eq('usuario_email', email);
 
-  load();
+  if(error){
+    Swal.fire({
+      icon:'error',
+      title:'Erro ao atualizar',
+      text:'Não foi possível alterar a confirmação.',
+      confirmButtonColor:'#EEABAB'
+    });
+    return;
+  }
+
+  await load();
 }
 
 async function del(id){
   const resposta = await Swal.fire({
-    title:"Remover convidado?",
-    text:"Esse nome sairá da sua lista.",
-    icon:"warning",
+    title:'Remover convidado?',
+    text:'Esse nome sairá da sua lista.',
+    icon:'warning',
     showCancelButton:true,
-    confirmButtonText:"Sim, remover",
-    cancelButtonText:"Cancelar",
-    confirmButtonColor:"#EEABAB"
+    confirmButtonText:'Sim, remover',
+    cancelButtonText:'Cancelar',
+    confirmButtonColor:'#D9534F',
+    cancelButtonColor:'#EADFD6'
   });
 
-  if (!resposta.isConfirmed) return;
+  if(!resposta.isConfirmed) return;
 
-  await supa
+  const { error } = await supa
     .from('convidados')
     .delete()
-    .eq('id', id);
+    .eq('id', id)
+    .eq('usuario_email', email);
 
-  load();
+  if(error){
+    Swal.fire({
+      icon:'error',
+      title:'Erro ao remover',
+      text:'Não foi possível remover esse convidado.',
+      confirmButtonColor:'#EEABAB'
+    });
+    return;
+  }
+
+  await load();
 }
 
-document.getElementById('nome').addEventListener("keypress", e => {
-  if (e.key === "Enter") add();
+inputNome.addEventListener('keypress', e => {
+  if(e.key === 'Enter') add();
 });
 
-load();
+iniciarConvidados();
 </script>
 
 </body>

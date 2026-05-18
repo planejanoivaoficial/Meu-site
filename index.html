@@ -6,7 +6,7 @@
 <title>PlanejaNoiva | Seu casamento perfeitamente organizado</title>
 
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" />
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&family=Montserrat:wght@700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Playfair+Display:wght@600;700&display=swap" rel="stylesheet">
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
@@ -14,96 +14,149 @@
 <style>
 :root {
     --cor-primaria: #EEABAB;
+    --cor-primaria-hover: #E79A9A;
     --cor-texto: #4A453E;
+    --cor-suave: #8C857B;
     --cor-fundo: #F7EFE4;
     --cor-bege-input: #FCF9F5;
+    --cor-borda: #E8DDD2;
+    --sombra-card: 0 24px 70px rgba(74, 69, 62, 0.10);
 }
 
-* { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Inter', sans-serif; }
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Inter', sans-serif;
+}
 
 body {
-    background-color: var(--cor-fundo);
-    background-image: url("https://www.transparenttextures.com/patterns/silk-weave.png");
+    min-height: 100vh;
+    padding: 24px;
     display: flex;
     justify-content: center;
     align-items: center;
-    min-height: 100vh;
-    padding: 24px;
+    background-color: var(--cor-fundo);
+    background-image:
+        radial-gradient(circle at top left, rgba(238,171,171,0.28), transparent 34%),
+        radial-gradient(circle at bottom right, rgba(255,255,255,0.85), transparent 32%),
+        url("https://www.transparenttextures.com/patterns/silk-weave.png");
+    color: var(--cor-texto);
 }
 
 .login-card {
-    background: white;
-    padding: 45px;
-    border-radius: 28px;
-    box-shadow: 0 15px 40px rgba(0,0,0,0.06);
+    position: relative;
     width: 100%;
-    max-width: 420px;
+    max-width: 430px;
+    padding: 44px;
     text-align: center;
-    border: 1px solid rgba(238,171,171,0.2);
+    background: rgba(255,255,255,0.88);
+    border: 1px solid rgba(238,171,171,0.28);
+    border-radius: 30px;
+    box-shadow: var(--sombra-card);
+    backdrop-filter: blur(14px);
     animation: fadeUp 0.6s ease;
+    overflow: hidden;
+}
+
+.login-card::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(135deg, rgba(238,171,171,0.14), transparent 38%);
+    pointer-events: none;
+}
+
+.login-content {
+    position: relative;
+    z-index: 1;
 }
 
 .logo-img {
-    height: 90px;
+    height: 92px;
     margin-bottom: 18px;
     mix-blend-mode: multiply;
 }
 
+.titulo {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.55rem;
+    line-height: 1.2;
+    color: var(--cor-texto);
+    margin-bottom: 10px;
+}
+
 .subtitulo {
-    margin-bottom: 25px;
-    color: #8C857B;
-    font-size: 0.9rem;
-    line-height: 1.5;
+    margin-bottom: 28px;
+    color: var(--cor-suave);
+    font-size: 0.92rem;
+    line-height: 1.55;
 }
 
 .input-group {
     text-align: left;
-    margin-bottom: 20px;
+    margin-bottom: 18px;
 }
 
 .label-row {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-bottom: 6px;
+    gap: 12px;
+    margin-bottom: 7px;
 }
 
 label {
-    font-size: 0.75rem;
-    font-weight: 700;
+    font-size: 0.72rem;
+    font-weight: 800;
     color: var(--cor-texto);
     text-transform: uppercase;
-    letter-spacing: 0.5px;
+    letter-spacing: 0.55px;
 }
 
 .forgot-link {
-    font-size: 0.7rem;
+    border: none;
+    background: none;
+    font-size: 0.72rem;
     color: var(--cor-primaria);
     text-decoration: none;
-    font-weight: 600;
+    font-weight: 700;
     cursor: pointer;
+}
+
+.forgot-link:hover {
+    color: var(--cor-primaria-hover);
+    text-decoration: underline;
 }
 
 input {
     width: 100%;
-    padding: 14px 16px;
-    border: 1px solid #E5DED5;
-    border-radius: 12px;
+    padding: 15px 16px;
+    border: 1px solid var(--cor-borda);
+    border-radius: 14px;
     outline: none;
     background-color: var(--cor-bege-input);
     color: var(--cor-texto);
     font-size: 0.95rem;
-    transition: 0.3s;
+    transition: 0.25s ease;
+}
+
+input::placeholder {
+    color: #B8AEA4;
 }
 
 input:focus {
     border-color: var(--cor-primaria);
     background-color: white;
-    box-shadow: 0 0 0 4px rgba(238,171,171,0.1);
+    box-shadow: 0 0 0 4px rgba(238,171,171,0.13);
 }
 
 .password-wrapper {
     position: relative;
+}
+
+.password-wrapper input {
+    padding-right: 52px;
 }
 
 .toggle-password {
@@ -114,79 +167,153 @@ input:focus {
     cursor: pointer;
     color: var(--cor-primaria);
     font-size: 22px;
+    user-select: none;
 }
 
 .btn-entrar {
     width: 100%;
+    min-height: 52px;
     padding: 16px;
-    background-color: var(--cor-primaria);
-    color: white;
-    border: none;
-    border-radius: 12px;
-    font-weight: 700;
-    cursor: pointer;
     margin-top: 10px;
-    transition: 0.4s;
+    border: none;
+    border-radius: 14px;
+    background: linear-gradient(135deg, #EEABAB, #E79A9A);
+    color: white;
     font-size: 1rem;
+    font-weight: 800;
+    cursor: pointer;
+    transition: 0.28s ease;
+    box-shadow: 0 12px 26px rgba(238,171,171,0.32);
 }
 
 .btn-entrar:hover {
-    background-color: #e59a9a;
     transform: translateY(-2px);
-    box-shadow: 0 8px 20px rgba(238,171,171,0.3);
+    box-shadow: 0 16px 32px rgba(238,171,171,0.38);
+}
+
+.btn-entrar:disabled {
+    opacity: 0.72;
+    cursor: not-allowed;
+    transform: none;
 }
 
 .footer-text {
-    margin-top: 25px;
-    font-size: 0.85rem;
-    color: #8C857B;
+    margin-top: 26px;
+    font-size: 0.86rem;
+    color: var(--cor-suave);
 }
 
 .footer-text a {
     color: var(--cor-primaria);
     text-decoration: none;
-    font-weight: 700;
+    font-weight: 800;
+}
+
+.footer-text a:hover {
+    color: var(--cor-primaria-hover);
+    text-decoration: underline;
+}
+
+.mini-seal {
+    margin-top: 18px;
+    font-size: 0.72rem;
+    color: #A79D93;
 }
 
 @keyframes fadeUp {
-    from { opacity: 0; transform: translateY(20px); }
-    to { opacity: 1; transform: translateY(0); }
+    from {
+        opacity: 0;
+        transform: translateY(18px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@media (max-width: 480px) {
+    body {
+        padding: 18px;
+        align-items: flex-start;
+        padding-top: 42px;
+    }
+
+    .login-card {
+        padding: 34px 24px;
+        border-radius: 24px;
+    }
+
+    .logo-img {
+        height: 78px;
+    }
+
+    .titulo {
+        font-size: 1.38rem;
+    }
+
+    .subtitulo {
+        font-size: 0.88rem;
+    }
 }
 </style>
 </head>
 
 <body>
 
-<div class="login-card">
-    <img src="https://vuiqbdqnfnofwkpvvuqy.supabase.co/storage/v1/object/public/logos/logo.png" alt="PlanejaNoiva" class="logo-img">
+<main class="login-card">
+    <div class="login-content">
+        <img src="https://vuiqbdqnfnofwkpvvuqy.supabase.co/storage/v1/object/public/logos/logo.png" alt="Logo PlanejaNoiva" class="logo-img">
 
-    <p class="subtitulo">
-        Organize cada detalhe do seu casamento com leveza, controle e elegância ✨
-    </p>
+        <h1 class="titulo">Seu casamento, perfeitamente organizado</h1>
 
-    <div class="input-group">
-        <label>E-mail</label>
-        <input type="email" id="emailInput" placeholder="exemplo@email.com">
-    </div>
+        <p class="subtitulo">
+            Acesse seu painel e cuide de cada detalhe com leveza, controle e elegância.
+        </p>
 
-    <div class="input-group">
-        <div class="label-row">
-            <label>Senha</label>
-            <a onclick="esqueciSenha()" class="forgot-link">Esqueci minha senha</a>
+        <form id="loginForm">
+            <div class="input-group">
+                <label for="emailInput">E-mail</label>
+                <input 
+                    type="email" 
+                    id="emailInput" 
+                    placeholder="exemplo@email.com"
+                    autocomplete="email"
+                    required
+                >
+            </div>
+
+            <div class="input-group">
+                <div class="label-row">
+                    <label for="senhaInput">Senha</label>
+                    <button type="button" onclick="esqueciSenha()" class="forgot-link">Esqueci minha senha</button>
+                </div>
+
+                <div class="password-wrapper">
+                    <input 
+                        type="password" 
+                        id="senhaInput" 
+                        placeholder="••••••••"
+                        autocomplete="current-password"
+                        required
+                    >
+                    <span class="toggle-password material-symbols-outlined" onclick="toggleSenha()" id="olhinho" aria-label="Mostrar senha">visibility</span>
+                </div>
+            </div>
+
+            <button class="btn-entrar" id="btnEntrar" type="submit">
+                Entrar no meu planejamento 💍
+            </button>
+        </form>
+
+        <div class="footer-text">
+            Ainda não tem conta? <a href="cadastro.html">Criar minha conta</a>
         </div>
 
-        <div class="password-wrapper">
-            <input type="password" id="senhaInput" placeholder="••••••••">
-            <span class="toggle-password material-symbols-outlined" onclick="toggleSenha()" id="olhinho">visibility</span>
+        <div class="mini-seal">
+            Planejamento seguro, privado e feito para noivas exigentes.
         </div>
     </div>
-
-    <button class="btn-entrar" onclick="realizarLogin()">Entrar no meu planejamento 💍</button>
-
-    <div class="footer-text">
-        Ainda não tem conta? <a href="cadastro.html">Criar minha conta</a>
-    </div>
-</div>
+</main>
 
 <script>
 const _supabase = supabase.createClient(
@@ -194,36 +321,51 @@ const _supabase = supabase.createClient(
     'sb_publishable_LjKm4HF9kyD7m0ch3Eefdw_TJ5SG6w2'
 );
 
+const loginForm = document.getElementById('loginForm');
+const btnEntrar = document.getElementById('btnEntrar');
+
+loginForm.addEventListener('submit', function(event) {
+    event.preventDefault();
+    realizarLogin();
+});
+
 async function realizarLogin() {
-    const email = document.getElementById('emailInput').value;
+    const email = document.getElementById('emailInput').value.trim().toLowerCase();
     const senha = document.getElementById('senhaInput').value;
 
     if (!email || !senha) {
         Swal.fire({
             icon: 'warning',
             title: 'Atenção',
-            text: 'Preencha todos os campos.',
+            text: 'Preencha todos os campos para continuar.',
             confirmButtonColor: '#EEABAB'
         });
         return;
     }
+
+    btnEntrar.disabled = true;
+    btnEntrar.innerText = 'Entrando...';
 
     const { data, error } = await _supabase.auth.signInWithPassword({
         email: email,
         password: senha
     });
 
+    btnEntrar.disabled = false;
+    btnEntrar.innerText = 'Entrar no meu planejamento 💍';
+
     if (error) {
         Swal.fire({
             icon: 'error',
-            title: 'Acesso negado',
-            text: 'E-mail ou senha incorretos ou não confirmados.',
+            title: 'Não conseguimos entrar',
+            text: 'Verifique seu e-mail, senha ou confirme sua conta antes de acessar.',
             confirmButtonColor: '#EEABAB'
         });
-    } else {
-        localStorage.setItem('usuario_email', data.user.email);
-        window.location.href = 'dashboard.html';
+        return;
     }
+
+    localStorage.setItem('usuario_email', data.user.email);
+    window.location.href = 'dashboard.html';
 }
 
 async function esqueciSenha() {
@@ -236,42 +378,49 @@ async function esqueciSenha() {
         confirmButtonColor: '#EEABAB',
         showCancelButton: true,
         cancelButtonText: 'Voltar',
-        cancelButtonColor: '#E5DED5'
+        cancelButtonColor: '#E5DED5',
+        inputValidator: (value) => {
+            if (!value) return 'Digite seu e-mail para continuar.';
+        }
     });
 
-    if (email) {
-        const { error } = await _supabase.auth.resetPasswordForEmail(email, {
-            redirectTo: 'https://planeja-noiva.vercel.app/redefinir-senha.html'
+    if (!email) return;
+
+    const emailFormatado = email.trim().toLowerCase();
+
+    const { error } = await _supabase.auth.resetPasswordForEmail(emailFormatado, {
+        redirectTo: `${window.location.origin}/redefinir-senha.html`
+    });
+
+    if (error) {
+        const msg = error.status === 429
+            ? 'Muitas tentativas. Aguarde alguns minutos antes de tentar novamente.'
+            : 'Não foi possível enviar o link agora. Verifique o e-mail e tente novamente.';
+
+        Swal.fire({
+            icon: 'error',
+            title: 'Ops!',
+            text: msg,
+            confirmButtonColor: '#EEABAB'
         });
-
-        if (error) {
-            const msg = error.status === 429
-                ? 'Muitas tentativas. Aguarde 15 minutos.'
-                : error.message;
-
-            Swal.fire({
-                icon: 'error',
-                title: 'Ops!',
-                text: msg,
-                confirmButtonColor: '#EEABAB'
-            });
-        } else {
-            Swal.fire({
-                icon: 'success',
-                title: 'E-mail enviado!',
-                text: 'Verifique sua caixa de entrada para redefinir sua senha.',
-                confirmButtonColor: '#EEABAB'
-            });
-        }
+        return;
     }
+
+    Swal.fire({
+        icon: 'success',
+        title: 'E-mail enviado!',
+        text: 'Verifique sua caixa de entrada para redefinir sua senha.',
+        confirmButtonColor: '#EEABAB'
+    });
 }
 
 function toggleSenha() {
     const input = document.getElementById('senhaInput');
     const olho = document.getElementById('olhinho');
 
-    input.type = input.type === "password" ? "text" : "password";
-    olho.innerText = input.type === "password" ? "visibility" : "visibility_off";
+    const senhaOculta = input.type === 'password';
+    input.type = senhaOculta ? 'text' : 'password';
+    olho.innerText = senhaOculta ? 'visibility_off' : 'visibility';
 }
 
 window.onload = async () => {

@@ -4,233 +4,525 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Configurações | PlanejaNoiva</title>
+<title>Configurações Premium | PlanejaNoiva</title>
 
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&family=Playfair+Display:wght@700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" />
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Playfair+Display:wght@700&display=swap" rel="stylesheet">
+
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
 <style>
 :root{
---rose:#EEABAB;
---text:#3F3932;
---muted:#8F857A;
---bg:#FBF6F1;
---border:#EADFD6;
+  --rose:#EEABAB;
+  --rose-dark:#D98F8F;
+  --text:#3F3932;
+  --muted:#8F857A;
+  --bg:#FBF6F1;
+  --border:#EADFD6;
+  --cream:#FFF9F4;
+  --shadow:0 20px 60px rgba(63,57,50,.08);
 }
 
-*{margin:0;padding:0;box-sizing:border-box;font-family:'Inter'}
+*{
+  margin:0;
+  padding:0;
+  box-sizing:border-box;
+  font-family:'Inter',sans-serif;
+}
 
 body{
-background:linear-gradient(180deg,#FFF8F3,#FBF6F1);
-color:var(--text);
-min-height:100vh;
-display:flex;
-justify-content:center;
-align-items:center;
-padding:24px;
+  background:
+    radial-gradient(circle at top left, rgba(238,171,171,.22), transparent 30%),
+    linear-gradient(180deg,#FFF8F3,#FBF6F1);
+  color:var(--text);
+  min-height:100vh;
 }
 
-.card{
-background:white;
-padding:45px;
-border-radius:30px;
-max-width:480px;
-width:100%;
-box-shadow:0 20px 60px rgba(0,0,0,.06);
-animation:fade .6s ease;
+nav{
+  height:76px;
+  background:rgba(255,255,255,.88);
+  backdrop-filter:blur(16px);
+  border-bottom:1px solid var(--border);
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  padding:0 5%;
+  position:sticky;
+  top:0;
+  z-index:10;
 }
 
 .logo{
-height:65px;
-display:block;
-margin:0 auto 18px;
-mix-blend-mode:multiply;
+  height:46px;
+  mix-blend-mode:multiply;
 }
 
-h1{
-font-family:'Playfair Display';
-text-align:center;
-font-size:2rem;
-margin-bottom:8px;
+.btn-voltar{
+  text-decoration:none;
+  color:var(--text);
+  font-weight:800;
+  background:white;
+  border:1px solid var(--border);
+  padding:11px 15px;
+  border-radius:16px;
+  display:flex;
+  align-items:center;
+  gap:8px;
+  transition:.2s;
 }
 
-.sub{
-text-align:center;
-color:var(--muted);
-margin-bottom:28px;
-line-height:1.5;
+.btn-voltar:hover{
+  transform:translateY(-2px);
+}
+
+.container{
+  max-width:920px;
+  margin:38px auto;
+  padding:0 20px 60px;
+}
+
+.hero{
+  background:white;
+  border:1px solid var(--border);
+  border-radius:34px;
+  padding:36px;
+  box-shadow:var(--shadow);
+  margin-bottom:24px;
+}
+
+.badge{
+  display:inline-flex;
+  align-items:center;
+  gap:8px;
+  background:var(--cream);
+  color:var(--rose-dark);
+  border:1px solid var(--border);
+  padding:9px 13px;
+  border-radius:999px;
+  font-size:.82rem;
+  font-weight:900;
+  margin-bottom:16px;
+}
+
+.hero h1{
+  font-family:'Playfair Display',serif;
+  font-size:2.7rem;
+  line-height:1.05;
+}
+
+.hero p{
+  color:var(--muted);
+  margin-top:12px;
+  line-height:1.7;
+  max-width:680px;
+}
+
+.grid{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:20px;
+}
+
+.card{
+  background:white;
+  border:1px solid var(--border);
+  border-radius:28px;
+  padding:28px;
+  box-shadow:0 12px 35px rgba(63,57,50,.04);
+}
+
+.card-title{
+  display:flex;
+  align-items:center;
+  gap:10px;
+  margin-bottom:22px;
+}
+
+.card-title span{
+  color:var(--rose-dark);
+  font-size:1.8rem;
+}
+
+.card-title h2{
+  font-size:1.15rem;
 }
 
 .group{
-margin-bottom:18px;
+  margin-bottom:18px;
 }
 
 label{
-display:block;
-font-size:.72rem;
-font-weight:700;
-text-transform:uppercase;
-letter-spacing:1px;
-color:var(--muted);
-margin-bottom:7px;
+  display:block;
+  font-size:.74rem;
+  font-weight:800;
+  text-transform:uppercase;
+  letter-spacing:1px;
+  color:var(--muted);
+  margin-bottom:8px;
 }
 
 input{
-width:100%;
-padding:15px;
-border-radius:14px;
-border:1px solid var(--border);
-background:#FCF9F5;
-outline:none;
-font-size:1rem;
+  width:100%;
+  padding:15px 16px;
+  border-radius:16px;
+  border:1px solid var(--border);
+  background:var(--cream);
+  outline:none;
+  transition:.25s;
+  font-size:.96rem;
 }
 
 input:focus{
-border-color:var(--rose);
-background:white;
+  border-color:var(--rose);
+  background:white;
+  box-shadow:0 0 0 4px rgba(238,171,171,.12);
+}
+
+.preview{
+  margin-top:12px;
+  background:linear-gradient(135deg,#fff,#FFF7F7);
+  border:1px solid var(--border);
+  border-radius:24px;
+  padding:22px;
+}
+
+.preview small{
+  color:var(--muted);
+  font-weight:700;
+  display:block;
+  margin-bottom:8px;
+}
+
+.preview strong{
+  display:block;
+  font-size:1.2rem;
+}
+
+.preview p{
+  margin-top:8px;
+  color:var(--muted);
+  line-height:1.6;
+}
+
+.actions{
+  margin-top:28px;
+  display:flex;
+  gap:14px;
+  flex-wrap:wrap;
 }
 
 .btn{
-width:100%;
-padding:16px;
-border:none;
-background:var(--rose);
-color:white;
-border-radius:15px;
-font-weight:700;
-cursor:pointer;
-transition:.3s;
-font-size:1rem;
-margin-top:8px;
+  flex:1;
+  min-width:220px;
+  padding:16px;
+  border:none;
+  border-radius:18px;
+  font-weight:900;
+  cursor:pointer;
+  transition:.25s;
+  font-size:.96rem;
 }
 
-.btn:hover{
-transform:translateY(-2px);
-box-shadow:0 10px 25px rgba(238,171,171,.35);
+.btn-primary{
+  background:var(--rose);
+  color:white;
+  box-shadow:0 14px 28px rgba(238,171,171,.3);
 }
 
-.voltar{
-display:block;
-text-align:center;
-margin-top:18px;
-color:var(--muted);
-text-decoration:none;
-font-size:.85rem;
+.btn-primary:hover{
+  transform:translateY(-2px);
 }
 
-@keyframes fade{
-from{opacity:0;transform:translateY(20px)}
-to{opacity:1;transform:translateY(0)}
+.btn-secondary{
+  background:white;
+  border:1px solid var(--border);
+  color:var(--text);
+}
+
+.info-box{
+  margin-top:22px;
+  background:#FFF9F4;
+  border:1px solid var(--border);
+  border-radius:22px;
+  padding:18px;
+}
+
+.info-box strong{
+  display:block;
+  margin-bottom:6px;
+}
+
+.info-box p{
+  color:var(--muted);
+  line-height:1.6;
+  font-size:.92rem;
+}
+
+@media(max-width:760px){
+
+  .hero h1{
+    font-size:2.15rem;
+  }
+
+  .grid{
+    grid-template-columns:1fr;
+  }
+
+  .actions{
+    flex-direction:column;
+  }
+
+  .btn{
+    width:100%;
+  }
+
 }
 </style>
 </head>
 
 <body>
 
-<div class="card">
+<nav>
 
-<img src="https://i.ibb.co/YTTQXBx8/Logo-Planeja-Noiva.png" class="logo">
+  <img src="https://i.ibb.co/YTTQXBx8/Logo-Planeja-Noiva.png" class="logo">
 
-<h1>Configurações 💍</h1>
-<p class="sub">Ajuste os dados principais que aparecem no cronograma oficial.</p>
+  <a href="dashboard.html" class="btn-voltar">
+    <span class="material-symbols-outlined">arrow_back</span>
+    Painel
+  </a>
 
-<div class="group">
-<label>Nome do noivo</label>
-<input type="text" id="nomeNoivo" placeholder="Ex: Odesvaldo Júnior">
-</div>
+</nav>
 
-<div class="group">
-<label>Data e hora do casamento</label>
-<input type="datetime-local" id="dataCasamento">
-</div>
+<div class="container">
 
-<div class="group">
-<label>Local do evento</label>
-<input type="text" id="localCasamento" placeholder="Ex: Goiânia, GO">
-</div>
+  <section class="hero">
 
-<button class="btn" onclick="atualizarDados()">Salvar configurações</button>
+    <div class="badge">
+      <span class="material-symbols-outlined">settings</span>
+      Configurações premium
+    </div>
 
-<a href="dashboard.html" class="voltar">Voltar ao painel</a>
+    <h1>Os detalhes que dão identidade ao casamento.</h1>
+
+    <p>
+      Ajuste informações importantes que serão usadas no cronograma,
+      contagem regressiva, páginas públicas e experiências compartilhadas do PlanejaNoiva.
+    </p>
+
+  </section>
+
+  <div class="grid">
+
+    <div class="card">
+
+      <div class="card-title">
+        <span class="material-symbols-outlined">favorite</span>
+        <h2>Informações do casal</h2>
+      </div>
+
+      <div class="group">
+        <label>Nome do noivo</label>
+        <input type="text" id="nomeNoivo" placeholder="Ex: Odesvaldo Júnior">
+      </div>
+
+      <div class="group">
+        <label>Local do evento</label>
+        <input type="text" id="localCasamento" placeholder="Ex: Goiânia, GO">
+      </div>
+
+      <div class="group">
+        <label>Data e hora do casamento</label>
+        <input type="datetime-local" id="dataCasamento">
+      </div>
+
+    </div>
+
+    <div class="card">
+
+      <div class="card-title">
+        <span class="material-symbols-outlined">visibility</span>
+        <h2>Prévia do evento</h2>
+      </div>
+
+      <div class="preview">
+
+        <small>Prévia oficial</small>
+
+        <strong id="previewTitulo">
+          Casamento
+        </strong>
+
+        <p id="previewTexto">
+          Defina os detalhes do evento para visualizar como o PlanejaNoiva exibirá as informações.
+        </p>
+
+      </div>
+
+      <div class="info-box">
+        <strong>✨ Onde essas informações aparecem?</strong>
+
+        <p>
+          Essas configurações são usadas no dashboard,
+          cronograma oficial, links públicos, contagem regressiva e páginas compartilhadas com convidados.
+        </p>
+      </div>
+
+    </div>
+
+  </div>
+
+  <div class="actions">
+
+    <button class="btn btn-primary" onclick="atualizarDados()">
+      Salvar configurações 💍
+    </button>
+
+    <button class="btn btn-secondary" onclick="window.location.href='dashboard.html'">
+      Voltar ao painel
+    </button>
+
+  </div>
 
 </div>
 
 <script>
 const supa = supabase.createClient(
-'https://vuiqbdqnfnofwkpvvuqy.supabase.co',
-'sb_publishable_LjKm4HF9kyD7m0ch3Eefdw_TJ5SG6w2'
+  'https://vuiqbdqnfnofwkpvvuqy.supabase.co',
+  'sb_publishable_LjKm4HF9kyD7m0ch3Eefdw_TJ5SG6w2'
 );
 
 const emailNoiva = localStorage.getItem('usuario_email');
 
 if(!emailNoiva){
-window.location.href = 'index.html';
+  window.location.href = 'index.html';
+}
+
+function atualizarPreview(){
+
+  const noivo = document.getElementById('nomeNoivo').value || 'Seu amor';
+  const local = document.getElementById('localCasamento').value || 'local do evento';
+  const data = document.getElementById('dataCasamento').value;
+
+  let dataFormatada = 'data especial';
+
+  if(data){
+    const dt = new Date(data);
+
+    dataFormatada = dt.toLocaleDateString('pt-BR',{
+      day:'2-digit',
+      month:'long',
+      year:'numeric'
+    });
+  }
+
+  document.getElementById('previewTitulo').innerText =
+    `Casamento • ${noivo}`;
+
+  document.getElementById('previewTexto').innerText =
+    `O evento acontecerá em ${local}, no dia ${dataFormatada}.`;
 }
 
 async function carregarCampos(){
-const { data } = await supa
-.from('usuarios')
-.select('nome_noivo, data_casamento, local_casamento')
-.eq('email', emailNoiva)
-.single();
 
-if(data){
-document.getElementById('nomeNoivo').value = data.nome_noivo || "";
-document.getElementById('localCasamento').value = data.local_casamento || "";
+  try{
 
-if(data.data_casamento){
-document.getElementById('dataCasamento').value = data.data_casamento.substring(0,16);
-}
-}
+    const { data, error } = await supa
+      .from('usuarios')
+      .select('nome_noivo, data_casamento, local_casamento')
+      .eq('email', emailNoiva)
+      .single();
+
+    if(error){
+      console.log(error);
+      return;
+    }
+
+    if(data){
+
+      document.getElementById('nomeNoivo').value =
+        data.nome_noivo || "";
+
+      document.getElementById('localCasamento').value =
+        data.local_casamento || "";
+
+      if(data.data_casamento){
+        document.getElementById('dataCasamento').value =
+          data.data_casamento.substring(0,16);
+      }
+
+      atualizarPreview();
+    }
+
+  }catch(e){
+    console.log(e);
+  }
+
 }
 
 async function atualizarDados(){
-const noivo = document.getElementById('nomeNoivo').value;
-const dataH = document.getElementById('dataCasamento').value;
-const local = document.getElementById('localCasamento').value;
 
-if(!noivo || !dataH){
-Swal.fire({
-icon:'info',
-title:'Campos obrigatórios',
-text:'Preencha o nome do noivo e a data do casamento.',
-confirmButtonColor:'#EEABAB'
-});
-return;
+  const noivo = document.getElementById('nomeNoivo').value.trim();
+  const dataH = document.getElementById('dataCasamento').value;
+  const local = document.getElementById('localCasamento').value.trim();
+
+  if(!noivo || !dataH){
+
+    Swal.fire({
+      icon:'warning',
+      title:'Campos obrigatórios',
+      text:'Preencha o nome do noivo e a data do casamento.',
+      confirmButtonColor:'#EEABAB'
+    });
+
+    return;
+  }
+
+  Swal.fire({
+    title:'Salvando configurações...',
+    text:'Atualizando informações do casamento.',
+    allowOutsideClick:false,
+    didOpen:()=>Swal.showLoading()
+  });
+
+  const { error } = await supa
+    .from('usuarios')
+    .update({
+      nome_noivo:noivo,
+      data_casamento:dataH,
+      local_casamento:local
+    })
+    .eq('email', emailNoiva);
+
+  if(error){
+
+    Swal.fire({
+      icon:'error',
+      title:'Erro ao salvar',
+      text:error.message,
+      confirmButtonColor:'#EEABAB'
+    });
+
+    return;
+  }
+
+  Swal.fire({
+    icon:'success',
+    title:'Configurações salvas 💍',
+    text:'Seu PlanejaNoiva já foi atualizado.',
+    confirmButtonColor:'#EEABAB'
+  });
+
 }
 
-Swal.fire({
-title:'Salvando...',
-allowOutsideClick:false,
-didOpen:()=>Swal.showLoading()
-});
+document.getElementById('nomeNoivo')
+  .addEventListener('input', atualizarPreview);
 
-const { error } = await supa
-.from('usuarios')
-.update({
-nome_noivo:noivo,
-data_casamento:dataH,
-local_casamento:local
-})
-.eq('email', emailNoiva);
+document.getElementById('localCasamento')
+  .addEventListener('input', atualizarPreview);
 
-if(!error){
-Swal.fire({
-icon:'success',
-title:'Configurações salvas 💍',
-text:'Seu cronograma já foi atualizado.',
-confirmButtonColor:'#EEABAB'
-});
-}else{
-Swal.fire({
-icon:'error',
-title:'Erro ao salvar',
-text:error.message,
-confirmButtonColor:'#EEABAB'
-});
-}
-}
+document.getElementById('dataCasamento')
+  .addEventListener('input', atualizarPreview);
 
 carregarCampos();
 </script>

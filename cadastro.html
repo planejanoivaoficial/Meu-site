@@ -6,7 +6,7 @@
 
 <title>PlanejaNoiva | Começar meu planejamento</title>
 
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&family=Playfair+Display:wght@700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Playfair+Display:wght@600;700&display=swap" rel="stylesheet">
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
@@ -14,102 +14,147 @@
 <style>
 :root{
 --rose:#EEABAB;
+--rose-hover:#E59A9A;
 --text:#3F3932;
 --muted:#8F857A;
 --bg:#FBF6F1;
 --gold:#D4AF37;
+--border:#EADFD6;
 }
 
-*{margin:0;padding:0;box-sizing:border-box;font-family:'Inter'}
+*{
+margin:0;
+padding:0;
+box-sizing:border-box;
+font-family:'Inter',sans-serif;
+}
 
 body{
-background:linear-gradient(180deg,#FFF8F3,#FBF6F1);
+min-height:100vh;
+padding:30px;
 display:flex;
 justify-content:center;
 align-items:center;
-min-height:100vh;
-padding:30px;
+background:
+radial-gradient(circle at top left, rgba(238,171,171,.20), transparent 30%),
+radial-gradient(circle at bottom right, rgba(255,255,255,.95), transparent 30%),
+linear-gradient(180deg,#FFF8F3,#FBF6F1);
 }
 
-/* CARD */
 .card{
-background:white;
-padding:45px;
-border-radius:30px;
-max-width:560px;
 width:100%;
-box-shadow:0 20px 50px rgba(0,0,0,.06);
+max-width:580px;
+padding:45px;
+border-radius:32px;
+background:rgba(255,255,255,.88);
+backdrop-filter:blur(12px);
+border:1px solid rgba(238,171,171,.18);
+box-shadow:0 24px 60px rgba(0,0,0,.07);
 animation:fadeUp .6s ease;
 }
 
-/* HEADER */
 .logo{
-height:60px;
-margin-bottom:15px;
+height:70px;
+margin-bottom:18px;
+mix-blend-mode:multiply;
 }
 
 h1{
-font-family:'Playfair Display';
+font-family:'Playfair Display',serif;
 font-size:2rem;
+color:var(--text);
 margin-bottom:10px;
+line-height:1.2;
 }
 
 .sub{
 color:var(--muted);
-margin-bottom:25px;
+margin-bottom:30px;
+line-height:1.6;
+font-size:.95rem;
 }
 
-/* FORM */
 .grid{
 display:grid;
 grid-template-columns:1fr 1fr;
-gap:15px;
+gap:18px;
 }
 
-.full{grid-column:span 2;}
+.full{
+grid-column:span 2;
+}
 
 label{
-font-size:0.7rem;
+font-size:.72rem;
 text-transform:uppercase;
-font-weight:700;
+font-weight:800;
 color:var(--muted);
-margin-bottom:5px;
+margin-bottom:7px;
 display:block;
+letter-spacing:.4px;
 }
 
 input{
 width:100%;
-padding:14px;
-border-radius:12px;
-border:1px solid #EADFD6;
+padding:15px 16px;
+border-radius:14px;
+border:1px solid var(--border);
 background:#FCF9F5;
 outline:none;
-transition:.3s;
+transition:.25s ease;
+font-size:.95rem;
+color:var(--text);
+}
+
+input::placeholder{
+color:#B7ADA2;
 }
 
 input:focus{
 border-color:var(--rose);
 background:white;
+box-shadow:0 0 0 4px rgba(238,171,171,.12);
 }
 
-/* COLOR PICKER */
 .palette{
 grid-column:span 2;
-border:1px dashed var(--rose);
-padding:20px;
-border-radius:15px;
+padding:22px;
+border-radius:20px;
+border:1px dashed rgba(238,171,171,.55);
+background:rgba(252,249,245,.8);
 text-align:center;
 }
 
+.palette-title{
+margin-bottom:8px;
+font-size:.9rem;
+font-weight:700;
+color:var(--text);
+}
+
+.palette-sub{
+font-size:.82rem;
+color:var(--muted);
+margin-bottom:14px;
+}
+
 .circle{
-width:70px;
-height:70px;
+width:82px;
+height:82px;
 border-radius:50%;
 background:var(--rose);
-margin:10px auto;
-border:3px solid var(--gold);
+margin:auto;
+border:4px solid rgba(212,175,55,.65);
+box-shadow:
+0 10px 20px rgba(238,171,171,.25),
+inset 0 2px 6px rgba(255,255,255,.4);
 position:relative;
 cursor:pointer;
+transition:.25s;
+}
+
+.circle:hover{
+transform:scale(1.04);
 }
 
 .circle input{
@@ -119,43 +164,92 @@ opacity:0;
 cursor:pointer;
 }
 
-/* BUTTON */
 .btn{
-margin-top:20px;
+margin-top:24px;
 width:100%;
-padding:16px;
+padding:17px;
 border:none;
-background:var(--rose);
+border-radius:16px;
+background:linear-gradient(135deg,var(--rose),var(--rose-hover));
 color:white;
-border-radius:15px;
-font-weight:700;
+font-weight:800;
+font-size:1rem;
 cursor:pointer;
-transition:.4s;
+transition:.3s;
+box-shadow:0 12px 24px rgba(238,171,171,.35);
 }
 
 .btn:hover{
 transform:translateY(-2px);
-box-shadow:0 10px 25px rgba(238,171,171,.4);
+box-shadow:0 18px 30px rgba(238,171,171,.40);
 }
 
-/* FOOTER */
+.btn:disabled{
+opacity:.75;
+cursor:not-allowed;
+transform:none;
+}
+
 .footer{
-margin-top:20px;
-font-size:.85rem;
+margin-top:22px;
+font-size:.88rem;
 text-align:center;
 color:var(--muted);
 }
 
 .footer a{
 color:var(--rose);
-font-weight:600;
+font-weight:700;
 text-decoration:none;
 }
 
-/* ANIMAÇÃO */
+.footer a:hover{
+text-decoration:underline;
+}
+
+.security{
+margin-top:18px;
+text-align:center;
+font-size:.74rem;
+color:#A1968A;
+}
+
+@media(max-width:680px){
+
+body{
+padding:18px;
+align-items:flex-start;
+padding-top:35px;
+}
+
+.card{
+padding:30px 22px;
+border-radius:24px;
+}
+
+.grid{
+grid-template-columns:1fr;
+gap:16px;
+}
+
+.full{
+grid-column:span 1;
+}
+
+h1{
+font-size:1.7rem;
+}
+}
+
 @keyframes fadeUp{
-from{opacity:0;transform:translateY(20px);}
-to{opacity:1;transform:translateY(0);}
+from{
+opacity:0;
+transform:translateY(20px);
+}
+to{
+opacity:1;
+transform:translateY(0);
+}
 }
 </style>
 </head>
@@ -164,57 +258,87 @@ to{opacity:1;transform:translateY(0);}
 
 <div class="card">
 
-<img src="https://vuiqbdqnfnofwkpvvuqy.supabase.co/storage/v1/object/public/logos/logo.png" class="logo">
+<img 
+src="https://vuiqbdqnfnofwkpvvuqy.supabase.co/storage/v1/object/public/logos/logo.png"
+class="logo"
+alt="PlanejaNoiva"
+>
 
 <h1>Comece seu planejamento 💍</h1>
-<p class="sub">Crie sua conta e organize seu casamento com leveza e controle</p>
+
+<p class="sub">
+Crie sua conta e transforme a organização do seu casamento em uma experiência leve, elegante e encantadora.
+</p>
+
+<form id="cadastroForm">
 
 <div class="grid">
 
 <div class="full">
 <label>Seu nome</label>
-<input id="nome" placeholder="Ex: Letícia Moura">
+<input id="nome" placeholder="Ex: Letícia Moura" required>
 </div>
 
 <div>
 <label>Email</label>
-<input id="email" type="email">
+<input id="email" type="email" placeholder="seu@email.com" required>
 </div>
 
 <div>
 <label>Senha</label>
-<input id="senha" type="password">
+<input id="senha" type="password" placeholder="Mínimo 6 caracteres" required>
 </div>
 
 <div class="full">
 <label>Nome do noivo</label>
-<input id="noivo">
+<input id="noivo" placeholder="Ex: Rafael">
 </div>
 
 <div>
-<label>Data</label>
-<input id="data" type="datetime-local">
+<label>Data do casamento</label>
+<input id="data" type="datetime-local" required>
 </div>
 
 <div>
 <label>Cidade</label>
-<input id="local">
+<input id="local" placeholder="Ex: Goiânia - GO">
 </div>
 
 <div class="palette">
-<label>Sua paleta</label>
+
+<div class="palette-title">
+Sua paleta principal ✨
+</div>
+
+<div class="palette-sub">
+Escolha a cor que representa a identidade do seu casamento.
+</div>
+
 <div class="circle" id="preview">
-<input type="color" id="cor" value="#EEABAB"
-oninput="preview.style.backgroundColor=this.value">
-</div>
+<input 
+type="color"
+id="cor"
+value="#EEABAB"
+oninput="preview.style.backgroundColor=this.value"
+>
 </div>
 
 </div>
 
-<button class="btn" onclick="registrar()">Criar minha conta 💖</button>
+</div>
+
+<button class="btn" id="btnCadastro" type="submit">
+Criar minha conta 💖
+</button>
+
+</form>
 
 <div class="footer">
 Já tem conta? <a href="index.html">Entrar</a>
+</div>
+
+<div class="security">
+Seus dados ficam protegidos e privados no PlanejaNoiva.
 </div>
 
 </div>
@@ -225,39 +349,99 @@ const supa = supabase.createClient(
 'sb_publishable_LjKm4HF9kyD7m0ch3Eefdw_TJ5SG6w2'
 );
 
+const form = document.getElementById('cadastroForm');
+const btnCadastro = document.getElementById('btnCadastro');
+
+form.addEventListener('submit', function(e){
+e.preventDefault();
+registrar();
+});
+
 async function registrar(){
 
-const nome=document.getElementById('nome').value;
-const email=document.getElementById('email').value;
-const senha=document.getElementById('senha').value;
-const noivo=document.getElementById('noivo').value;
-const data=document.getElementById('data').value;
-const local=document.getElementById('local').value;
-const cor=document.getElementById('cor').value;
+const nome = document.getElementById('nome').value.trim();
+const email = document.getElementById('email').value.trim().toLowerCase();
+const senha = document.getElementById('senha').value;
+const noivo = document.getElementById('noivo').value.trim();
+const data = document.getElementById('data').value;
+const local = document.getElementById('local').value.trim();
+const cor = document.getElementById('cor').value;
 
 if(!nome || !email || !senha || !data){
-Swal.fire("Preencha os campos obrigatórios ✨");
+
+Swal.fire({
+icon:'warning',
+title:'Campos obrigatórios',
+text:'Preencha os dados principais para continuar.',
+confirmButtonColor:'#EEABAB'
+});
+
 return;
 }
 
-/* LOADING PREMIUM */
+if(senha.length < 6){
+
 Swal.fire({
-title:"Criando sua conta...",
-allowOutsideClick:false,
-didOpen:()=>Swal.showLoading()
+icon:'warning',
+title:'Senha muito curta',
+text:'Sua senha precisa ter pelo menos 6 caracteres.',
+confirmButtonColor:'#EEABAB'
 });
 
-const { error } = await supa.from('usuarios').insert([{
+return;
+}
+
+btnCadastro.disabled = true;
+btnCadastro.innerText = 'Criando sua conta...';
+
+const { data:authData, error:authError } = await supa.auth.signUp({
+email,
+password:senha
+});
+
+if(authError){
+
+btnCadastro.disabled = false;
+btnCadastro.innerText = 'Criar minha conta 💖';
+
+Swal.fire({
+icon:'error',
+title:'Não foi possível criar a conta',
+text:authError.message,
+confirmButtonColor:'#EEABAB'
+});
+
+return;
+}
+
+const userId = authData.user?.id;
+
+const { error:profileError } = await supa
+.from('usuarios')
+.insert([{
+id:userId,
 nome,
 email,
-senha,
 nome_noivo:noivo,
 data_casamento:data,
 local_casamento:local,
 paleta_cores:cor
 }]);
 
-if(!error){
+btnCadastro.disabled = false;
+btnCadastro.innerText = 'Criar minha conta 💖';
+
+if(profileError){
+
+Swal.fire({
+icon:'error',
+title:'Conta criada parcialmente',
+text:'O login foi criado, mas houve erro ao salvar o perfil.',
+confirmButtonColor:'#EEABAB'
+});
+
+return;
+}
 
 localStorage.setItem('usuario_email',email);
 localStorage.setItem('usuario_nome',nome);
@@ -270,10 +454,6 @@ confirmButtonColor:'#EEABAB'
 }).then(()=>{
 window.location.href='dashboard.html';
 });
-
-}else{
-Swal.fire("Erro ao criar conta");
-}
 
 }
 </script>

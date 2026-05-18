@@ -6,121 +6,218 @@
 
 <title>Confirmação | PlanejaNoiva</title>
 
-<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;1,500&family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;1,500&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
 <style>
 :root{
 --rose:#EEABAB;
+--rose-dark:#D98F8F;
 --text:#5A544E;
+--muted:#8F857A;
 --bg:#FDF9F6;
+--border:#EADFD6;
+--cream:#FCF9F5;
 }
 
-*{margin:0;padding:0;box-sizing:border-box}
+*{
+margin:0;
+padding:0;
+box-sizing:border-box;
+}
 
 body{
-background:linear-gradient(180deg,#FFF8F3,#FBF6F1);
-font-family:'Inter';
+min-height:100vh;
+padding:22px;
 display:flex;
 justify-content:center;
 align-items:center;
-min-height:100vh;
-padding:20px;
+font-family:'Inter',sans-serif;
+background:
+radial-gradient(circle at top left, rgba(238,171,171,.26), transparent 34%),
+radial-gradient(circle at bottom right, rgba(255,255,255,.95), transparent 32%),
+linear-gradient(180deg,#FFF8F3,#FBF6F1);
+color:var(--text);
 }
 
 .card{
-background:white;
-padding:50px 35px;
-border-radius:30px;
-max-width:420px;
 width:100%;
+max-width:440px;
+padding:48px 34px;
+border-radius:32px;
+background:rgba(255,255,255,.92);
+border:1px solid rgba(234,223,214,.9);
 text-align:center;
-box-shadow:0 20px 60px rgba(0,0,0,.05);
+box-shadow:0 24px 70px rgba(63,57,50,.08);
+backdrop-filter:blur(12px);
 animation:fade .6s ease;
 }
 
 .logo{
-height:80px;
-margin-bottom:25px;
+height:82px;
+margin-bottom:24px;
+mix-blend-mode:multiply;
 }
 
 h1{
-font-family:'Cormorant Garamond';
-font-size:2rem;
+font-family:'Cormorant Garamond',serif;
+font-size:2.25rem;
+font-weight:600;
 font-style:italic;
-margin-bottom:10px;
+line-height:1.05;
+margin-bottom:12px;
 }
 
 .sub{
-color:#8F857A;
+color:var(--muted);
 margin-bottom:30px;
+line-height:1.55;
+font-size:.95rem;
+}
+
+.input-group{
+text-align:left;
+margin-bottom:15px;
+}
+
+label{
+display:block;
+font-size:.72rem;
+font-weight:700;
+text-transform:uppercase;
+letter-spacing:.5px;
+color:var(--muted);
+margin-bottom:7px;
 }
 
 .input{
 width:100%;
-padding:15px;
-border-radius:12px;
-border:1px solid #EADFD6;
-background:#FCF9F5;
-margin-bottom:15px;
+padding:15px 16px;
+border-radius:14px;
+border:1px solid var(--border);
+background:var(--cream);
+color:var(--text);
+font-size:.96rem;
+outline:none;
+transition:.25s;
 }
 
 .input:focus{
 border-color:var(--rose);
 background:white;
-outline:none;
+box-shadow:0 0 0 4px rgba(238,171,171,.12);
 }
 
 .grid{
-display:flex;
-gap:10px;
+display:grid;
+grid-template-columns:1fr 1fr;
+gap:12px;
 }
 
 .btn{
 width:100%;
+min-height:52px;
 padding:16px;
-background:var(--rose);
+margin-top:10px;
+background:linear-gradient(135deg,var(--rose),var(--rose-dark));
 color:white;
 border:none;
-border-radius:14px;
-font-weight:600;
+border-radius:16px;
+font-weight:800;
 cursor:pointer;
 transition:.3s;
-margin-top:10px;
+box-shadow:0 14px 28px rgba(238,171,171,.34);
 }
 
 .btn:hover{
 transform:translateY(-2px);
-box-shadow:0 10px 25px rgba(238,171,171,.4);
+box-shadow:0 18px 34px rgba(238,171,171,.42);
+}
+
+.btn:disabled{
+opacity:.72;
+cursor:not-allowed;
+transform:none;
+}
+
+.small-note{
+margin-top:18px;
+font-size:.78rem;
+color:#A1968A;
+line-height:1.5;
+}
+
+.success-icon{
+font-size:3rem;
+margin-bottom:14px;
+}
+
+@media(max-width:480px){
+.card{
+padding:38px 24px;
+border-radius:26px;
+}
+
+h1{
+font-size:2rem;
+}
+
+.grid{
+grid-template-columns:1fr;
+}
 }
 
 @keyframes fade{
-from{opacity:0;transform:translateY(20px)}
-to{opacity:1;transform:translateY(0)}
+from{
+opacity:0;
+transform:translateY(20px);
+}
+to{
+opacity:1;
+transform:translateY(0);
+}
 }
 </style>
 </head>
 
 <body>
 
-<div class="card">
+<main class="card" id="card">
 
-<img src="https://i.ibb.co/YTTQXBx8/Logo-Planeja-Noiva.png" class="logo">
+<img src="https://vuiqbdqnfnofwkpvvuqy.supabase.co/storage/v1/object/public/logos/logo.png" class="logo" alt="PlanejaNoiva">
 
 <h1>Confirme sua presença 🥂</h1>
-<p class="sub">Será um prazer ter você nesse momento especial</p>
 
-<input type="text" id="nome" class="input" placeholder="Seu nome">
+<p class="sub">
+Será um prazer ter você nesse momento especial. Preencha seus dados para confirmar presença.
+</p>
+
+<div class="input-group">
+<label for="nome">Seu nome</label>
+<input type="text" id="nome" class="input" placeholder="Ex: Maria Oliveira">
+</div>
 
 <div class="grid">
+<div class="input-group">
+<label for="adt">Adultos</label>
 <input type="number" id="adt" class="input" value="1" min="1">
+</div>
+
+<div class="input-group">
+<label for="cri">Crianças</label>
 <input type="number" id="cri" class="input" value="0" min="0">
 </div>
-
-<button class="btn" onclick="confirmar()">Confirmar presença</button>
-
 </div>
+
+<button class="btn" id="btnConfirmar" onclick="confirmar()">Confirmar presença</button>
+
+<div class="small-note">
+Confirme apenas uma vez para ajudar os noivos na organização da lista.
+</div>
+
+</main>
 
 <script>
 const supa = supabase.createClient(
@@ -131,53 +228,77 @@ const supa = supabase.createClient(
 const params = new URLSearchParams(window.location.search);
 const emailNoiva = params.get('noiva');
 
+const card = document.getElementById('card');
+const btnConfirmar = document.getElementById('btnConfirmar');
+
+if(!emailNoiva){
+card.innerHTML = `
+  <h1>Link inválido</h1>
+  <p class="sub">Este link de confirmação não está completo. Peça um novo link para os noivos.</p>
+`;
+}
+
+function numeroSeguro(valor, minimo){
+const n = parseInt(valor, 10);
+if(isNaN(n) || n < minimo) return minimo;
+return n;
+}
+
 async function confirmar(){
+const nome = document.getElementById('nome').value.trim();
+const adt = numeroSeguro(document.getElementById('adt').value, 1);
+const cri = numeroSeguro(document.getElementById('cri').value, 0);
 
-const nome = document.getElementById('nome').value;
-const adt = document.getElementById('adt').value;
-const cri = document.getElementById('cri').value;
-
-if(!nome || !emailNoiva){
+if(!emailNoiva){
 Swal.fire({
-icon:'warning',
-title:'Preencha seu nome',
+icon:'error',
+title:'Link inválido',
+text:'Peça um novo link de confirmação para os noivos.',
 confirmButtonColor:'#EEABAB'
 });
 return;
 }
 
+if(!nome){
 Swal.fire({
-title:'Confirmando presença...',
-allowOutsideClick:false,
-didOpen:()=>Swal.showLoading()
+icon:'warning',
+title:'Informe seu nome',
+text:'Digite seu nome para confirmar presença.',
+confirmButtonColor:'#EEABAB'
 });
+return;
+}
+
+btnConfirmar.disabled = true;
+btnConfirmar.innerText = 'Confirmando...';
+
+const nomeFinal = `${nome} (${adt} adulto${adt > 1 ? 's' : ''} / ${cri} criança${cri !== 1 ? 's' : ''})`;
 
 const { error } = await supa.from('convidados').insert([{
-nome: `${nome} (${adt} adultos / ${cri} crianças)`,
+nome: nomeFinal,
 usuario_email: emailNoiva,
-confirmado:true,
-parentesco:'Online'
+confirmado: true,
+parentesco: 'Online'
 }]);
+
+btnConfirmar.disabled = false;
+btnConfirmar.innerText = 'Confirmar presença';
 
 if(error){
 Swal.fire({
 icon:'error',
 title:'Erro ao confirmar',
-text:error.message,
+text:'Não foi possível confirmar agora. Tente novamente.',
 confirmButtonColor:'#EEABAB'
 });
-}else{
-Swal.fire({
-icon:'success',
-title:'Presença confirmada 💍',
-text:'Nos vemos no grande dia!',
-confirmButtonColor:'#EEABAB'
-});
-document.querySelector('.card').innerHTML = `
-<h1 style="font-family:'Cormorant Garamond'">Obrigada ✨</h1>
-<p class="sub">Sua presença foi confirmada com sucesso</p>
-`;
+return;
 }
+
+card.innerHTML = `
+  <div class="success-icon">💍</div>
+  <h1>Obrigada ✨</h1>
+  <p class="sub">Sua presença foi confirmada com sucesso. Os noivos ficarão muito felizes em receber você.</p>
+`;
 }
 </script>
 
