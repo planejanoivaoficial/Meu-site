@@ -898,10 +898,21 @@ body::after{
   }
 }
 
+@page{
+  size:A4;
+  margin:14mm 10mm 16mm;
+}
+
 @media print{
 
+  html,
   body{
-    padding:22px;
+    width:100%;
+    overflow:visible !important;
+  }
+
+  body{
+    padding:0;
     background:white;
   }
 
@@ -910,26 +921,81 @@ body::after{
     display:none;
   }
 
+  .page{
+    max-width:100%;
+    overflow:visible;
+  }
+
   .hero,
   .place-card,
   .card{
     box-shadow:none;
-    border:1px solid #eee;
     background:white;
-    break-inside:avoid;
+    border:1px solid #eee;
   }
 
-  .actions,
-  .footer{
-    display:none;
+  .hero{
+    padding:26px 22px;
+    margin-bottom:14mm;
+    break-inside:avoid;
+    page-break-inside:avoid;
   }
 
   .location-section{
-    margin-bottom:28px;
+    grid-template-columns:1fr 1fr;
+    gap:10mm;
+    margin-bottom:14mm;
+    break-inside:avoid;
+    page-break-inside:avoid;
   }
 
+  .timeline-shell{
+    padding-top:8mm;
+    overflow:visible;
+  }
+
+  .timeline-shell::before{
+    display:none;
+  }
+
+  .timeline{
+    gap:10mm;
+  }
+
+  .item{
+    padding-left:0;
+    margin-bottom:10mm;
+    break-inside:avoid;
+    page-break-inside:avoid;
+  }
+
+  .dot{
+    display:none;
+  }
+
+  .card{
+    break-inside:avoid;
+    page-break-inside:avoid;
+    min-height:auto;
+    padding:16px 20px;
+  }
+
+  .actions,
+  .footer,
   .route-actions{
     display:none;
+  }
+
+  .names{
+    font-size:44px;
+  }
+
+  .desc{
+    font-size:26px;
+  }
+
+  .time{
+    font-size:13px;
   }
 }
 
@@ -1338,19 +1404,10 @@ async function load(){
     const temRecepcaoHero =
       usuarioTemRecepcao(user);
 
-    const localPrincipal =
-      temRecepcaoHero
-        ? (
-            user.local_recepcao ||
-            user.local_cerimonia ||
-            user.local_casamento ||
-            'Local do evento'
-          )
-        : (
-            user.local_cerimonia ||
-            user.local_casamento ||
-            'Local da cerimônia'
-          );
+   const localPrincipal =
+  user.local_cerimonia ||
+  user.local_casamento ||
+  'Local da cerimônia';
 
     document.getElementById('nomes').innerText =
       `${user.nome || 'Noiva'} & ${user.nome_noivo || 'Noivo'}`;
