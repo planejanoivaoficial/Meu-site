@@ -644,8 +644,8 @@ body::after{
 
 <script>
 const supa = supabase.createClient(
-'https://vuiqbdqnfnofwkpvvuqy.supabase.co',
-'sb_publishable_LjKm4HF9kyD7m0ch3Eefdw_TJ5SG6w2'
+  'https://vuiqbdqnfnofwkpvvuqy.supabase.co',
+  'sb_publishable_LjKm4HF9kyD7m0ch3Eefdw_TJ5SG6w2'
 );
 
 const params = new URLSearchParams(window.location.search);
@@ -715,7 +715,10 @@ function horarioOrdenavel(horaTexto){
 }
 
 function textoBusca(local, endereco){
-  return [local, endereco].map(v => String(v || '').trim()).filter(Boolean).join(', ');
+  return [local, endereco]
+    .map(v => String(v || '').trim())
+    .filter(Boolean)
+    .join(', ');
 }
 
 function gerarLinkGoogleMaps(busca){
@@ -759,13 +762,21 @@ function criarCardLocal(tipo, icone, local, endereco){
   `;
 }
 
+function usuarioTemRecepcao(user){
+  return (
+    user.tem_recepcao === true ||
+    user.tem_recepcao === 'true' ||
+    user.tem_recepcao === 1
+  );
+}
+
 function renderizarLocais(user){
   const section = document.getElementById('locaisSection');
 
   const localCerimonia = user.local_cerimonia || '';
   const enderecoCerimonia = user.endereco_cerimonia || '';
 
-  const temRecepcao = user.tem_recepcao !== false;
+  const temRecepcao = usuarioTemRecepcao(user);
   const localRecepcao = temRecepcao ? (user.local_recepcao || '') : '';
   const enderecoRecepcao = temRecepcao ? (user.endereco_recepcao || '') : '';
 
@@ -826,9 +837,20 @@ async function load(){
   if(user){
     dataCasamentoUsuario = user.data_casamento || null;
 
-    const localPrincipal = user.tem_recepcao === false
-      ? (user.local_cerimonia || user.local_casamento || 'Local do evento')
-      : (user.local_recepcao || user.local_cerimonia || user.local_casamento || 'Local do evento');
+    const temRecepcaoHero = usuarioTemRecepcao(user);
+
+    const localPrincipal = temRecepcaoHero
+      ? (
+          user.local_recepcao ||
+          user.local_cerimonia ||
+          user.local_casamento ||
+          'Local do evento'
+        )
+      : (
+          user.local_cerimonia ||
+          user.local_casamento ||
+          'Local da cerimônia'
+        );
 
     document.getElementById('nomes').innerText =
       `${user.nome || 'Noiva'} & ${user.nome_noivo || 'Noivo'}`;
