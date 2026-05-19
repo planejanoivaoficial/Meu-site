@@ -125,7 +125,7 @@ nav{
 
 .actions{
   display:grid;
-  grid-template-columns:repeat(3,1fr);
+  grid-template-columns:repeat(4,1fr);
   gap:12px;
   margin:20px 0;
 }
@@ -150,6 +150,7 @@ nav{
 .wpp{background:var(--green);color:white}
 .print{background:var(--text);color:white}
 .ai{background:linear-gradient(135deg,var(--rose),var(--rose-dark));color:white}
+.clear{background:#FFF1F1;color:var(--red);border:1px solid rgba(239,68,68,.18)}
 
 .form-box{
   background:white;
@@ -274,7 +275,7 @@ input:focus{
   color:var(--muted);
 }
 
-@media(max-width:720px){
+@media(max-width:760px){
   .hero h1{font-size:2.1rem}
   .actions{grid-template-columns:1fr}
   .form{grid-template-columns:1fr}
@@ -314,14 +315,19 @@ input:focus{
     Gerar sugestão
   </button>
 
+  <button onclick="apagarTudo()" class="action-btn clear">
+    <span class="material-symbols-outlined">delete_sweep</span>
+    Apagar tudo
+  </button>
+
   <button onclick="compartilharWhatsApp()" class="action-btn wpp">
     <span class="material-symbols-outlined">ios_share</span>
-    Compartilhar WhatsApp
+    Compartilhar
   </button>
 
   <button onclick="abrirImpressao()" class="action-btn print">
     <span class="material-symbols-outlined">print</span>
-    Ver versão oficial
+    Ver oficial
   </button>
 </div>
 
@@ -405,7 +411,6 @@ function horarioOrdenavel(horaTexto){
 
   const casamento = new Date(dataCasamentoUsuario);
   const minutoCasamento = casamento.getHours() * 60 + casamento.getMinutes();
-
   const inicioDiaCasamento = minutoCasamento - 420;
 
   if(minutos < inicioDiaCasamento){
@@ -446,9 +451,7 @@ async function load(){
     return;
   }
 
-  const dadosOrdenados = [...data].sort((a,b) => {
-    return horarioOrdenavel(a.hora) - horarioOrdenavel(b.hora);
-  });
+  const dadosOrdenados = [...data].sort((a,b) => horarioOrdenavel(a.hora) - horarioOrdenavel(b.hora));
 
   let html = '';
 
@@ -512,6 +515,51 @@ async function add(){
   await load();
 }
 
+async function apagarTudo(){
+  const r = await Swal.fire({
+    icon:'warning',
+    title:'Apagar todo o cronograma?',
+    text:'Todos os horários serão removidos. Essa ação não pode ser desfeita.',
+    showCancelButton:true,
+    confirmButtonText:'Sim, apagar tudo',
+    cancelButtonText:'Cancelar',
+    confirmButtonColor:'#D9534F',
+    cancelButtonColor:'#EADFD6'
+  });
+
+  if(!r.isConfirmed) return;
+
+  Swal.fire({
+    title:'Apagando cronograma...',
+    allowOutsideClick:false,
+    didOpen:()=>Swal.showLoading()
+  });
+
+  const { error } = await supa
+    .from('cronograma')
+    .delete()
+    .eq('usuario_email', email);
+
+  if(error){
+    Swal.fire({
+      icon:'error',
+      title:'Erro ao apagar',
+      text:'Não foi possível apagar o cronograma.',
+      confirmButtonColor:'#EEABAB'
+    });
+    return;
+  }
+
+  Swal.fire({
+    icon:'success',
+    title:'Cronograma limpo',
+    text:'Agora você pode gerar uma nova sugestão sem duplicar.',
+    confirmButtonColor:'#EEABAB'
+  });
+
+  await load();
+}
+
 async function gerarSugestao(){
   const { data:user } = await supa
     .from('usuarios')
@@ -532,6 +580,55 @@ async function gerarSugestao(){
   dataCasamentoUsuario = user.data_casamento;
 
   const casamento = new Date(user.data_casamento);
+
+  const { data:existentes } = await supa
+    .from('cronograma')
+    .select('id')
+    .eq('usuario_email', email)
+    .limit(1);
+
+  if(existentes && existentes.length > 0){
+    const escolha = await Swal.fire({
+      icon:'question',
+      title:'Já existe um cronograma',
+      text:'Você deseja substituir os horários atuais ou adicionar a sugestão por cima?',
+      showCancelButton:true,
+      showDenyButton:true,
+      confirmButtonText:'Substituir',
+      denyButtonText:'Adicionar mesmo assim',
+      cancelButtonText:'Cancelar',
+      confirmButtonColor:'#EEABAB',
+      denyButtonColor:'#3F3932',
+      cancelButtonColor:'#EADFD6'
+    });
+
+    if(escolha.isDismissed) return;
+
+    if(escolha.isConfirmed){
+      await supa
+        .from('cronograma')
+        .delete()
+        .eq('usuario_email', email);
+    }
+  }else{
+    const r = await Swal.fire({
+      icon:'question',
+      title:'Gerar sugestão de roteiro?',
+      text:'Isso criará um cronograma automático com base no horário do casamento.',
+      showCancelButton:true,
+      confirmButtonText:'Sim, gerar',
+      cancelButtonText:'Cancelar',
+      confirmButtonColor:'#EEABAB'
+    });
+
+    if(!r.isConfirmed) return;
+  }
+
+  Swal.fire({
+    title:'Gerando roteiro...',
+    allowOutsideClick:false,
+    didOpen:()=>Swal.showLoading()
+  });
 
   const sugestoes = [
     { min:-360, desc:'Início do making of da noiva' },
@@ -557,24 +654,6 @@ async function gerarSugestao(){
     { min:420, desc:'Café, doces ou lanche da madrugada' },
     { min:480, desc:'Encerramento previsto' }
   ];
-
-  const r = await Swal.fire({
-    icon:'question',
-    title:'Gerar sugestão de roteiro?',
-    text:'Isso criará um cronograma automático com base no horário do casamento. Os itens atuais serão mantidos.',
-    showCancelButton:true,
-    confirmButtonText:'Sim, gerar',
-    cancelButtonText:'Cancelar',
-    confirmButtonColor:'#EEABAB'
-  });
-
-  if(!r.isConfirmed) return;
-
-  Swal.fire({
-    title:'Gerando roteiro...',
-    allowOutsideClick:false,
-    didOpen:()=>Swal.showLoading()
-  });
 
   const itens = sugestoes.map(item => ({
     usuario_email: email,
