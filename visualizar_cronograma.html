@@ -2,10 +2,7 @@
 <html lang="pt-br">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
-<meta http-equiv="Pragma" content="no-cache">
-<meta http-equiv="Expires" content="0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 <title>Cronograma Oficial | PlanejaNoiva</title>
 
@@ -20,6 +17,8 @@
   --texto:#3F3932;
   --muted:#8F857A;
   --bg:#FDF9F6;
+  --paper:#FFFDFB;
+  --line:rgba(63,57,50,.10);
   --shadow:0 28px 80px rgba(63,57,50,.08);
 }
 
@@ -39,11 +38,12 @@ body{
   min-height:100vh;
   padding:54px 22px 70px;
   background:
-    radial-gradient(circle at 12% 8%, rgba(238,171,171,.18), transparent 30%),
+    radial-gradient(circle at 12% 8%, color-mix(in srgb, var(--cor-tema) 16%, transparent), transparent 30%),
     radial-gradient(circle at 88% 12%, rgba(212,175,55,.10), transparent 26%),
     linear-gradient(180deg,#FFFDFC,#F8F0EA);
   color:var(--texto);
   font-family:'Cormorant Garamond',serif;
+  overflow-x:hidden;
 }
 
 body::before{
@@ -61,7 +61,12 @@ body::after{
   width:640px;
   height:640px;
   border-radius:50%;
-  background:radial-gradient(circle,rgba(238,171,171,.18),transparent 68%);
+  background:
+    radial-gradient(
+      circle,
+      color-mix(in srgb, var(--cor-tema) 22%, transparent),
+      transparent 68%
+    );
   filter:blur(6px);
   opacity:.42;
   top:-300px;
@@ -78,12 +83,17 @@ body::after{
 
 .hero{
   position:relative;
-  width:100%;
   text-align:center;
   padding:54px 36px 48px;
   margin-bottom:36px;
   border-radius:42px;
-  background:linear-gradient(180deg,rgba(255,255,255,.88),rgba(255,250,247,.68));
+  background:
+    linear-gradient(
+      180deg,
+      rgba(255,255,255,.88),
+      rgba(255,250,247,.68)
+    );
+
   border:1px solid rgba(234,223,214,.72);
   box-shadow:var(--shadow);
   overflow:hidden;
@@ -95,7 +105,12 @@ body::after{
   width:360px;
   height:360px;
   border-radius:50%;
-  border:1px solid rgba(238,171,171,.28);
+  border:1px solid color-mix(
+    in srgb,
+    var(--cor-tema) 30%,
+    transparent
+  );
+
   top:-190px;
   right:-110px;
 }
@@ -106,7 +121,13 @@ body::after{
   width:240px;
   height:240px;
   border-radius:50%;
-  background:rgba(238,171,171,.10);
+  background:
+    color-mix(
+      in srgb,
+      var(--cor-tema) 10%,
+      transparent
+    );
+
   bottom:-150px;
   left:-90px;
 }
@@ -142,7 +163,6 @@ body::after{
   color:var(--cor-tema);
   letter-spacing:-2px;
   margin-bottom:24px;
-  overflow-wrap:anywhere;
 }
 
 .details{
@@ -153,11 +173,13 @@ body::after{
   align-items:center;
   flex-wrap:wrap;
   gap:14px;
+
   font-family:'Montserrat',sans-serif;
   font-size:.76rem;
   font-weight:700;
   letter-spacing:3.5px;
   text-transform:uppercase;
+
   color:rgba(63,57,50,.72);
 }
 
@@ -173,13 +195,14 @@ body::after{
   position:relative;
   z-index:2;
   margin-top:15px;
+
   font-family:'Montserrat',sans-serif;
   font-size:.72rem;
   font-weight:600;
   letter-spacing:3px;
   text-transform:uppercase;
+
   color:rgba(63,57,50,.52);
-  overflow-wrap:anywhere;
 }
 
 .seal-wrap{
@@ -196,7 +219,14 @@ body::after{
 .seal-line{
   height:1px;
   flex:1;
-  background:linear-gradient(90deg,transparent,var(--cor-tema),transparent);
+  background:
+    linear-gradient(
+      90deg,
+      transparent,
+      var(--cor-tema),
+      transparent
+    );
+
   opacity:.72;
 }
 
@@ -205,23 +235,31 @@ body::after{
   height:24px;
   border-radius:50%;
   background:var(--cor-tema);
-  box-shadow:0 0 0 11px rgba(238,171,171,.12),0 14px 36px rgba(238,171,171,.28);
+
+  box-shadow:
+    0 0 0 11px color-mix(in srgb, var(--cor-tema) 12%, transparent),
+    0 14px 36px color-mix(in srgb, var(--cor-tema) 28%, transparent);
 }
 
 .tag{
   position:relative;
   z-index:2;
+
   display:inline-flex;
   align-items:center;
   justify-content:center;
+
   padding:13px 42px;
+
   border-top:1px solid var(--cor-tema);
   border-bottom:1px solid var(--cor-tema);
+
   font-family:'Montserrat',sans-serif;
   font-size:.64rem;
   font-weight:700;
   letter-spacing:5px;
   text-transform:uppercase;
+
   color:rgba(63,57,50,.82);
 }
 
@@ -230,16 +268,22 @@ body::after{
   display:grid;
   grid-template-columns:repeat(2,1fr);
   gap:18px;
-  width:100%;
 }
 
 .place-card{
   position:relative;
-  width:100%;
-  background:linear-gradient(135deg,rgba(255,255,255,.94),rgba(255,248,245,.82));
+
+  background:
+    linear-gradient(
+      135deg,
+      rgba(255,255,255,.94),
+      rgba(255,248,245,.82)
+    );
+
   border:1px solid rgba(234,223,214,.82);
   border-radius:34px;
   padding:26px;
+
   box-shadow:0 18px 55px rgba(63,57,50,.055);
   overflow:hidden;
 }
@@ -252,7 +296,13 @@ body::after{
   border-radius:50%;
   right:-80px;
   top:-90px;
-  background:rgba(238,171,171,.09);
+
+  background:
+    color-mix(
+      in srgb,
+      var(--cor-tema) 9%,
+      transparent
+    );
 }
 
 .place-card > *{
@@ -266,8 +316,11 @@ body::after{
   font-weight:800;
   letter-spacing:3px;
   text-transform:uppercase;
+
   color:var(--cor-tema);
+
   margin-bottom:12px;
+
   display:flex;
   align-items:center;
   gap:8px;
@@ -279,7 +332,6 @@ body::after{
   font-style:italic;
   line-height:1.05;
   color:rgba(63,57,50,.9);
-  overflow-wrap:anywhere;
 }
 
 .place-address{
@@ -288,7 +340,6 @@ body::after{
   font-size:.82rem;
   line-height:1.7;
   margin-top:10px;
-  overflow-wrap:anywhere;
 }
 
 .route-actions{
@@ -302,15 +353,18 @@ body::after{
   text-decoration:none;
   border-radius:999px;
   padding:12px 16px;
+
   font-family:'Montserrat',sans-serif;
   font-size:.66rem;
   letter-spacing:1.5px;
   text-transform:uppercase;
   font-weight:800;
+
   display:inline-flex;
   align-items:center;
   justify-content:center;
   gap:7px;
+
   transition:.25s;
 }
 
@@ -344,7 +398,15 @@ body::after{
   top:0;
   bottom:0;
   width:1px;
-  background:linear-gradient(180deg,transparent,var(--cor-tema),transparent);
+
+  background:
+    linear-gradient(
+      180deg,
+      transparent,
+      var(--cor-tema),
+      transparent
+    );
+
   opacity:.38;
 }
 
@@ -352,12 +414,10 @@ body::after{
   display:flex;
   flex-direction:column;
   gap:24px;
-  width:100%;
 }
 
 .item{
   position:relative;
-  width:100%;
   padding-left:92px;
   animation:fadeUp .7s ease both;
 }
@@ -367,25 +427,41 @@ body::after{
   left:22px;
   top:50%;
   transform:translateY(-50%);
+
   width:26px;
   height:26px;
   border-radius:50%;
+
   background:var(--cor-tema);
-  box-shadow:0 0 0 9px rgba(238,171,171,.12),0 16px 34px rgba(63,57,50,.08);
+
+  box-shadow:
+    0 0 0 9px color-mix(in srgb, var(--cor-tema) 12%, transparent),
+    0 16px 34px rgba(63,57,50,.08);
 }
 
 .card{
   position:relative;
-  width:100%;
+
   display:grid;
   grid-template-columns:130px 1fr;
   align-items:center;
   gap:26px;
+
   min-height:104px;
+
   padding:26px 34px;
+
   border-radius:34px;
-  background:linear-gradient(135deg,rgba(255,255,255,.92),rgba(255,250,247,.76));
+
+  background:
+    linear-gradient(
+      135deg,
+      rgba(255,255,255,.92),
+      rgba(255,250,247,.76)
+    );
+
   border:1px solid rgba(234,223,214,.78);
+
   box-shadow:0 18px 55px rgba(63,57,50,.055);
   overflow:hidden;
 }
@@ -395,17 +471,26 @@ body::after{
   position:absolute;
   right:-60px;
   top:-80px;
+
   width:170px;
   height:170px;
   border-radius:50%;
-  background:rgba(238,171,171,.08);
+
+  background:
+    color-mix(
+      in srgb,
+      var(--cor-tema) 8%,
+      transparent
+    );
 }
 
 .time{
   position:relative;
   z-index:2;
+
   font-family:'Montserrat',sans-serif;
   color:var(--cor-tema);
+
   font-size:1rem;
   font-weight:800;
   letter-spacing:1px;
@@ -415,22 +500,28 @@ body::after{
 .desc{
   position:relative;
   z-index:2;
+
   text-align:right;
+
   font-size:1.9rem;
   font-style:italic;
   font-weight:400;
   line-height:1.12;
+
   color:rgba(63,57,50,.86);
-  overflow-wrap:anywhere;
 }
 
 .empty{
   padding:42px 30px;
   text-align:center;
+
   border-radius:32px;
+
   background:rgba(255,255,255,.75);
   border:1px dashed rgba(63,57,50,.13);
+
   color:rgba(63,57,50,.48);
+
   font-size:1.65rem;
   font-style:italic;
 }
@@ -438,10 +529,12 @@ body::after{
 .loading{
   padding:42px 30px;
   text-align:center;
+
   font-family:'Montserrat',sans-serif;
   font-size:.78rem;
   letter-spacing:4px;
   text-transform:uppercase;
+
   color:rgba(63,57,50,.48);
 }
 
@@ -455,15 +548,20 @@ body::after{
   border:none;
   padding:15px 44px;
   border-radius:999px;
+
   background:var(--texto);
   color:white;
+
   font-family:'Montserrat',sans-serif;
   font-size:.66rem;
   font-weight:800;
   letter-spacing:3.5px;
   text-transform:uppercase;
+
   cursor:pointer;
+
   box-shadow:0 18px 38px rgba(63,57,50,.14);
+
   transition:.28s;
 }
 
@@ -475,11 +573,13 @@ body::after{
 .footer{
   margin-top:32px;
   text-align:center;
+
   font-family:'Montserrat',sans-serif;
   font-size:.62rem;
   font-weight:600;
   letter-spacing:3px;
   text-transform:uppercase;
+
   color:rgba(63,57,50,.38);
 }
 
@@ -495,56 +595,31 @@ body::after{
 }
 
 @media(max-width:720px){
-  html,
-  body{
-    width:100%;
-    overflow-x:hidden;
-  }
 
   body{
-    padding:18px 12px 48px;
-  }
-
-  .page{
-    width:100%;
-    max-width:100%;
+    padding:20px 12px 50px;
   }
 
   .hero{
-    width:100%;
-    padding:36px 18px 32px;
+    padding:38px 20px 34px;
     border-radius:30px;
     margin-bottom:26px;
   }
 
-  .hero::before{
-    width:230px;
-    height:230px;
-    top:-125px;
-    right:-125px;
-  }
-
-  .hero::after{
-    width:170px;
-    height:170px;
-    bottom:-100px;
-    left:-85px;
-  }
-
   .logo{
-    height:64px;
+    height:66px;
     margin-bottom:14px;
   }
 
   .kicker{
-    font-size:.56rem;
+    font-size:.58rem;
     letter-spacing:3px;
     margin-bottom:14px;
   }
 
   .names{
-    font-size:clamp(2.35rem,13vw,3.15rem);
-    line-height:.98;
+    font-size:2.9rem;
+    line-height:.95;
     letter-spacing:-1px;
     margin-bottom:18px;
   }
@@ -554,7 +629,6 @@ body::after{
     gap:8px;
     font-size:.62rem;
     letter-spacing:2px;
-    line-height:1.6;
   }
 
   .detail-dot{
@@ -564,19 +638,14 @@ body::after{
   .location{
     font-size:.62rem;
     letter-spacing:2px;
-    line-height:1.6;
     margin-top:10px;
-  }
-
-  .seal-wrap{
-    margin:24px auto 22px;
   }
 
   .tag{
     width:100%;
-    padding:12px 12px;
-    font-size:.54rem;
-    letter-spacing:2.6px;
+    padding:12px 18px;
+    font-size:.56rem;
+    letter-spacing:3px;
   }
 
   .location-section{
@@ -586,17 +655,8 @@ body::after{
   }
 
   .place-card{
-    width:100%;
     border-radius:28px;
     padding:22px;
-  }
-
-  .place-title{
-    font-size:1.7rem;
-  }
-
-  .place-address{
-    font-size:.74rem;
   }
 
   .route-actions{
@@ -605,16 +665,10 @@ body::after{
 
   .route-btn{
     width:100%;
-    min-height:44px;
-  }
-
-  .timeline-shell{
-    width:100%;
-    max-width:100%;
   }
 
   .timeline-shell::before{
-    left:13px;
+    left:14px;
   }
 
   .timeline{
@@ -622,38 +676,31 @@ body::after{
   }
 
   .item{
-    width:100%;
-    padding-left:40px;
+    padding-left:42px;
   }
 
   .dot{
-    left:1px;
+    left:2px;
     width:22px;
     height:22px;
   }
 
   .card{
-    width:100%;
     grid-template-columns:1fr;
     gap:12px;
-    padding:22px 18px;
+    padding:22px 20px;
     border-radius:26px;
     min-height:auto;
   }
 
   .time{
     font-size:.82rem;
-    letter-spacing:1px;
   }
 
   .desc{
     text-align:left;
-    font-size:1.55rem;
-    line-height:1.1;
-  }
-
-  .actions{
-    margin-top:34px;
+    font-size:1.6rem;
+    line-height:1.08;
   }
 
   .btn{
@@ -662,16 +709,10 @@ body::after{
     font-size:.6rem;
     letter-spacing:2px;
   }
-
-  .footer{
-    margin-top:24px;
-    font-size:.54rem;
-    letter-spacing:2px;
-    line-height:1.7;
-  }
 }
 
 @media print{
+
   body{
     padding:22px;
     background:white;
@@ -696,10 +737,6 @@ body::after{
     display:none;
   }
 
-  .location-section{
-    margin-bottom:28px;
-  }
-
   .route-actions{
     display:none;
   }
@@ -712,11 +749,19 @@ body::after{
 <main class="page">
 
 <section class="hero">
-  <img src="https://vuiqbdqnfnofwkpvvuqy.supabase.co/storage/v1/object/public/logos/logo.png" class="logo" alt="PlanejaNoiva">
 
-  <div class="kicker">PlanejaNoiva apresenta</div>
+  <img
+    src="https://i.ibb.co/YTTQXBx8/Logo-Planeja-Noiva.png"
+    class="logo"
+  >
 
-  <div class="names" id="nomes">Carregando...</div>
+  <div class="kicker">
+    PlanejaNoiva apresenta
+  </div>
+
+  <div class="names" id="nomes">
+    Carregando...
+  </div>
 
   <div class="details">
     <span id="dataHora"></span>
@@ -732,19 +777,32 @@ body::after{
     <div class="seal-line"></div>
   </div>
 
-  <div class="tag">Cronograma Oficial</div>
+  <div class="tag">
+    Cronograma Oficial
+  </div>
+
 </section>
 
-<section class="location-section" id="locaisSection" style="display:none;"></section>
+<section
+  class="location-section"
+  id="locaisSection"
+  style="display:none;"
+></section>
 
 <section class="timeline-shell">
+
   <div class="timeline" id="lista">
-    <div class="loading">Carregando cronograma...</div>
+    <div class="loading">
+      Carregando cronograma...
+    </div>
   </div>
+
 </section>
 
 <div class="actions">
-  <button class="btn" onclick="window.print()">Exportar PDF</button>
+  <button class="btn" onclick="window.print()">
+    Exportar PDF
+  </button>
 </div>
 
 <div class="footer">
@@ -760,6 +818,7 @@ const supa = supabase.createClient(
 );
 
 const params = new URLSearchParams(window.location.search);
+
 const emailParam = params.get('noiva');
 const token = params.get('token');
 
@@ -772,51 +831,73 @@ function escaparHTML(texto){
 }
 
 function normalizarEmail(valor){
-  return decodeURIComponent(String(valor || '').trim()).toLowerCase();
+  return decodeURIComponent(
+    String(valor || '').trim()
+  );
 }
 
 function partesDataLocal(valor){
+
   const texto = String(valor || '');
+
   const ano = texto.substring(0,4);
   const mes = texto.substring(5,7);
   const dia = texto.substring(8,10);
   const hora = texto.substring(11,16) || '00:00';
-  return { ano, mes, dia, hora };
+
+  return {
+    ano,
+    mes,
+    dia,
+    hora
+  };
 }
 
 function formatarDataCasamento(valor){
+
   const p = partesDataLocal(valor);
 
-  if(!p.ano || !p.mes || !p.dia){
-    return '';
-  }
+  if(!p.ano) return '';
 
   return `${p.dia}/${p.mes}/${p.ano} • ${p.hora}H`;
 }
 
 function minutoCasamentoLocal(){
+
   if(!dataCasamentoUsuario) return null;
 
-  const hora = partesDataLocal(dataCasamentoUsuario).hora;
+  const hora = partesDataLocal(
+    dataCasamentoUsuario
+  ).hora;
+
   const [h,m] = hora.split(':').map(Number);
 
   return (h * 60) + (m || 0);
 }
 
 function minutosDoHorario(horaTexto){
-  const [h,m] = String(horaTexto || '00:00').substring(0,5).split(':').map(Number);
+
+  const [h,m] = String(horaTexto || '00:00')
+    .substring(0,5)
+    .split(':')
+    .map(Number);
+
   return (h * 60) + (m || 0);
 }
 
 function horarioOrdenavel(horaTexto){
+
   const minutos = minutosDoHorario(horaTexto);
-  const minutoCasamento = minutoCasamentoLocal();
+
+  const minutoCasamento =
+    minutoCasamentoLocal();
 
   if(minutoCasamento === null){
     return minutos;
   }
 
-  const inicioRoteiro = minutoCasamento - 420;
+  const inicioRoteiro =
+    minutoCasamento - 420;
 
   if(minutos < inicioRoteiro){
     return minutos + 1440;
@@ -825,55 +906,102 @@ function horarioOrdenavel(horaTexto){
   return minutos;
 }
 
-function textoBusca(local, endereco){
-  return [local, endereco]
+function textoBusca(local,endereco){
+
+  return [local,endereco]
     .map(v => String(v || '').trim())
     .filter(Boolean)
     .join(', ');
 }
 
 function gerarLinkGoogleMaps(busca){
+
   const q = encodeURIComponent(busca || '');
-  return q ? `https://www.google.com/maps/search/?api=1&query=${q}` : '#';
+
+  return q
+    ? `https://www.google.com/maps/search/?api=1&query=${q}`
+    : '#';
 }
 
 function gerarLinkWaze(busca){
+
   const q = encodeURIComponent(busca || '');
-  return q ? `https://waze.com/ul?q=${q}&navigate=yes` : '#';
+
+  return q
+    ? `https://waze.com/ul?q=${q}&navigate=yes`
+    : '#';
 }
 
-function criarCardLocal(tipo, icone, local, endereco){
-  const busca = textoBusca(local, endereco);
+function criarCardLocal(
+  tipo,
+  icone,
+  local,
+  endereco
+){
+
+  const busca = textoBusca(local,endereco);
 
   if(!busca) return '';
 
   return `
     <article class="place-card">
+
       <div class="place-label">
-        <span class="material-symbols-outlined">${icone}</span>
+        <span class="material-symbols-outlined">
+          ${icone}
+        </span>
+
         ${tipo}
       </div>
 
-      <div class="place-title">${escaparHTML(local || endereco)}</div>
+      <div class="place-title">
+        ${escaparHTML(local || endereco)}
+      </div>
 
-      ${endereco ? `<div class="place-address">${escaparHTML(endereco)}</div>` : ''}
+      ${
+        endereco
+        ? `
+          <div class="place-address">
+            ${escaparHTML(endereco)}
+          </div>
+        `
+        : ''
+      }
 
       <div class="route-actions">
-        <a class="route-btn google" href="${gerarLinkGoogleMaps(busca)}" target="_blank">
-          <span class="material-symbols-outlined">map</span>
+
+        <a
+          class="route-btn google"
+          href="${gerarLinkGoogleMaps(busca)}"
+          target="_blank"
+        >
+          <span class="material-symbols-outlined">
+            map
+          </span>
+
           Google Maps
         </a>
 
-        <a class="route-btn waze" href="${gerarLinkWaze(busca)}" target="_blank">
-          <span class="material-symbols-outlined">near_me</span>
+        <a
+          class="route-btn waze"
+          href="${gerarLinkWaze(busca)}"
+          target="_blank"
+        >
+          <span class="material-symbols-outlined">
+            near_me
+          </span>
+
           Waze
         </a>
+
       </div>
+
     </article>
   `;
 }
 
 function usuarioTemRecepcao(user){
+
   return (
     user.tem_recepcao === true ||
     user.tem_recepcao === 'true' ||
@@ -882,45 +1010,75 @@ function usuarioTemRecepcao(user){
 }
 
 function renderizarLocais(user){
-  const section = document.getElementById('locaisSection');
 
-  const localCerimonia = user.local_cerimonia || '';
-  const enderecoCerimonia = user.endereco_cerimonia || '';
+  const section =
+    document.getElementById(
+      'locaisSection'
+    );
 
-  const temRecepcao = usuarioTemRecepcao(user);
-  const localRecepcao = temRecepcao ? (user.local_recepcao || '') : '';
-  const enderecoRecepcao = temRecepcao ? (user.endereco_recepcao || '') : '';
+  const localCerimonia =
+    user.local_cerimonia || '';
+
+  const enderecoCerimonia =
+    user.endereco_cerimonia || '';
+
+  const temRecepcao =
+    usuarioTemRecepcao(user);
+
+  const localRecepcao = temRecepcao
+    ? (user.local_recepcao || '')
+    : '';
+
+  const enderecoRecepcao = temRecepcao
+    ? (user.endereco_recepcao || '')
+    : '';
 
   let html = '';
 
-  html += criarCardLocal('Cerimônia', 'church', localCerimonia, enderecoCerimonia);
+  html += criarCardLocal(
+    'Cerimônia',
+    'church',
+    localCerimonia,
+    enderecoCerimonia
+  );
 
   if(temRecepcao){
-    html += criarCardLocal('Recepção', 'celebration', localRecepcao, enderecoRecepcao);
+
+    html += criarCardLocal(
+      'Recepção',
+      'celebration',
+      localRecepcao,
+      enderecoRecepcao
+    );
   }
 
   if(html){
+
     section.innerHTML = html;
     section.style.display = 'grid';
+
   }else{
+
     section.style.display = 'none';
   }
 }
 
 async function buscarEmailPublico(){
+
   if(emailParam){
     return normalizarEmail(emailParam);
   }
 
   if(token){
+
     const { data:config } = await supa
       .from('mesas_assentos')
       .select('usuario_email')
       .eq('public_token', token)
       .maybeSingle();
 
-    if(config && config.usuario_email){
-      return normalizarEmail(config.usuario_email);
+    if(config?.usuario_email){
+      return config.usuario_email;
     }
   }
 
@@ -928,14 +1086,21 @@ async function buscarEmailPublico(){
 }
 
 async function load(){
-  const lista = document.getElementById('lista');
-  const emailNoiva = await buscarEmailPublico();
+
+  const lista =
+    document.getElementById('lista');
+
+  const emailNoiva =
+    await buscarEmailPublico();
 
   if(!emailNoiva){
-    lista.innerHTML = `<div class="empty">Link inválido</div>`;
-    document.getElementById('nomes').innerText = 'Cronograma indisponível';
-    document.getElementById('dataHora').innerText = '';
-    document.getElementById('localHero').innerText = '';
+
+    lista.innerHTML = `
+      <div class="empty">
+        Link inválido
+      </div>
+    `;
+
     return;
   }
 
@@ -943,16 +1108,22 @@ async function load(){
     .from('usuarios')
     .select('*')
     .eq('email', emailNoiva)
-    .order('created_at', { ascending:false })
+    .order('created_at', {
+      ascending:false
+    })
     .limit(1)
     .maybeSingle();
 
   if(user){
-    dataCasamentoUsuario = user.data_casamento || null;
 
-    const temRecepcaoHero = usuarioTemRecepcao(user);
+    dataCasamentoUsuario =
+      user.data_casamento || null;
 
-    const localPrincipal = temRecepcaoHero
+    const temRecepcaoHero =
+      usuarioTemRecepcao(user);
+
+    const localPrincipal =
+      temRecepcaoHero
       ? (
           user.local_recepcao ||
           user.local_cerimonia ||
@@ -965,22 +1136,35 @@ async function load(){
           'Local da cerimônia'
         );
 
-    document.getElementById('nomes').innerText =
+    document.getElementById('nomes')
+      .innerText =
       `${user.nome || 'Noiva'} & ${user.nome_noivo || 'Noivo'}`;
 
-    document.getElementById('dataHora').innerText =
-      user.data_casamento ? formatarDataCasamento(user.data_casamento) : '';
+    document.getElementById('dataHora')
+      .innerText =
+      user.data_casamento
+      ? formatarDataCasamento(
+          user.data_casamento
+        )
+      : '';
 
-    document.getElementById('localHero').innerText = localPrincipal;
-    document.getElementById('local').innerText = localPrincipal;
+    document.getElementById('localHero')
+      .innerText = localPrincipal;
+
+    document.getElementById('local')
+      .innerText = localPrincipal;
 
     if(user.paleta_cores){
-      document.documentElement.style.setProperty('--cor-tema', user.paleta_cores);
+
+      document.documentElement
+        .style
+        .setProperty(
+          '--cor-tema',
+          user.paleta_cores
+        );
     }
 
     renderizarLocais(user);
-  }else{
-    document.getElementById('nomes').innerText = 'Cronograma Oficial';
   }
 
   const { data:crono, error } = await supa
@@ -989,30 +1173,64 @@ async function load(){
     .eq('usuario_email', emailNoiva);
 
   if(error){
-    lista.innerHTML = `<div class="empty">Erro ao carregar cronograma</div>`;
+
+    lista.innerHTML = `
+      <div class="empty">
+        Erro ao carregar cronograma
+      </div>
+    `;
+
     return;
   }
 
-  if(!crono || crono.length === 0){
-    lista.innerHTML = `<div class="empty">A definir o roteiro dos sonhos...</div>`;
+  if(!crono || !crono.length){
+
+    lista.innerHTML = `
+      <div class="empty">
+        A definir o roteiro dos sonhos...
+      </div>
+    `;
+
     return;
   }
 
-  const ordenado = [...crono].sort((a,b) => {
-    return horarioOrdenavel(a.hora) - horarioOrdenavel(b.hora);
-  });
+  const ordenado = [...crono]
+    .sort((a,b)=>{
+
+      return (
+        horarioOrdenavel(a.hora)
+        -
+        horarioOrdenavel(b.hora)
+      );
+    });
 
   let html = '';
 
-  ordenado.forEach((item,index) => {
+  ordenado.forEach((item,index)=>{
+
     html += `
-      <article class="item" style="animation-delay:${index * .05}s">
+      <article
+        class="item"
+        style="animation-delay:${index * .05}s"
+      >
+
         <div class="dot"></div>
 
         <div class="card">
-          <div class="time">${escaparHTML((item.hora || '').substring(0,5))}h</div>
-          <div class="desc">${escaparHTML(item.descricao)}</div>
+
+          <div class="time">
+            ${escaparHTML(
+              (item.hora || '')
+              .substring(0,5)
+            )}h
+          </div>
+
+          <div class="desc">
+            ${escaparHTML(item.descricao)}
+          </div>
+
         </div>
+
       </article>
     `;
   });
