@@ -721,7 +721,7 @@ async function del(id){
 function linkPublico(){
   return window.location.origin +
     window.location.pathname.replace('cronograma.html','visualizar_cronograma.html') +
-    `?noiva=${encodeURIComponent(email)}`;
+    `?noiva=${encodeURIComponent(email)}&v=${Date.now()}`;
 }
 
 function compartilharWhatsApp(){
