@@ -1,17 +1,34 @@
 <!DOCTYPE html>
 <html lang="pt-br">
 <head>
+
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<meta
+  name="viewport"
+  content="width=device-width, initial-scale=1.0, viewport-fit=cover"
+/>
+
+<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+<meta http-equiv="Pragma" content="no-cache">
+<meta http-equiv="Expires" content="0">
 
 <title>Cronograma Oficial | PlanejaNoiva</title>
 
-<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400;1,500&family=Montserrat:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" />
+<link
+  href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400;1,500&family=Montserrat:wght@300;400;500;600;700&display=swap"
+  rel="stylesheet"
+/>
+
+<link
+  rel="stylesheet"
+  href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined"
+/>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
 <style>
+
 :root{
   --cor-tema:#EEABAB;
   --texto:#3F3932;
@@ -31,19 +48,23 @@
 html,
 body{
   width:100%;
+  max-width:100%;
   overflow-x:hidden;
+  scroll-behavior:smooth;
 }
 
 body{
   min-height:100vh;
   padding:54px 22px 70px;
   background:
-    radial-gradient(circle at 12% 8%, color-mix(in srgb, var(--cor-tema) 16%, transparent), transparent 30%),
+    radial-gradient(circle at 12% 8%, rgba(238,171,171,.16), transparent 30%),
     radial-gradient(circle at 88% 12%, rgba(212,175,55,.10), transparent 26%),
     linear-gradient(180deg,#FFFDFC,#F8F0EA);
+
   color:var(--texto);
   font-family:'Cormorant Garamond',serif;
   overflow-x:hidden;
+  position:relative;
 }
 
 body::before{
@@ -51,7 +72,7 @@ body::before{
   position:fixed;
   inset:0;
   background:url("https://www.transparenttextures.com/patterns/natural-paper.png");
-  opacity:.32;
+  opacity:.28;
   z-index:-2;
 }
 
@@ -62,11 +83,7 @@ body::after{
   height:640px;
   border-radius:50%;
   background:
-    radial-gradient(
-      circle,
-      color-mix(in srgb, var(--cor-tema) 22%, transparent),
-      transparent 68%
-    );
+    radial-gradient(circle, rgba(238,171,171,.18), transparent 68%);
   filter:blur(6px);
   opacity:.42;
   top:-300px;
@@ -79,37 +96,42 @@ body::after{
   width:100%;
   max-width:980px;
   margin:0 auto;
+  overflow:hidden;
 }
 
 .hero{
   position:relative;
+  width:100%;
+  max-width:100%;
   text-align:center;
   padding:54px 36px 48px;
   margin-bottom:36px;
   border-radius:42px;
+
   background:
     linear-gradient(
       180deg,
-      rgba(255,255,255,.88),
-      rgba(255,250,247,.68)
+      rgba(255,255,255,.92),
+      rgba(255,250,247,.74)
     );
 
   border:1px solid rgba(234,223,214,.72);
+
   box-shadow:var(--shadow);
+
   overflow:hidden;
 }
 
 .hero::before{
   content:"";
   position:absolute;
+
   width:360px;
   height:360px;
+
   border-radius:50%;
-  border:1px solid color-mix(
-    in srgb,
-    var(--cor-tema) 30%,
-    transparent
-  );
+
+  border:1px solid rgba(238,171,171,.30);
 
   top:-190px;
   right:-110px;
@@ -118,15 +140,13 @@ body::after{
 .hero::after{
   content:"";
   position:absolute;
+
   width:240px;
   height:240px;
+
   border-radius:50%;
-  background:
-    color-mix(
-      in srgb,
-      var(--cor-tema) 10%,
-      transparent
-    );
+
+  background:rgba(238,171,171,.10);
 
   bottom:-150px;
   left:-90px;
@@ -135,8 +155,12 @@ body::after{
 .logo{
   position:relative;
   z-index:2;
+
   height:86px;
+  max-width:180px;
+
   margin-bottom:18px;
+
   mix-blend-mode:multiply;
   opacity:.92;
 }
@@ -144,34 +168,46 @@ body::after{
 .kicker{
   position:relative;
   z-index:2;
+
   font-family:'Montserrat',sans-serif;
   font-size:.66rem;
   font-weight:700;
   letter-spacing:5px;
   text-transform:uppercase;
+
   color:var(--muted);
+
   margin-bottom:20px;
 }
 
 .names{
   position:relative;
   z-index:2;
+
   font-size:clamp(3rem,8vw,5.6rem);
   font-weight:300;
   font-style:italic;
+
   line-height:.96;
+
   color:var(--cor-tema);
+
   letter-spacing:-2px;
+
   margin-bottom:24px;
+
+  overflow-wrap:anywhere;
 }
 
 .details{
   position:relative;
   z-index:2;
+
   display:flex;
   justify-content:center;
   align-items:center;
   flex-wrap:wrap;
+
   gap:14px;
 
   font-family:'Montserrat',sans-serif;
@@ -187,13 +223,16 @@ body::after{
   width:5px;
   height:5px;
   border-radius:50%;
+
   background:var(--cor-tema);
+
   opacity:.8;
 }
 
 .location{
   position:relative;
   z-index:2;
+
   margin-top:15px;
 
   font-family:'Montserrat',sans-serif;
@@ -203,22 +242,29 @@ body::after{
   text-transform:uppercase;
 
   color:rgba(63,57,50,.52);
+
+  overflow-wrap:anywhere;
 }
 
 .seal-wrap{
   position:relative;
   z-index:2;
+
   display:flex;
   align-items:center;
   justify-content:center;
+
   gap:18px;
+
   margin:30px auto 26px;
+
   max-width:430px;
 }
 
 .seal-line{
   height:1px;
   flex:1;
+
   background:
     linear-gradient(
       90deg,
@@ -233,12 +279,14 @@ body::after{
 .seal{
   width:24px;
   height:24px;
+
   border-radius:50%;
+
   background:var(--cor-tema);
 
   box-shadow:
-    0 0 0 11px color-mix(in srgb, var(--cor-tema) 12%, transparent),
-    0 14px 36px color-mix(in srgb, var(--cor-tema) 28%, transparent);
+    0 0 0 11px rgba(238,171,171,.12),
+    0 14px 36px rgba(238,171,171,.28);
 }
 
 .tag{
@@ -265,13 +313,20 @@ body::after{
 
 .location-section{
   margin-bottom:42px;
+
   display:grid;
   grid-template-columns:repeat(2,1fr);
+
   gap:18px;
+
+  width:100%;
 }
 
 .place-card{
   position:relative;
+
+  width:100%;
+  max-width:100%;
 
   background:
     linear-gradient(
@@ -281,28 +336,29 @@ body::after{
     );
 
   border:1px solid rgba(234,223,214,.82);
+
   border-radius:34px;
+
   padding:26px;
 
   box-shadow:0 18px 55px rgba(63,57,50,.055);
+
   overflow:hidden;
 }
 
 .place-card::after{
   content:"";
   position:absolute;
+
   width:170px;
   height:170px;
+
   border-radius:50%;
+
   right:-80px;
   top:-90px;
 
-  background:
-    color-mix(
-      in srgb,
-      var(--cor-tema) 9%,
-      transparent
-    );
+  background:rgba(238,171,171,.08);
 }
 
 .place-card > *{
@@ -323,6 +379,7 @@ body::after{
 
   display:flex;
   align-items:center;
+
   gap:8px;
 }
 
@@ -331,27 +388,37 @@ body::after{
   font-size:2rem;
   font-style:italic;
   line-height:1.05;
+
   color:rgba(63,57,50,.9);
+
+  overflow-wrap:anywhere;
 }
 
 .place-address{
   font-family:'Montserrat',sans-serif;
   color:rgba(63,57,50,.56);
+
   font-size:.82rem;
   line-height:1.7;
+
   margin-top:10px;
+
+  overflow-wrap:anywhere;
 }
 
 .route-actions{
   display:flex;
   gap:10px;
   flex-wrap:wrap;
+
   margin-top:18px;
 }
 
 .route-btn{
   text-decoration:none;
+
   border-radius:999px;
+
   padding:12px 16px;
 
   font-family:'Montserrat',sans-serif;
@@ -363,6 +430,7 @@ body::after{
   display:inline-flex;
   align-items:center;
   justify-content:center;
+
   gap:7px;
 
   transition:.25s;
@@ -394,9 +462,11 @@ body::after{
 .timeline-shell::before{
   content:"";
   position:absolute;
+
   left:34px;
   top:0;
   bottom:0;
+
   width:1px;
 
   background:
@@ -414,37 +484,51 @@ body::after{
   display:flex;
   flex-direction:column;
   gap:24px;
+
+  width:100%;
 }
 
 .item{
   position:relative;
+
+  width:100%;
+
   padding-left:92px;
+
   animation:fadeUp .7s ease both;
 }
 
 .dot{
   position:absolute;
+
   left:22px;
   top:50%;
+
   transform:translateY(-50%);
 
   width:26px;
   height:26px;
+
   border-radius:50%;
 
   background:var(--cor-tema);
 
   box-shadow:
-    0 0 0 9px color-mix(in srgb, var(--cor-tema) 12%, transparent),
+    0 0 0 9px rgba(238,171,171,.12),
     0 16px 34px rgba(63,57,50,.08);
 }
 
 .card{
   position:relative;
 
+  width:100%;
+  max-width:100%;
+
   display:grid;
   grid-template-columns:130px 1fr;
+
   align-items:center;
+
   gap:26px;
 
   min-height:104px;
@@ -463,25 +547,23 @@ body::after{
   border:1px solid rgba(234,223,214,.78);
 
   box-shadow:0 18px 55px rgba(63,57,50,.055);
+
   overflow:hidden;
 }
 
 .card::after{
   content:"";
   position:absolute;
+
   right:-60px;
   top:-80px;
 
   width:170px;
   height:170px;
+
   border-radius:50%;
 
-  background:
-    color-mix(
-      in srgb,
-      var(--cor-tema) 8%,
-      transparent
-    );
+  background:rgba(238,171,171,.08);
 }
 
 .time{
@@ -489,6 +571,7 @@ body::after{
   z-index:2;
 
   font-family:'Montserrat',sans-serif;
+
   color:var(--cor-tema);
 
   font-size:1rem;
@@ -501,7 +584,7 @@ body::after{
   position:relative;
   z-index:2;
 
-  text-align:right;
+  text-align:left;
 
   font-size:1.9rem;
   font-style:italic;
@@ -509,15 +592,19 @@ body::after{
   line-height:1.12;
 
   color:rgba(63,57,50,.86);
+
+  overflow-wrap:anywhere;
 }
 
 .empty{
   padding:42px 30px;
+
   text-align:center;
 
   border-radius:32px;
 
   background:rgba(255,255,255,.75);
+
   border:1px dashed rgba(63,57,50,.13);
 
   color:rgba(63,57,50,.48);
@@ -528,6 +615,7 @@ body::after{
 
 .loading{
   padding:42px 30px;
+
   text-align:center;
 
   font-family:'Montserrat',sans-serif;
@@ -541,15 +629,19 @@ body::after{
 .actions{
   display:flex;
   justify-content:center;
+
   margin-top:54px;
 }
 
 .btn{
   border:none;
+
   padding:15px 44px;
+
   border-radius:999px;
 
   background:var(--texto);
+
   color:white;
 
   font-family:'Montserrat',sans-serif;
@@ -572,6 +664,7 @@ body::after{
 
 .footer{
   margin-top:32px;
+
   text-align:center;
 
   font-family:'Montserrat',sans-serif;
@@ -588,38 +681,78 @@ body::after{
     opacity:0;
     transform:translateY(18px);
   }
+
   to{
     opacity:1;
     transform:translateY(0);
   }
 }
 
+/* MOBILE PREMIUM */
+
 @media(max-width:720px){
 
+  *{
+    max-width:100%;
+  }
+
+  html,
   body{
-    padding:20px 12px 50px;
+    overflow-x:hidden !important;
+    width:100%;
+  }
+
+  body{
+    padding:18px 12px 48px;
+  }
+
+  .page{
+    width:100%;
+    max-width:100%;
   }
 
   .hero{
-    padding:38px 20px 34px;
+    width:100%;
+    max-width:100%;
+
+    padding:38px 18px 34px;
+
     border-radius:30px;
+
     margin-bottom:26px;
+  }
+
+  .hero::before{
+    width:240px;
+    height:240px;
+
+    top:-120px;
+    right:-120px;
+  }
+
+  .hero::after{
+    width:180px;
+    height:180px;
+
+    bottom:-100px;
+    left:-80px;
   }
 
   .logo{
     height:66px;
+    max-width:150px;
     margin-bottom:14px;
   }
 
   .kicker{
-    font-size:.58rem;
+    font-size:.56rem;
     letter-spacing:3px;
     margin-bottom:14px;
   }
 
   .names{
-    font-size:2.9rem;
-    line-height:.95;
+    font-size:clamp(2.4rem,13vw,3.2rem);
+    line-height:.98;
     letter-spacing:-1px;
     margin-bottom:18px;
   }
@@ -627,8 +760,11 @@ body::after{
   .details{
     flex-direction:column;
     gap:8px;
+
     font-size:.62rem;
     letter-spacing:2px;
+
+    line-height:1.6;
   }
 
   .detail-dot{
@@ -638,25 +774,45 @@ body::after{
   .location{
     font-size:.62rem;
     letter-spacing:2px;
+    line-height:1.6;
     margin-top:10px;
+  }
+
+  .seal-wrap{
+    margin:24px auto 22px;
   }
 
   .tag{
     width:100%;
-    padding:12px 18px;
-    font-size:.56rem;
-    letter-spacing:3px;
+    padding:12px 14px;
+
+    font-size:.54rem;
+    letter-spacing:2.6px;
   }
 
   .location-section{
     grid-template-columns:1fr;
     gap:14px;
+
     margin-bottom:28px;
   }
 
   .place-card{
+    width:100%;
+    max-width:100%;
+
     border-radius:28px;
+
     padding:22px;
+  }
+
+  .place-title{
+    font-size:1.75rem;
+  }
+
+  .place-address{
+    font-size:.76rem;
+    line-height:1.7;
   }
 
   .route-actions{
@@ -665,10 +821,16 @@ body::after{
 
   .route-btn{
     width:100%;
+    min-height:48px;
+  }
+
+  .timeline-shell{
+    width:100%;
+    max-width:100%;
   }
 
   .timeline-shell::before{
-    left:14px;
+    left:13px;
   }
 
   .timeline{
@@ -676,38 +838,63 @@ body::after{
   }
 
   .item{
-    padding-left:42px;
+    width:100%;
+    padding-left:40px;
   }
 
   .dot{
-    left:2px;
+    left:1px;
+
     width:22px;
     height:22px;
   }
 
   .card{
+    width:100%;
+    max-width:100%;
+
     grid-template-columns:1fr;
+
     gap:12px;
-    padding:22px 20px;
+
+    padding:22px 18px;
+
     border-radius:26px;
+
     min-height:auto;
   }
 
   .time{
     font-size:.82rem;
+    letter-spacing:1px;
   }
 
   .desc{
     text-align:left;
-    font-size:1.6rem;
+
+    font-size:1.55rem;
     line-height:1.08;
+  }
+
+  .actions{
+    margin-top:34px;
   }
 
   .btn{
     width:100%;
+
     padding:16px 20px;
+
     font-size:.6rem;
     letter-spacing:2px;
+  }
+
+  .footer{
+    margin-top:24px;
+
+    font-size:.54rem;
+    letter-spacing:2px;
+    line-height:1.7;
   }
 }
 
@@ -737,10 +924,15 @@ body::after{
     display:none;
   }
 
+  .location-section{
+    margin-bottom:28px;
+  }
+
   .route-actions{
     display:none;
   }
 }
+
 </style>
 </head>
 
@@ -751,8 +943,9 @@ body::after{
 <section class="hero">
 
   <img
-    src="https://i.ibb.co/YTTQXBx8/Logo-Planeja-Noiva.png"
+    src="https://vuiqbdqnfnofwkpvvuqy.supabase.co/storage/v1/object/public/logos/logo.png"
     class="logo"
+    alt="PlanejaNoiva"
   >
 
   <div class="kicker">
@@ -792,9 +985,11 @@ body::after{
 <section class="timeline-shell">
 
   <div class="timeline" id="lista">
+
     <div class="loading">
       Carregando cronograma...
     </div>
+
   </div>
 
 </section>
@@ -812,6 +1007,7 @@ body::after{
 </main>
 
 <script>
+
 const supa = supabase.createClient(
   'https://vuiqbdqnfnofwkpvvuqy.supabase.co',
   'sb_publishable_LjKm4HF9kyD7m0ch3Eefdw_TJ5SG6w2'
@@ -825,15 +1021,19 @@ const token = params.get('token');
 let dataCasamentoUsuario = null;
 
 function escaparHTML(texto){
+
   const div = document.createElement('div');
+
   div.innerText = texto || '';
+
   return div.innerHTML;
 }
 
 function normalizarEmail(valor){
+
   return decodeURIComponent(
     String(valor || '').trim()
-  );
+  ).toLowerCase();
 }
 
 function partesDataLocal(valor){
@@ -843,6 +1043,7 @@ function partesDataLocal(valor){
   const ano = texto.substring(0,4);
   const mes = texto.substring(5,7);
   const dia = texto.substring(8,10);
+
   const hora = texto.substring(11,16) || '00:00';
 
   return {
@@ -857,7 +1058,9 @@ function formatarDataCasamento(valor){
 
   const p = partesDataLocal(valor);
 
-  if(!p.ano) return '';
+  if(!p.ano || !p.mes || !p.dia){
+    return '';
+  }
 
   return `${p.dia}/${p.mes}/${p.ano} • ${p.hora}H`;
 }
@@ -877,10 +1080,12 @@ function minutoCasamentoLocal(){
 
 function minutosDoHorario(horaTexto){
 
-  const [h,m] = String(horaTexto || '00:00')
-    .substring(0,5)
-    .split(':')
-    .map(Number);
+  const [h,m] = String(
+    horaTexto || '00:00'
+  )
+  .substring(0,5)
+  .split(':')
+  .map(Number);
 
   return (h * 60) + (m || 0);
 }
@@ -889,15 +1094,13 @@ function horarioOrdenavel(horaTexto){
 
   const minutos = minutosDoHorario(horaTexto);
 
-  const minutoCasamento =
-    minutoCasamentoLocal();
+  const minutoCasamento = minutoCasamentoLocal();
 
   if(minutoCasamento === null){
     return minutos;
   }
 
-  const inicioRoteiro =
-    minutoCasamento - 420;
+  const inicioRoteiro = minutoCasamento - 420;
 
   if(minutos < inicioRoteiro){
     return minutos + 1440;
@@ -906,9 +1109,9 @@ function horarioOrdenavel(horaTexto){
   return minutos;
 }
 
-function textoBusca(local,endereco){
+function textoBusca(local, endereco){
 
-  return [local,endereco]
+  return [local, endereco]
     .map(v => String(v || '').trim())
     .filter(Boolean)
     .join(', ');
@@ -939,7 +1142,7 @@ function criarCardLocal(
   endereco
 ){
 
-  const busca = textoBusca(local,endereco);
+  const busca = textoBusca(local, endereco);
 
   if(!busca) return '';
 
@@ -960,12 +1163,12 @@ function criarCardLocal(
 
       ${
         endereco
-        ? `
-          <div class="place-address">
-            ${escaparHTML(endereco)}
-          </div>
-        `
-        : ''
+          ? `
+            <div class="place-address">
+              ${escaparHTML(endereco)}
+            </div>
+          `
+          : ''
       }
 
       <div class="route-actions">
@@ -1012,9 +1215,7 @@ function usuarioTemRecepcao(user){
 function renderizarLocais(user){
 
   const section =
-    document.getElementById(
-      'locaisSection'
-    );
+    document.getElementById('locaisSection');
 
   const localCerimonia =
     user.local_cerimonia || '';
@@ -1025,13 +1226,15 @@ function renderizarLocais(user){
   const temRecepcao =
     usuarioTemRecepcao(user);
 
-  const localRecepcao = temRecepcao
-    ? (user.local_recepcao || '')
-    : '';
+  const localRecepcao =
+    temRecepcao
+      ? (user.local_recepcao || '')
+      : '';
 
-  const enderecoRecepcao = temRecepcao
-    ? (user.endereco_recepcao || '')
-    : '';
+  const enderecoRecepcao =
+    temRecepcao
+      ? (user.endereco_recepcao || '')
+      : '';
 
   let html = '';
 
@@ -1055,6 +1258,7 @@ function renderizarLocais(user){
   if(html){
 
     section.innerHTML = html;
+
     section.style.display = 'grid';
 
   }else{
@@ -1077,8 +1281,11 @@ async function buscarEmailPublico(){
       .eq('public_token', token)
       .maybeSingle();
 
-    if(config?.usuario_email){
-      return config.usuario_email;
+    if(config && config.usuario_email){
+
+      return normalizarEmail(
+        config.usuario_email
+      );
     }
   }
 
@@ -1100,6 +1307,15 @@ async function load(){
         Link inválido
       </div>
     `;
+
+    document.getElementById('nomes').innerText =
+      'Cronograma indisponível';
+
+    document.getElementById('dataHora').innerText =
+      '';
+
+    document.getElementById('localHero').innerText =
+      '';
 
     return;
   }
@@ -1124,47 +1340,48 @@ async function load(){
 
     const localPrincipal =
       temRecepcaoHero
-      ? (
-          user.local_recepcao ||
-          user.local_cerimonia ||
-          user.local_casamento ||
-          'Local do evento'
-        )
-      : (
-          user.local_cerimonia ||
-          user.local_casamento ||
-          'Local da cerimônia'
-        );
+        ? (
+            user.local_recepcao ||
+            user.local_cerimonia ||
+            user.local_casamento ||
+            'Local do evento'
+          )
+        : (
+            user.local_cerimonia ||
+            user.local_casamento ||
+            'Local da cerimônia'
+          );
 
-    document.getElementById('nomes')
-      .innerText =
+    document.getElementById('nomes').innerText =
       `${user.nome || 'Noiva'} & ${user.nome_noivo || 'Noivo'}`;
 
-    document.getElementById('dataHora')
-      .innerText =
+    document.getElementById('dataHora').innerText =
       user.data_casamento
-      ? formatarDataCasamento(
-          user.data_casamento
-        )
-      : '';
+        ? formatarDataCasamento(
+            user.data_casamento
+          )
+        : '';
 
-    document.getElementById('localHero')
-      .innerText = localPrincipal;
+    document.getElementById('localHero').innerText =
+      localPrincipal;
 
-    document.getElementById('local')
-      .innerText = localPrincipal;
+    document.getElementById('local').innerText =
+      localPrincipal;
 
     if(user.paleta_cores){
 
-      document.documentElement
-        .style
-        .setProperty(
-          '--cor-tema',
-          user.paleta_cores
-        );
+      document.documentElement.style.setProperty(
+        '--cor-tema',
+        user.paleta_cores
+      );
     }
 
     renderizarLocais(user);
+
+  }else{
+
+    document.getElementById('nomes').innerText =
+      'Cronograma Oficial';
   }
 
   const { data:crono, error } = await supa
@@ -1183,7 +1400,7 @@ async function load(){
     return;
   }
 
-  if(!crono || !crono.length){
+  if(!crono || crono.length === 0){
 
     lista.innerHTML = `
       <div class="empty">
@@ -1194,19 +1411,18 @@ async function load(){
     return;
   }
 
-  const ordenado = [...crono]
-    .sort((a,b)=>{
+  const ordenado = [...crono].sort((a,b) => {
 
-      return (
-        horarioOrdenavel(a.hora)
-        -
-        horarioOrdenavel(b.hora)
-      );
-    });
+    return (
+      horarioOrdenavel(a.hora)
+      -
+      horarioOrdenavel(b.hora)
+    );
+  });
 
   let html = '';
 
-  ordenado.forEach((item,index)=>{
+  ordenado.forEach((item,index) => {
 
     html += `
       <article
@@ -1220,8 +1436,7 @@ async function load(){
 
           <div class="time">
             ${escaparHTML(
-              (item.hora || '')
-              .substring(0,5)
+              (item.hora || '').substring(0,5)
             )}h
           </div>
 
@@ -1239,6 +1454,7 @@ async function load(){
 }
 
 load();
+
 </script>
 
 </body>
