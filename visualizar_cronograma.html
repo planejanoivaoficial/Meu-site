@@ -36,7 +36,6 @@ font-family:'Cormorant Garamond',serif;
 overflow-x:hidden;
 }
 
-/* textura */
 body::before{
 content:"";
 position:fixed;
@@ -46,7 +45,6 @@ opacity:.35;
 z-index:-1;
 }
 
-/* brilho */
 body::after{
 content:"";
 position:fixed;
@@ -60,7 +58,6 @@ right:-180px;
 z-index:-1;
 }
 
-/* HEADER */
 .header{
 text-align:center;
 max-width:760px;
@@ -123,7 +120,6 @@ margin-top:8px;
 font-weight:700;
 }
 
-/* TIMELINE */
 .timeline{
 width:100%;
 max-width:720px;
@@ -193,7 +189,6 @@ line-height:1.2;
 flex:1;
 }
 
-/* EMPTY */
 .empty{
 text-align:center;
 opacity:.45;
@@ -202,7 +197,6 @@ margin-top:40px;
 font-size:1.5rem;
 }
 
-/* BOTÃO */
 .btn{
 margin-top:70px;
 background:white;
@@ -226,7 +220,6 @@ border-color:var(--cor-tema);
 color:white;
 }
 
-/* loading */
 .loading{
 font-family:'Montserrat';
 font-size:.8rem;
@@ -235,7 +228,6 @@ text-transform:uppercase;
 opacity:.5;
 }
 
-/* animações */
 @keyframes fade{
 from{
 opacity:0;
@@ -258,7 +250,6 @@ transform:translateY(0);
 }
 }
 
-/* mobile */
 @media(max-width:700px){
 
 body{
@@ -330,7 +321,7 @@ display:none;
 
 <div class="header">
 
-<img src="https://i.ibb.co/YTTQXBx8/Logo-Planeja-Noiva.png" class="logo">
+<img src="https://vuiqbdqnfnofwkpvvuqy.supabase.co/storage/v1/object/public/logos/logo.png" class="logo" alt="PlanejaNoiva">
 
 <div class="names" id="nomes">
 Carregando...
@@ -369,46 +360,62 @@ const supa = supabase.createClient(
 
 const params = new URLSearchParams(window.location.search);
 
+const email = params.get('noiva');
 const token = params.get('token');
+
+function escaparHTML(texto){
+const div = document.createElement('div');
+div.innerText = texto || '';
+return div.innerHTML;
+}
+
+async function buscarEmailPublico(){
+
+if(email){
+return decodeURIComponent(email);
+}
+
+if(token){
+
+const { data:config } = await supa
+.from('mesas_assentos')
+.select('usuario_email')
+.eq('public_token', token)
+.maybeSingle();
+
+if(config && config.usuario_email){
+return config.usuario_email;
+}
+
+}
+
+return null;
+}
 
 async function load(){
 
 const lista = document.getElementById('lista');
 
-if(!token){
+const emailNoiva = await buscarEmailPublico();
+
+if(!emailNoiva){
+
 lista.innerHTML = `
 <p class="empty">
 Link inválido
 </p>
 `;
-return;
-}
 
-/* busca token */
-const { data:config, error:configError } = await supa
-.from('mesas_assentos')
-.select('*')
-.eq('public_token', token)
-.single();
-
-if(configError || !config){
-
-lista.innerHTML = `
-<p class="empty">
-Esse link não existe mais
-</p>
-`;
+document.getElementById('nomes').innerText =
+'Cronograma indisponível';
 
 return;
 }
 
-const email = config.usuario_email;
-
-/* usuário */
 const { data:user } = await supa
 .from('usuarios')
 .select('*')
-.eq('email', email)
+.eq('email', emailNoiva)
 .single();
 
 if(user){
@@ -445,11 +452,10 @@ user.paleta_cores
 
 }
 
-/* cronograma */
 const { data:crono, error } = await supa
 .from('cronograma')
 .select('*')
-.eq('usuario_email', email)
+.eq('usuario_email', emailNoiva)
 .order('hora', { ascending:true });
 
 if(error){
@@ -486,11 +492,11 @@ html += `
 <div class="content">
 
 <div class="time">
-${item.hora.substring(0,5)}h
+${escaparHTML((item.hora || '').substring(0,5))}h
 </div>
 
 <div class="desc">
-${item.descricao}
+${escaparHTML(item.descricao)}
 </div>
 
 </div>

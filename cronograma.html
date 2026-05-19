@@ -28,9 +28,7 @@
 
 body{
   font-family:'Inter',sans-serif;
-  background:
-    radial-gradient(circle at top left, rgba(238,171,171,.25), transparent 30%),
-    linear-gradient(180deg,#FFF8F3,#FBF6F1);
+  background:linear-gradient(180deg,#FFF8F3,#FBF6F1);
   color:var(--text);
   min-height:100vh;
 }
@@ -107,7 +105,7 @@ nav{
 
 .actions{
   display:grid;
-  grid-template-columns:1fr 1fr;
+  grid-template-columns:repeat(3,1fr);
   gap:12px;
   margin:20px 0;
 }
@@ -126,6 +124,7 @@ nav{
 
 .wpp{background:var(--green);color:white}
 .print{background:var(--text);color:white}
+.ai{background:var(--rose);color:white}
 
 .form-box{
   background:white;
@@ -166,11 +165,6 @@ input:focus{
   border-radius:16px;
   font-weight:900;
   cursor:pointer;
-}
-
-.add:disabled{
-  opacity:.7;
-  cursor:not-allowed;
 }
 
 .timeline{
@@ -290,6 +284,11 @@ input:focus{
 </section>
 
 <div class="actions">
+  <button onclick="gerarSugestao()" class="action-btn ai">
+    <span class="material-symbols-outlined">auto_awesome</span>
+    Gerar sugestão
+  </button>
+
   <button onclick="compartilharWhatsApp()" class="action-btn wpp">
     <span class="material-symbols-outlined">ios_share</span>
     Compartilhar WhatsApp
@@ -350,6 +349,12 @@ function escaparHTML(texto){
   return div.innerHTML;
 }
 
+function somarMinutos(dataBase, minutos){
+  const d = new Date(dataBase);
+  d.setMinutes(d.getMinutes() + minutos);
+  return d.toTimeString().substring(0,5);
+}
+
 async function load(){
   const { data, error } = await supa
     .from('cronograma')
@@ -370,7 +375,7 @@ async function load(){
   if(!data || data.length === 0){
     lista.innerHTML = `
       <div class="empty">
-        Nenhum horário cadastrado ainda. Comece pela cerimônia, recepção ou making of.
+        Nenhum horário cadastrado ainda. Use “Gerar sugestão” para criar um roteiro com base no horário do casamento.
       </div>
     `;
     return;
@@ -438,6 +443,98 @@ async function add(){
   await load();
 }
 
+async function gerarSugestao(){
+  const { data:user } = await supa
+    .from('usuarios')
+    .select('data_casamento')
+    .eq('id', usuarioLogado.id)
+    .single();
+
+  if(!user || !user.data_casamento){
+    Swal.fire({
+      icon:'warning',
+      title:'Data não encontrada',
+      text:'Cadastre a data e horário do casamento em Meu Perfil ou Configurações.',
+      confirmButtonColor:'#EEABAB'
+    });
+    return;
+  }
+
+  const casamento = new Date(user.data_casamento);
+
+  const sugestoes = [
+    { min:-360, desc:'Início do making of da noiva' },
+    { min:-300, desc:'Cabelo e maquiagem' },
+    { min:-240, desc:'Making of do noivo' },
+    { min:-180, desc:'Fotos da noiva pronta' },
+    { min:-120, desc:'Saída da noiva para o local da cerimônia' },
+    { min:-60, desc:'Chegada dos padrinhos e familiares' },
+    { min:-30, desc:'Recepção dos convidados' },
+    { min:0, desc:'Início da cerimônia' },
+    { min:15, desc:'Entrada dos padrinhos' },
+    { min:25, desc:'Entrada do noivo' },
+    { min:35, desc:'Entrada da noiva' },
+    { min:55, desc:'Troca das alianças' },
+    { min:70, desc:'Bênção e assinatura' },
+    { min:90, desc:'Saída dos noivos' },
+    { min:120, desc:'Fotos oficiais com família e padrinhos' },
+    { min:150, desc:'Entrada dos noivos na recepção' },
+    { min:180, desc:'Jantar ou serviço de buffet' },
+    { min:240, desc:'Brinde e corte do bolo' },
+    { min:270, desc:'Primeira dança dos noivos' },
+    { min:300, desc:'Abertura da pista' },
+    { min:420, desc:'Café, doces ou lanche da madrugada' },
+    { min:480, desc:'Encerramento previsto' }
+  ];
+
+  const r = await Swal.fire({
+    icon:'question',
+    title:'Gerar sugestão de roteiro?',
+    text:'Isso criará um cronograma automático com base no horário do casamento. Os itens atuais serão mantidos.',
+    showCancelButton:true,
+    confirmButtonText:'Sim, gerar',
+    cancelButtonText:'Cancelar',
+    confirmButtonColor:'#EEABAB'
+  });
+
+  if(!r.isConfirmed) return;
+
+  Swal.fire({
+    title:'Gerando roteiro...',
+    allowOutsideClick:false,
+    didOpen:()=>Swal.showLoading()
+  });
+
+  const itens = sugestoes.map(item => ({
+    usuario_email: email,
+    hora: somarMinutos(casamento, item.min),
+    descricao: item.desc
+  }));
+
+  const { error } = await supa
+    .from('cronograma')
+    .insert(itens);
+
+  if(error){
+    Swal.fire({
+      icon:'error',
+      title:'Erro ao gerar',
+      text:'Não foi possível criar o roteiro automático.',
+      confirmButtonColor:'#EEABAB'
+    });
+    return;
+  }
+
+  Swal.fire({
+    icon:'success',
+    title:'Roteiro criado 💍',
+    text:'A sugestão foi adicionada ao cronograma.',
+    confirmButtonColor:'#EEABAB'
+  });
+
+  await load();
+}
+
 async function del(id){
   const r = await Swal.fire({
     title:'Remover horário?',
@@ -472,7 +569,9 @@ async function del(id){
 }
 
 function linkPublico(){
-  return window.location.href.replace('cronograma.html','visualizar_cronograma.html') + `?noiva=${encodeURIComponent(email)}`;
+  return window.location.origin +
+    window.location.pathname.replace('cronograma.html','visualizar_cronograma.html') +
+    `?noiva=${encodeURIComponent(email)}`;
 }
 
 function compartilharWhatsApp(){
