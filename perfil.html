@@ -1,848 +1,914 @@
 <!DOCTYPE html>
 <html lang="pt-br">
 <head>
+
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Minha Identidade | PlanejaNoiva</title>
+<meta
+name="viewport"
+content="width=device-width, initial-scale=1.0, viewport-fit=cover"
+/>
 
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" />
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Playfair+Display:wght@600;700&display=swap" rel="stylesheet">
+<title>Meu Perfil | PlanejaNoiva</title>
+
+<link
+href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Cormorant+Garamond:wght@400;500;600;700&display=swap"
+rel="stylesheet"
+/>
+
+<link
+rel="stylesheet"
+href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined"
+/>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
 <style>
+
 :root{
 --rose:#EEABAB;
---rose-dark:#D98F8F;
+--gold:#D4AF37;
 --text:#3F3932;
 --muted:#8F857A;
 --bg:#FBF6F1;
---cream:#FFF9F4;
---border:#EADFD6;
---gold:#D4AF37;
---shadow:0 24px 70px rgba(63,57,50,.09);
+--line:#EADFD6;
 }
 
 *{
 margin:0;
 padding:0;
 box-sizing:border-box;
-font-family:'Inter',sans-serif;
+}
+
+html,
+body{
+overflow-x:hidden;
 }
 
 body{
-min-height:100vh;
+font-family:'Inter',sans-serif;
+
 background:
-radial-gradient(circle at 8% 6%, rgba(238,171,171,.26), transparent 30%),
-radial-gradient(circle at 92% 12%, rgba(212,175,55,.10), transparent 24%),
-linear-gradient(180deg,#FFFDFC,#FBF6F1);
+radial-gradient(circle at top left, rgba(238,171,171,.12), transparent 26%),
+radial-gradient(circle at top right, rgba(212,175,55,.08), transparent 20%),
+linear-gradient(180deg,#FFFDFC,#F8F0EA);
+
 color:var(--text);
+
+min-height:100vh;
+
+padding:34px 16px;
 }
 
-nav{
-height:76px;
-background:rgba(255,255,255,.86);
-backdrop-filter:blur(18px);
-padding:0 5%;
-display:flex;
-justify-content:space-between;
-align-items:center;
-border-bottom:1px solid rgba(234,223,214,.78);
-position:sticky;
-top:0;
-z-index:100;
+.page{
+width:100%;
+max-width:980px;
+margin:0 auto;
 }
 
-nav img{
-height:46px;
+.hero{
+position:relative;
+
+padding:54px 40px;
+
+border-radius:38px;
+
+overflow:hidden;
+
+background:
+linear-gradient(
+135deg,
+rgba(255,255,255,.94),
+rgba(255,248,245,.84)
+);
+
+border:1px solid rgba(234,223,214,.8);
+
+box-shadow:
+0 30px 80px rgba(63,57,50,.08);
+
+margin-bottom:30px;
+}
+
+.hero::before{
+content:"";
+
+position:absolute;
+
+width:340px;
+height:340px;
+
+border-radius:50%;
+
+background:
+radial-gradient(circle, rgba(238,171,171,.18), transparent 70%);
+
+top:-180px;
+right:-120px;
+}
+
+.logo{
+height:74px;
+
+display:block;
+
+margin:0 auto 18px;
+
 mix-blend-mode:multiply;
 }
 
-.voltar{
-color:var(--rose-dark);
-font-weight:800;
-text-decoration:none;
-background:white;
-border:1px solid var(--border);
-padding:11px 15px;
-border-radius:14px;
-display:flex;
-align-items:center;
-gap:8px;
-box-shadow:0 10px 25px rgba(63,57,50,.04);
-}
-
-.container{
-max-width:980px;
-margin:42px auto;
-padding:0 20px 70px;
-animation:fade .6s ease;
-}
-
-header{
-text-align:center;
-margin-bottom:34px;
-}
-
 .kicker{
-display:inline-flex;
-align-items:center;
-gap:8px;
-background:white;
-border:1px solid var(--border);
-color:var(--rose-dark);
-padding:9px 14px;
-border-radius:999px;
-font-size:.78rem;
-font-weight:900;
-margin-bottom:18px;
-box-shadow:0 10px 25px rgba(63,57,50,.04);
-}
+font-size:.68rem;
+font-weight:700;
+letter-spacing:4px;
+text-transform:uppercase;
 
-header h1{
-font-family:'Playfair Display',serif;
-font-size:2.65rem;
-line-height:1.05;
-}
+text-align:center;
 
-header p{
 color:var(--muted);
-margin:12px auto 0;
-line-height:1.7;
-max-width:680px;
+
+margin-bottom:12px;
+}
+
+h1{
+font-family:'Cormorant Garamond',serif;
+
+font-size:4rem;
+font-weight:600;
+
+text-align:center;
+
+line-height:.95;
+
+color:var(--rose);
+
+margin-bottom:14px;
+}
+
+.subtitle{
+max-width:700px;
+
+margin:0 auto;
+
+text-align:center;
+
+font-size:1rem;
+line-height:1.8;
+
+color:rgba(63,57,50,.65);
+}
+
+.form-grid{
+display:grid;
+grid-template-columns:repeat(2,1fr);
+gap:22px;
 }
 
 .card{
-background:rgba(255,255,255,.94);
-padding:30px;
-border-radius:30px;
-margin-bottom:24px;
-border:1px solid rgba(234,223,214,.88);
-box-shadow:0 16px 42px rgba(63,57,50,.055);
-transition:.25s;
-position:relative;
-overflow:hidden;
-}
+background:
+linear-gradient(
+180deg,
+rgba(255,255,255,.96),
+rgba(255,250,247,.82)
+);
 
-.card::after{
-content:'';
-position:absolute;
-width:220px;
-height:220px;
-border-radius:50%;
-background:color-mix(in srgb, var(--rose) 10%, transparent);
-right:-120px;
-top:-130px;
-pointer-events:none;
-}
+border:1px solid rgba(234,223,214,.82);
 
-.card:hover{
-transform:translateY(-3px);
-box-shadow:var(--shadow);
-}
+border-radius:32px;
 
-.card > *{
-position:relative;
-z-index:1;
-}
+padding:28px;
 
-.title{
-display:flex;
-align-items:center;
-gap:8px;
-font-size:.76rem;
-font-weight:900;
-letter-spacing:1.8px;
-text-transform:uppercase;
-color:var(--rose-dark);
-margin-bottom:22px;
-}
-
-.grid{
-display:grid;
-grid-template-columns:1fr 1fr;
-gap:17px;
+box-shadow:
+0 18px 55px rgba(63,57,50,.05);
 }
 
 .full{
-grid-column:span 2;
+grid-column:1 / -1;
 }
 
-label{
-font-size:.72rem;
-font-weight:800;
-color:var(--muted);
+.section-title{
+display:flex;
+align-items:center;
+gap:10px;
+
+font-size:.75rem;
+font-weight:700;
+letter-spacing:3px;
 text-transform:uppercase;
-letter-spacing:.45px;
-margin-bottom:7px;
-display:block;
-}
 
-input, select{
-width:100%;
-padding:15px 16px;
-border-radius:15px;
-border:1px solid var(--border);
-background:#FCF9F5;
-outline:none;
-transition:.25s;
-font-size:.95rem;
-color:var(--text);
-}
+color:var(--rose);
 
-input:focus, select:focus{
-border-color:var(--rose);
-background:white;
-box-shadow:0 0 0 4px color-mix(in srgb, var(--rose) 16%, transparent);
-}
-
-input:disabled{
-opacity:.65;
-cursor:not-allowed;
-}
-
-.color-box{
-text-align:center;
-padding:24px 18px 28px;
-background:linear-gradient(135deg,#FFF9F4,#FFFDFC);
-border:1px dashed color-mix(in srgb, var(--rose) 55%, #EADFD6);
-border-radius:24px;
 margin-bottom:22px;
 }
 
-.color-row{
-display:flex;
-align-items:center;
-justify-content:center;
+.inputs{
+display:grid;
 gap:18px;
-flex-wrap:wrap;
-margin-top:15px;
 }
 
-.circle{
-width:96px;
-height:96px;
-border-radius:50%;
-border:4px solid rgba(212,175,55,.72);
-box-shadow:
-0 12px 28px color-mix(in srgb, var(--rose) 22%, transparent),
-inset 0 2px 7px rgba(255,255,255,.5);
-background:var(--rose);
+.row{
+display:grid;
+grid-template-columns:1fr 1fr;
+gap:16px;
 }
 
-.color-input{
-width:92px;
-height:50px;
-padding:4px;
-border-radius:14px;
-cursor:pointer;
-background:white;
-}
-
-.hint{
-color:#A1968A;
-font-size:.82rem;
-margin-top:10px;
-line-height:1.5;
-}
-
-.location-panel{
-background:linear-gradient(135deg,#FFFDFC,#FFF7F5);
-border:1px solid var(--border);
-border-radius:24px;
-padding:20px;
-margin-bottom:18px;
-}
-
-.location-head{
-display:flex;
-align-items:center;
-justify-content:space-between;
-gap:14px;
-margin-bottom:16px;
-}
-
-.location-head strong{
-font-size:1rem;
-}
-
-.location-head span{
-color:var(--rose-dark);
-}
-
-.location-actions{
-display:flex;
-gap:10px;
-flex-wrap:wrap;
-margin-top:12px;
-}
-
-.map-btn{
-border:none;
-padding:12px 14px;
-border-radius:14px;
-font-size:.82rem;
-font-weight:900;
-cursor:pointer;
-text-decoration:none;
-display:inline-flex;
-align-items:center;
-justify-content:center;
-gap:7px;
-transition:.25s;
-}
-
-.map-btn:hover{
-transform:translateY(-2px);
-}
-
-.google{
-background:#FFFFFF;
-border:1px solid var(--border);
-color:var(--text);
-}
-
-.waze{
-background:#EAF7FF;
-border:1px solid #CDEEFE;
-color:#1976A3;
-}
-
-.maps-hint{
-font-size:.78rem;
-color:#A1968A;
-margin-top:7px;
-line-height:1.5;
-}
-
-.recepcao-box{
-display:none;
-margin-top:18px;
-}
-
-.recepcao-box.active{
+label{
 display:block;
-}
 
-.preview-card{
-margin-top:18px;
-background:linear-gradient(135deg,#FFFFFF,#FFF8F6);
-border:1px solid var(--border);
-border-radius:24px;
-padding:20px;
-}
-
-.preview-card small{
-display:block;
-font-weight:900;
-color:var(--rose-dark);
+font-size:.72rem;
+font-weight:700;
+letter-spacing:2px;
 text-transform:uppercase;
-letter-spacing:1.5px;
-font-size:.68rem;
+
+color:var(--muted);
+
 margin-bottom:8px;
 }
 
-.preview-card strong{
-display:block;
-font-family:'Playfair Display',serif;
-font-size:1.45rem;
-line-height:1.2;
+input,
+textarea,
+select{
+width:100%;
+
+padding:16px;
+
+border-radius:18px;
+
+border:1px solid var(--line);
+
+background:#FCF9F5;
+
+font-size:.95rem;
+
+outline:none;
+
+transition:.25s;
 }
 
-.preview-card p{
-margin-top:8px;
+input:focus,
+textarea:focus,
+select:focus{
+border-color:var(--rose);
+background:white;
+
+box-shadow:
+0 0 0 4px rgba(238,171,171,.10);
+}
+
+textarea{
+min-height:120px;
+resize:none;
+}
+
+.color-box{
+display:flex;
+align-items:center;
+justify-content:center;
+
+padding:24px;
+
+border-radius:26px;
+
+border:1px dashed rgba(238,171,171,.5);
+
+background:
+linear-gradient(
+135deg,
+rgba(255,255,255,.82),
+rgba(255,245,242,.78)
+);
+}
+
+.color-circle{
+position:relative;
+
+width:90px;
+height:90px;
+
+border-radius:50%;
+
+background:var(--rose);
+
+box-shadow:
+0 15px 35px rgba(238,171,171,.28);
+
+overflow:hidden;
+
+cursor:pointer;
+}
+
+.color-circle input{
+position:absolute;
+inset:0;
+
+opacity:0;
+
+cursor:pointer;
+}
+
+.switch{
+display:flex;
+align-items:center;
+justify-content:space-between;
+
+padding:18px 20px;
+
+border-radius:22px;
+
+background:
+linear-gradient(
+135deg,
+rgba(255,255,255,.82),
+rgba(255,247,243,.78)
+);
+
+border:1px solid rgba(234,223,214,.8);
+}
+
+.switch-text{
+display:flex;
+flex-direction:column;
+gap:4px;
+}
+
+.switch-title{
+font-size:.85rem;
+font-weight:700;
+}
+
+.switch-sub{
+font-size:.78rem;
 color:var(--muted);
-line-height:1.55;
-font-size:.92rem;
+}
+
+.toggle{
+position:relative;
+
+width:62px;
+height:34px;
+
+border-radius:999px;
+
+background:#E7DDD5;
+
+cursor:pointer;
+
+transition:.3s;
+}
+
+.toggle::after{
+content:"";
+
+position:absolute;
+
+top:4px;
+left:4px;
+
+width:26px;
+height:26px;
+
+border-radius:50%;
+
+background:white;
+
+transition:.3s;
+}
+
+.toggle.active{
+background:var(--rose);
+}
+
+.toggle.active::after{
+left:32px;
+}
+
+.btn-wrap{
+margin-top:34px;
+
+display:flex;
+justify-content:center;
 }
 
 .btn{
-width:100%;
-padding:18px;
 border:none;
-background:linear-gradient(135deg,var(--rose),var(--rose-dark));
+
+padding:18px 44px;
+
+border-radius:999px;
+
+background:var(--text);
+
 color:white;
-font-weight:900;
-border-radius:18px;
+
+font-size:.74rem;
+font-weight:800;
+letter-spacing:3px;
+text-transform:uppercase;
+
 cursor:pointer;
+
 transition:.3s;
-font-size:1rem;
-box-shadow:0 16px 32px color-mix(in srgb, var(--rose) 34%, transparent);
+
+box-shadow:
+0 18px 40px rgba(63,57,50,.12);
 }
 
 .btn:hover{
 transform:translateY(-2px);
-box-shadow:0 20px 40px color-mix(in srgb, var(--rose) 42%, transparent);
+
+background:var(--rose);
 }
 
-.btn:disabled{
-opacity:.72;
-cursor:not-allowed;
-transform:none;
+.maps-preview{
+margin-top:10px;
+
+font-size:.8rem;
+
+color:var(--muted);
+
+line-height:1.7;
 }
 
-@media(max-width:720px){
-nav{
-padding:0 18px;
+.footer{
+margin-top:26px;
+
+text-align:center;
+
+font-size:.65rem;
+font-weight:600;
+letter-spacing:3px;
+text-transform:uppercase;
+
+color:rgba(63,57,50,.38);
 }
 
-.container{
-margin-top:30px;
+@media(max-width:780px){
+
+.hero{
+padding:38px 22px;
+border-radius:30px;
 }
 
-header h1{
-font-size:2rem;
+h1{
+font-size:3rem;
 }
 
-.card{
-padding:24px 20px;
-border-radius:24px;
-}
-
-.grid{
+.form-grid{
 grid-template-columns:1fr;
 }
 
-.full{
-grid-column:span 1;
+.row{
+grid-template-columns:1fr;
 }
 
-.location-head{
-align-items:flex-start;
-flex-direction:column;
-}
+.card{
+padding:22px;
+border-radius:28px;
 }
 
-@keyframes fade{
-from{
-opacity:0;
-transform:translateY(20px);
+.btn{
+width:100%;
 }
-to{
-opacity:1;
-transform:translateY(0);
+
 }
-}
+
 </style>
 </head>
 
 <body>
 
-<nav>
-<img src="https://vuiqbdqnfnofwkpvvuqy.supabase.co/storage/v1/object/public/logos/logo.png" alt="PlanejaNoiva">
+<div class="page">
 
-<a href="dashboard.html" class="voltar">
-<span class="material-symbols-outlined">arrow_back</span>
-Painel
-</a>
-</nav>
+<section class="hero">
 
-<div class="container">
+<img
+src="https://vuiqbdqnfnofwkpvvuqy.supabase.co/storage/v1/object/public/logos/logo.png"
+class="logo"
+>
 
-<header>
 <div class="kicker">
-<span class="material-symbols-outlined">diamond</span>
-Identidade premium
+PlanejaNoiva Premium
 </div>
 
-<h1>Sua Identidade 💍</h1>
-<p>Defina os detalhes, locais e atmosfera visual do casamento. Essas informações alimentam o cronograma, links públicos e páginas oficiais.</p>
-</header>
+<h1>
+Meu Perfil
+</h1>
 
-<div class="card">
-<div class="title">
-<span class="material-symbols-outlined">person</span>
-Dados da Noiva
-</div>
+<p class="subtitle">
+Configure os detalhes do grande dia e permita que o PlanejaNoiva crie um roteiro inteligente e elegante automaticamente.
+</p>
 
-<div class="grid">
-<div class="full">
-<label for="nome">Seu nome</label>
-<input id="nome" placeholder="Ex: Gabriey Moura">
-</div>
+</section>
 
-<div class="full">
-<label for="email">Email</label>
-<input id="email" disabled>
-</div>
-</div>
-</div>
+<div class="form-grid">
 
 <div class="card">
-<div class="title">
+
+<div class="section-title">
 <span class="material-symbols-outlined">favorite</span>
-Identidade do Casal
+Informações do Casal
+</div>
+
+<div class="inputs">
+
+<div>
+<label>Nome da noiva</label>
+<input type="text" id="nome">
+</div>
+
+<div>
+<label>Nome do noivo</label>
+<input type="text" id="nomeNoivo">
+</div>
+
+</div>
+
+</div>
+
+<div class="card">
+
+<div class="section-title">
+<span class="material-symbols-outlined">palette</span>
+Paleta do Casamento
 </div>
 
 <div class="color-box">
-<label for="cor">Cor principal</label>
 
-<div class="color-row">
-<div class="circle" id="preview"></div>
-<input type="color" id="cor" class="color-input" value="#EEABAB">
-</div>
+<div
+class="color-circle"
+id="circle"
+>
 
-<div class="hint">Escolha o tom visual que aparecerá nas páginas oficiais do casamento.</div>
-</div>
+<input
+type="color"
+id="cor"
+value="#EEABAB"
+oninput="
+document.documentElement.style.setProperty('--rose',this.value);
+document.getElementById('circle').style.background=this.value;
+"
+/>
 
-<div class="grid">
-<div class="full">
-<label for="noivo">Nome do noivo</label>
-<input id="noivo" placeholder="Ex: Junior">
-</div>
-
-<div>
-<label for="data">Data e horário da cerimônia</label>
-<input type="datetime-local" id="data">
 </div>
 
-<div>
-<label for="temRecepcao">Terá recepção?</label>
-<select id="temRecepcao">
-<option value="true">Sim, terá recepção</option>
-<option value="false">Não terá recepção</option>
-</select>
-</div>
-</div>
 </div>
 
-<div class="card">
-<div class="title">
-<span class="material-symbols-outlined">location_on</span>
-Locais e rotas automáticas
 </div>
 
-<div class="location-panel">
-<div class="location-head">
-<strong>Cerimônia</strong>
+<div class="card full">
+
+<div class="section-title">
 <span class="material-symbols-outlined">church</span>
+Cerimônia
 </div>
 
-<div class="grid">
-<div class="full">
-<label for="localCerimonia">Nome do local da cerimônia</label>
-<input id="localCerimonia" placeholder="Ex: Paróquia Nossa Senhora Assunção Goiânia">
-<div class="maps-hint">Digite o nome como a noiva pesquisaria no Google Maps. O sistema gera a rota automaticamente.</div>
+<div class="inputs">
+
+<div class="row">
+
+<div>
+<label>Data e horário da cerimônia</label>
+
+<input
+type="datetime-local"
+id="dataCerimonia"
+>
 </div>
 
-<div class="full">
-<label for="enderecoCerimonia">Endereço ou referência da cerimônia</label>
-<input id="enderecoCerimonia" placeholder="Ex: Rua 10, Setor Central, Goiânia - GO">
-<div class="maps-hint">Pode ser endereço completo, bairro ou ponto de referência. Quanto mais específico, melhor.</div>
-</div>
+<div>
+<label>Nome do local</label>
+
+<input
+type="text"
+id="localCerimonia"
+placeholder="Ex: Igreja Nossa Senhora..."
+>
 </div>
 
-<div class="location-actions">
-<a href="#" target="_blank" class="map-btn google" id="googleCerimonia">
-<span class="material-symbols-outlined">map</span>
-Google Maps
-</a>
-
-<a href="#" target="_blank" class="map-btn waze" id="wazeCerimonia">
-<span class="material-symbols-outlined">near_me</span>
-Waze
-</a>
-</div>
 </div>
 
-<div class="recepcao-box" id="recepcaoBox">
-<div class="location-panel">
-<div class="location-head">
-<strong>Recepção</strong>
+<div>
+
+<label>Link Google Maps</label>
+
+<input
+type="text"
+id="mapsCerimonia"
+placeholder="Cole o link do Google Maps"
+oninput="preencherNomeLocal(this.value,'localCerimonia')"
+>
+
+<div class="maps-preview">
+Ao colar o link do Google Maps, o PlanejaNoiva tentará preencher automaticamente o nome do local.
+</div>
+
+</div>
+
+<div>
+
+<label>Endereço da cerimônia</label>
+
+<textarea id="enderecoCerimonia"></textarea>
+
+</div>
+
+</div>
+
+</div>
+
+<div class="card full">
+
+<div class="section-title">
 <span class="material-symbols-outlined">celebration</span>
+Recepção
 </div>
 
-<div class="grid">
-<div class="full">
-<label for="localRecepcao">Nome do local da recepção</label>
-<input id="localRecepcao" placeholder="Ex: Espaço Villa Goiânia">
-<div class="maps-hint">Digite o nome do espaço, buffet, salão ou chácara como aparece nas buscas.</div>
+<div class="inputs">
+
+<div class="switch">
+
+<div class="switch-text">
+<div class="switch-title">
+Terá recepção?
 </div>
 
-<div class="full">
-<label for="enderecoRecepcao">Endereço ou referência da recepção</label>
-<input id="enderecoRecepcao" placeholder="Ex: Rodovia GO..., Goiânia - GO">
-<div class="maps-hint">Essa informação ajuda convidados e fornecedores a abrirem a rota com mais precisão.</div>
-</div>
-</div>
-
-<div class="location-actions">
-<a href="#" target="_blank" class="map-btn google" id="googleRecepcao">
-<span class="material-symbols-outlined">map</span>
-Google Maps
-</a>
-
-<a href="#" target="_blank" class="map-btn waze" id="wazeRecepcao">
-<span class="material-symbols-outlined">near_me</span>
-Waze
-</a>
-</div>
+<div class="switch-sub">
+Desative caso o casamento termine após a cerimônia.
 </div>
 </div>
 
-<div class="preview-card">
-<small>Prévia dos locais</small>
-<strong id="previewTitulo">Cerimônia</strong>
-<p id="previewTexto">Preencha os locais para visualizar como eles serão usados nas páginas oficiais.</p>
-</div>
+<div
+class="toggle active"
+id="toggleRecepcao"
+onclick="toggleRecepcao()"
+></div>
+
 </div>
 
-<button class="btn" id="btnSalvar" onclick="salvar()">Salvar identidade ✨</button>
+<div id="recepcaoFields">
+
+<div class="row">
+
+<div>
+<label>Data e horário da recepção</label>
+
+<input
+type="datetime-local"
+id="dataRecepcao"
+>
+</div>
+
+<div>
+<label>Nome do local</label>
+
+<input
+type="text"
+id="localRecepcao"
+placeholder="Ex: Maison Florença"
+>
+</div>
+
+</div>
+
+<div>
+
+<label>Link Google Maps</label>
+
+<input
+type="text"
+id="mapsRecepcao"
+placeholder="Cole o link do Google Maps"
+oninput="preencherNomeLocal(this.value,'localRecepcao')"
+>
+
+</div>
+
+<div>
+
+<label>Endereço da recepção</label>
+
+<textarea id="enderecoRecepcao"></textarea>
+
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+<div class="btn-wrap">
+
+<button
+class="btn"
+onclick="salvar()"
+>
+Salvar Perfil
+</button>
+
+</div>
+
+<div class="footer">
+PlanejaNoiva • Luxury Wedding Experience
+</div>
 
 </div>
 
 <script>
+
 const supa = supabase.createClient(
 'https://vuiqbdqnfnofwkpvvuqy.supabase.co',
 'sb_publishable_LjKm4HF9kyD7m0ch3Eefdw_TJ5SG6w2'
 );
 
-let usuarioLogado = null;
+const email =
+localStorage.getItem('usuario_email');
 
-const nome = document.getElementById('nome');
-const emailInput = document.getElementById('email');
-const noivo = document.getElementById('noivo');
-const dataInput = document.getElementById('data');
-const cor = document.getElementById('cor');
-const preview = document.getElementById('preview');
-const btnSalvar = document.getElementById('btnSalvar');
+let temRecepcao = true;
 
-const temRecepcao = document.getElementById('temRecepcao');
-const recepcaoBox = document.getElementById('recepcaoBox');
-
-const localCerimonia = document.getElementById('localCerimonia');
-const enderecoCerimonia = document.getElementById('enderecoCerimonia');
-const localRecepcao = document.getElementById('localRecepcao');
-const enderecoRecepcao = document.getElementById('enderecoRecepcao');
-
-const googleCerimonia = document.getElementById('googleCerimonia');
-const wazeCerimonia = document.getElementById('wazeCerimonia');
-const googleRecepcao = document.getElementById('googleRecepcao');
-const wazeRecepcao = document.getElementById('wazeRecepcao');
-
-const previewTitulo = document.getElementById('previewTitulo');
-const previewTexto = document.getElementById('previewTexto');
-
-function textoBusca(local, endereco){
-const partes = [local, endereco].map(v => String(v || '').trim()).filter(Boolean);
-return partes.join(', ');
+if(!email){
+window.location.href='index.html';
 }
 
-function gerarLinkGoogleMaps(busca){
-const q = encodeURIComponent(busca || '');
-return q ? `https://www.google.com/maps/search/?api=1&query=${q}` : '#';
+function toggleRecepcao(){
+
+temRecepcao = !temRecepcao;
+
+const toggle =
+document.getElementById('toggleRecepcao');
+
+const fields =
+document.getElementById('recepcaoFields');
+
+if(temRecepcao){
+
+toggle.classList.add('active');
+
+fields.style.display='block';
+
+}else{
+
+toggle.classList.remove('active');
+
+fields.style.display='none';
+}
 }
 
-function gerarLinkWaze(busca){
-const q = encodeURIComponent(busca || '');
-return q ? `https://waze.com/ul?q=${q}&navigate=yes` : '#';
+function preencherNomeLocal(link,idCampo){
+
+try{
+
+const texto =
+decodeURIComponent(link);
+
+const regex =
+/place\/([^\/]+)/i;
+
+const match =
+texto.match(regex);
+
+if(match && match[1]){
+
+const nome =
+match[1]
+.replace(/\+/g,' ');
+
+document.getElementById(idCampo).value =
+nome;
 }
 
-function atualizarBotoesRotas(){
-const buscaCerimonia = textoBusca(localCerimonia.value, enderecoCerimonia.value);
-googleCerimonia.href = gerarLinkGoogleMaps(buscaCerimonia);
-wazeCerimonia.href = gerarLinkWaze(buscaCerimonia);
-
-const buscaRecepcao = textoBusca(localRecepcao.value, enderecoRecepcao.value);
-googleRecepcao.href = gerarLinkGoogleMaps(buscaRecepcao);
-wazeRecepcao.href = gerarLinkWaze(buscaRecepcao);
-}
-
-function atualizarRecepcao(){
-const ativo = temRecepcao.value === 'true';
-recepcaoBox.classList.toggle('active', ativo);
-atualizarPreviewLocais();
-atualizarBotoesRotas();
-}
-
-function atualizarPreviewLocais(){
-const cerimonia = localCerimonia.value.trim() || 'Local da cerimônia';
-const recepcaoAtiva = temRecepcao.value === 'true';
-const recepcao = localRecepcao.value.trim() || 'Local da recepção';
-
-previewTitulo.innerText = recepcaoAtiva
-? 'Cerimônia e recepção'
-: 'Cerimônia';
-
-previewTexto.innerText = recepcaoAtiva
-? `Cerimônia: ${cerimonia}. Recepção: ${recepcao}.`
-: `Cerimônia: ${cerimonia}. Não haverá recepção cadastrada.`;
-
-atualizarBotoesRotas();
-}
-
-cor.addEventListener('input', function(){
-preview.style.backgroundColor = this.value;
-document.documentElement.style.setProperty('--rose', this.value);
-});
-
-temRecepcao.addEventListener('change', atualizarRecepcao);
-
-[localCerimonia, enderecoCerimonia, localRecepcao, enderecoRecepcao].forEach(input => {
-input.addEventListener('input', atualizarPreviewLocais);
-});
-
-async function iniciar(){
-const { data, error } = await supa.auth.getSession();
-
-if(error || !data.session){
-localStorage.clear();
-window.location.href = 'index.html';
-return;
-}
-
-usuarioLogado = data.session.user;
-localStorage.setItem('usuario_email', usuarioLogado.email);
-
-await carregar();
+}catch(e){}
 }
 
 async function carregar(){
-const { data, error } = await supa
+
+const { data:user } = await supa
 .from('usuarios')
 .select('*')
-.eq('email', usuarioLogado.email)
+.eq('email',email)
 .maybeSingle();
 
-emailInput.value = usuarioLogado.email;
+if(!user) return;
 
-if(error){
-console.log('Erro ao carregar perfil:', error);
-return;
+nome.value = user.nome || '';
+nomeNoivo.value = user.nome_noivo || '';
+
+localCerimonia.value =
+user.local_cerimonia || '';
+
+enderecoCerimonia.value =
+user.endereco_cerimonia || '';
+
+dataCerimonia.value =
+user.data_hora_cerimonia
+? user.data_hora_cerimonia.substring(0,16)
+: '';
+
+localRecepcao.value =
+user.local_recepcao || '';
+
+enderecoRecepcao.value =
+user.endereco_recepcao || '';
+
+dataRecepcao.value =
+user.data_hora_recepcao
+? user.data_hora_recepcao.substring(0,16)
+: '';
+
+if(user.paleta_cores){
+
+cor.value = user.paleta_cores;
+
+document.getElementById('circle')
+.style.background =
+user.paleta_cores;
 }
 
-if(data){
-nome.value = data.nome || '';
-noivo.value = data.nome_noivo || '';
+if(
+user.tem_recepcao === false ||
+user.tem_recepcao === 'false'
+){
 
-localCerimonia.value = data.local_cerimonia || data.local_casamento || '';
-enderecoCerimonia.value = data.endereco_cerimonia || '';
-
-temRecepcao.value = data.tem_recepcao === false ? 'false' : 'true';
-
-localRecepcao.value = data.local_recepcao || '';
-enderecoRecepcao.value = data.endereco_recepcao || '';
-
-if(data.data_casamento){
-dataInput.value = data.data_casamento.substring(0,16);
+toggleRecepcao();
 }
-
-if(data.paleta_cores){
-cor.value = data.paleta_cores;
-preview.style.backgroundColor = data.paleta_cores;
-document.documentElement.style.setProperty('--rose', data.paleta_cores);
-}
-}else{
-nome.value = localStorage.getItem('usuario_nome') || '';
-preview.style.backgroundColor = cor.value;
-}
-
-atualizarRecepcao();
 }
 
 async function salvar(){
-const nomeValor = nome.value.trim();
-const noivoValor = noivo.value.trim();
-const dataValor = dataInput.value || null;
-const corValor = cor.value;
 
-const cerimoniaValor = localCerimonia.value.trim();
-const enderecoCerimoniaValor = enderecoCerimonia.value.trim();
-
-const temRecepcaoValor = temRecepcao.value === 'true';
-const recepcaoValor = temRecepcaoValor ? localRecepcao.value.trim() : '';
-const enderecoRecepcaoValor = temRecepcaoValor ? enderecoRecepcao.value.trim() : '';
-
-if(!nomeValor){
 Swal.fire({
-icon:'warning',
-title:'Nome obrigatório',
-text:'Informe seu nome para salvar.',
-confirmButtonColor:'#EEABAB'
+title:'Salvando...',
+allowOutsideClick:false,
+didOpen:()=>Swal.showLoading()
 });
-return;
-}
 
-if(!dataValor){
-Swal.fire({
-icon:'warning',
-title:'Horário da cerimônia obrigatório',
-text:'Informe a data e o horário de início da cerimônia.',
-confirmButtonColor:'#EEABAB'
-});
-return;
-}
+const payload = {
 
-if(!cerimoniaValor){
-Swal.fire({
-icon:'warning',
-title:'Local da cerimônia obrigatório',
-text:'Informe o nome do local da cerimônia.',
-confirmButtonColor:'#EEABAB'
-});
-return;
-}
+nome:nome.value,
+nome_noivo:nomeNoivo.value,
 
-if(temRecepcaoValor && !recepcaoValor){
-Swal.fire({
-icon:'warning',
-title:'Local da recepção obrigatório',
-text:'Informe o local da recepção ou marque que não haverá recepção.',
-confirmButtonColor:'#EEABAB'
-});
-return;
-}
+paleta_cores:cor.value,
 
-btnSalvar.disabled = true;
-btnSalvar.innerText = 'Salvando...';
+data_hora_cerimonia:
+dataCerimonia.value,
+
+local_cerimonia:
+localCerimonia.value,
+
+endereco_cerimonia:
+enderecoCerimonia.value,
+
+tem_recepcao:temRecepcao,
+
+data_hora_recepcao:
+temRecepcao
+? dataRecepcao.value
+: null,
+
+local_recepcao:
+temRecepcao
+? localRecepcao.value
+: null,
+
+endereco_recepcao:
+temRecepcao
+? enderecoRecepcao.value
+: null,
+
+data_casamento:
+dataCerimonia.value,
+
+local_casamento:
+localCerimonia.value
+};
 
 const { error } = await supa
 .from('usuarios')
-.upsert({
-id: usuarioLogado.id,
-email: usuarioLogado.email,
-nome: nomeValor,
-nome_noivo: noivoValor,
-data_casamento: dataValor,
-local_casamento: temRecepcaoValor ? recepcaoValor : cerimoniaValor,
-local_cerimonia: cerimoniaValor,
-endereco_cerimonia: enderecoCerimoniaValor,
-tem_recepcao: temRecepcaoValor,
-local_recepcao: recepcaoValor,
-endereco_recepcao: enderecoRecepcaoValor,
-paleta_cores: corValor
-}, {
-onConflict: 'id'
-});
-
-btnSalvar.disabled = false;
-btnSalvar.innerText = 'Salvar identidade ✨';
+.update(payload)
+.eq('email',email);
 
 if(error){
+
 Swal.fire({
 icon:'error',
 title:'Erro ao salvar',
 text:error.message,
 confirmButtonColor:'#EEABAB'
 });
+
 return;
 }
 
-localStorage.setItem('usuario_nome', nomeValor);
-localStorage.setItem('usuario_email', usuarioLogado.email);
-
 Swal.fire({
 icon:'success',
-title:'Identidade salva 💍',
-text:'Os locais já podem abrir rota no Google Maps e Waze.',
+title:'Perfil atualizado ✨',
+text:'Agora o cronograma inteligente utilizará os horários da cerimônia e recepção.',
 confirmButtonColor:'#EEABAB'
 });
 }
 
-preview.style.backgroundColor = cor.value;
-iniciar();
+carregar();
+
 </script>
 
 </body>
