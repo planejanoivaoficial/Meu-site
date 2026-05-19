@@ -49,7 +49,10 @@ nav{
   z-index:10;
 }
 
-.nav-logo{height:46px;mix-blend-mode:multiply}
+.nav-logo{
+  height:46px;
+  mix-blend-mode:multiply;
+}
 
 .btn-voltar{
   text-decoration:none;
@@ -121,6 +124,36 @@ nav{
   color:var(--muted);
   line-height:1.7;
   margin-top:10px;
+}
+
+.info-box{
+  margin-top:22px;
+  display:grid;
+  grid-template-columns:repeat(2,1fr);
+  gap:14px;
+}
+
+.info-card{
+  background:var(--cream);
+  border:1px solid var(--border);
+  border-radius:22px;
+  padding:18px;
+}
+
+.info-card small{
+  display:block;
+  font-size:.7rem;
+  font-weight:900;
+  letter-spacing:1.5px;
+  text-transform:uppercase;
+  color:var(--rose-dark);
+  margin-bottom:6px;
+}
+
+.info-card strong{
+  display:block;
+  font-size:1rem;
+  line-height:1.4;
 }
 
 .actions{
@@ -281,6 +314,7 @@ input:focus{
   .form{grid-template-columns:1fr}
   .add{padding:15px}
   .content{flex-direction:column;align-items:flex-start}
+  .info-box{grid-template-columns:1fr}
 }
 </style>
 </head>
@@ -289,6 +323,7 @@ input:focus{
 
 <nav>
   <img src="https://vuiqbdqnfnofwkpvvuqy.supabase.co/storage/v1/object/public/logos/logo.png" class="nav-logo" alt="PlanejaNoiva">
+
   <a href="dashboard.html" class="btn-voltar">
     <span class="material-symbols-outlined">arrow_back</span>
     Painel
@@ -304,9 +339,23 @@ input:focus{
   </div>
 
   <h1>O roteiro elegante para o dia mais importante.</h1>
+
   <p>
-    Organize horários, entradas, cerimônia, recepção e momentos especiais em uma linha do tempo clara para noivos, cerimonial e fornecedores.
+    Gere um cronograma inteligente com base no horário da cerimônia e da recepção.
+    O PlanejaNoiva organiza making of, cerimônia, fotos, buffet, bolo, dança e festa com lógica refinada.
   </p>
+
+  <div class="info-box">
+    <div class="info-card">
+      <small>Cerimônia</small>
+      <strong id="infoCerimonia">Aguardando perfil</strong>
+    </div>
+
+    <div class="info-card">
+      <small>Recepção</small>
+      <strong id="infoRecepcao">Aguardando perfil</strong>
+    </div>
+  </div>
 </section>
 
 <div class="actions">
@@ -351,7 +400,7 @@ const supa = supabase.createClient(
 
 let usuarioLogado = null;
 let email = null;
-let dataCasamentoUsuario = null;
+let perfilEvento = null;
 
 const hora = document.getElementById('hora');
 const descricao = document.getElementById('descricao');
@@ -368,7 +417,7 @@ async function iniciarCronograma(){
   }
 
   usuarioLogado = data.session.user;
-  email = usuarioLogado.email;
+  email = usuarioLogado.email.trim().toLowerCase();
 
   localStorage.setItem('usuario_email', email);
 
@@ -379,11 +428,54 @@ async function iniciarCronograma(){
 async function carregarPerfilEvento(){
   const { data } = await supa
     .from('usuarios')
-    .select('data_casamento')
+    .select('*')
     .eq('email', email)
+    .order('created_at', { ascending:false })
+    .limit(1)
     .maybeSingle();
 
-  dataCasamentoUsuario = data?.data_casamento || null;
+  perfilEvento = data || null;
+
+  const cerimonia = perfilEvento?.data_hora_cerimonia || perfilEvento?.data_casamento || null;
+  const recepcao = perfilEvento?.data_hora_recepcao || null;
+
+  document.getElementById('infoCerimonia').innerText =
+    cerimonia ? formatarDataHora(cerimonia) : 'Cadastre no perfil';
+
+  document.getElementById('infoRecepcao').innerText =
+    perfilEvento?.tem_recepcao === false
+      ? 'Sem recepção'
+      : (recepcao ? formatarDataHora(recepcao) : 'Cadastre no perfil');
+}
+
+function criarDataLocal(valor){
+  if(!valor) return null;
+
+  const texto = String(valor);
+  const ano = Number(texto.substring(0,4));
+  const mes = Number(texto.substring(5,7)) - 1;
+  const dia = Number(texto.substring(8,10));
+  const hora = Number(texto.substring(11,13) || 0);
+  const minuto = Number(texto.substring(14,16) || 0);
+
+  return new Date(ano, mes, dia, hora, minuto, 0, 0);
+}
+
+function formatarDataHora(valor){
+  const d = criarDataLocal(valor);
+
+  if(!d) return '';
+
+  const data = d.toLocaleDateString('pt-BR', {
+    day:'2-digit',
+    month:'2-digit',
+    year:'numeric'
+  });
+
+  const horas = String(d.getHours()).padStart(2,'0');
+  const minutos = String(d.getMinutes()).padStart(2,'0');
+
+  return `${data} às ${horas}:${minutos}`;
 }
 
 function escaparHTML(texto){
@@ -402,18 +494,26 @@ function minutosDoHorario(horaTexto){
   return (h * 60) + m;
 }
 
+function minutoBaseCerimonia(){
+  const valor = perfilEvento?.data_hora_cerimonia || perfilEvento?.data_casamento || null;
+  const d = criarDataLocal(valor);
+
+  if(!d) return null;
+
+  return d.getHours() * 60 + d.getMinutes();
+}
+
 function horarioOrdenavel(horaTexto){
   const minutos = minutosDoHorario(horaTexto);
+  const base = minutoBaseCerimonia();
 
-  if(!dataCasamentoUsuario){
+  if(base === null){
     return minutos;
   }
 
-  const casamento = new Date(dataCasamentoUsuario);
-  const minutoCasamento = casamento.getHours() * 60 + casamento.getMinutes();
-  const inicioDiaCasamento = minutoCasamento - 420;
+  const inicioRoteiro = base - 420;
 
-  if(minutos < inicioDiaCasamento){
+  if(minutos < inicioRoteiro){
     return minutos + 1440;
   }
 
@@ -421,9 +521,13 @@ function horarioOrdenavel(horaTexto){
 }
 
 function somarMinutos(dataBase, minutos){
-  const d = new Date(dataBase);
+  const d = criarDataLocal(dataBase);
+
+  if(!d) return '';
+
   d.setMinutes(d.getMinutes() + minutos);
-  return d.toTimeString().substring(0,5);
+
+  return `${String(d.getHours()).padStart(2,'0')}:${String(d.getMinutes()).padStart(2,'0')}`;
 }
 
 async function load(){
@@ -445,7 +549,7 @@ async function load(){
   if(!data || data.length === 0){
     lista.innerHTML = `
       <div class="empty">
-        Nenhum horário cadastrado ainda. Use “Gerar sugestão” para criar um roteiro com base no horário do casamento.
+        Nenhum horário cadastrado ainda. Use “Gerar sugestão” para criar um roteiro com base na cerimônia e recepção.
       </div>
     `;
     return;
@@ -561,25 +665,46 @@ async function apagarTudo(){
 }
 
 async function gerarSugestao(){
-  const { data:user } = await supa
-    .from('usuarios')
-    .select('data_casamento')
-    .eq('email', email)
-    .single();
+  await carregarPerfilEvento();
 
-  if(!user || !user.data_casamento){
+  if(!perfilEvento){
     Swal.fire({
       icon:'warning',
-      title:'Data não encontrada',
-      text:'Cadastre a data e horário do casamento em Meu Perfil ou Configurações.',
+      title:'Perfil não encontrado',
+      text:'Cadastre os dados do casamento em Meu Perfil.',
       confirmButtonColor:'#EEABAB'
     });
     return;
   }
 
-  dataCasamentoUsuario = user.data_casamento;
+  const cerimonia = perfilEvento.data_hora_cerimonia || perfilEvento.data_casamento;
 
-  const casamento = new Date(user.data_casamento);
+  if(!cerimonia){
+    Swal.fire({
+      icon:'warning',
+      title:'Horário da cerimônia não encontrado',
+      text:'Cadastre a data e o horário da cerimônia no perfil.',
+      confirmButtonColor:'#EEABAB'
+    });
+    return;
+  }
+
+  const temRecepcao =
+    perfilEvento.tem_recepcao === true ||
+    perfilEvento.tem_recepcao === 'true' ||
+    perfilEvento.tem_recepcao === 1;
+
+  const recepcao = temRecepcao ? perfilEvento.data_hora_recepcao : null;
+
+  if(temRecepcao && !recepcao){
+    Swal.fire({
+      icon:'warning',
+      title:'Horário da recepção não encontrado',
+      text:'Cadastre o horário da recepção no perfil ou marque que não terá recepção.',
+      confirmButtonColor:'#EEABAB'
+    });
+    return;
+  }
 
   const { data:existentes } = await supa
     .from('cronograma')
@@ -613,8 +738,8 @@ async function gerarSugestao(){
   }else{
     const r = await Swal.fire({
       icon:'question',
-      title:'Gerar sugestão de roteiro?',
-      text:'Isso criará um cronograma automático com base no horário do casamento.',
+      title:'Gerar sugestão inteligente?',
+      text:'O roteiro será criado com base no horário da cerimônia e da recepção.',
       showCancelButton:true,
       confirmButtonText:'Sim, gerar',
       cancelButtonText:'Cancelar',
@@ -625,39 +750,50 @@ async function gerarSugestao(){
   }
 
   Swal.fire({
-    title:'Gerando roteiro...',
+    title:'Gerando roteiro inteligente...',
     allowOutsideClick:false,
     didOpen:()=>Swal.showLoading()
   });
 
-  const sugestoes = [
-    { min:-360, desc:'Início do making of da noiva' },
-    { min:-300, desc:'Cabelo e maquiagem' },
-    { min:-240, desc:'Making of do noivo' },
-    { min:-180, desc:'Fotos da noiva pronta' },
-    { min:-120, desc:'Saída da noiva para o local da cerimônia' },
-    { min:-60, desc:'Chegada dos padrinhos e familiares' },
-    { min:-30, desc:'Recepção dos convidados' },
-    { min:0, desc:'Início da cerimônia' },
-    { min:15, desc:'Entrada dos padrinhos' },
-    { min:25, desc:'Entrada do noivo' },
-    { min:35, desc:'Entrada da noiva' },
-    { min:55, desc:'Troca das alianças' },
-    { min:70, desc:'Bênção e assinatura' },
-    { min:90, desc:'Saída dos noivos' },
-    { min:120, desc:'Fotos oficiais com família e padrinhos' },
-    { min:150, desc:'Entrada dos noivos na recepção' },
-    { min:180, desc:'Jantar ou serviço de buffet' },
-    { min:240, desc:'Brinde e corte do bolo' },
-    { min:270, desc:'Primeira dança dos noivos' },
-    { min:300, desc:'Abertura da pista' },
-    { min:420, desc:'Café, doces ou lanche da madrugada' },
-    { min:480, desc:'Encerramento previsto' }
+  let sugestoes = [
+    { base:'cerimonia', min:-360, desc:'Início do making of da noiva' },
+    { base:'cerimonia', min:-300, desc:'Cabelo e maquiagem da noiva' },
+    { base:'cerimonia', min:-240, desc:'Making of do noivo' },
+    { base:'cerimonia', min:-180, desc:'Fotos da noiva pronta' },
+    { base:'cerimonia', min:-120, desc:'Saída da noiva para o local da cerimônia' },
+    { base:'cerimonia', min:-60, desc:'Chegada dos padrinhos e familiares' },
+    { base:'cerimonia', min:-30, desc:'Recepção dos convidados na cerimônia' },
+    { base:'cerimonia', min:0, desc:'Início da cerimônia' },
+    { base:'cerimonia', min:15, desc:'Entrada dos padrinhos' },
+    { base:'cerimonia', min:25, desc:'Entrada do noivo' },
+    { base:'cerimonia', min:35, desc:'Entrada da noiva' },
+    { base:'cerimonia', min:55, desc:'Troca das alianças' },
+    { base:'cerimonia', min:70, desc:'Bênção e assinatura' },
+    { base:'cerimonia', min:90, desc:'Saída dos noivos' },
+    { base:'cerimonia', min:110, desc:'Fotos oficiais com família e padrinhos' }
   ];
+
+  if(temRecepcao && recepcao){
+    sugestoes = sugestoes.concat([
+      { base:'recepcao', min:0, desc:'Início da recepção dos convidados' },
+      { base:'recepcao', min:20, desc:'Entrada dos noivos na recepção' },
+      { base:'recepcao', min:45, desc:'Jantar ou serviço de buffet' },
+      { base:'recepcao', min:105, desc:'Brinde e corte do bolo' },
+      { base:'recepcao', min:130, desc:'Primeira dança dos noivos' },
+      { base:'recepcao', min:150, desc:'Abertura da pista' },
+      { base:'recepcao', min:270, desc:'Café, doces ou lanche da madrugada' },
+      { base:'recepcao', min:330, desc:'Encerramento previsto' }
+    ]);
+  }else{
+    sugestoes = sugestoes.concat([
+      { base:'cerimonia', min:130, desc:'Cumprimentos aos noivos' },
+      { base:'cerimonia', min:160, desc:'Encerramento previsto' }
+    ]);
+  }
 
   const itens = sugestoes.map(item => ({
     usuario_email: email,
-    hora: somarMinutos(casamento, item.min),
+    hora: somarMinutos(item.base === 'recepcao' ? recepcao : cerimonia, item.min),
     descricao: item.desc
   }));
 
@@ -678,7 +814,7 @@ async function gerarSugestao(){
   Swal.fire({
     icon:'success',
     title:'Roteiro criado 💍',
-    text:'A sugestão foi adicionada ao cronograma.',
+    text:'A sugestão foi criada com base nos horários da cerimônia e recepção.',
     confirmButtonColor:'#EEABAB'
   });
 
@@ -719,9 +855,11 @@ async function del(id){
 }
 
 function linkPublico(){
+  const emailLimpo = String(email || '').trim().toLowerCase();
+
   return window.location.origin +
     window.location.pathname.replace('cronograma.html','visualizar_cronograma.html') +
-    `?noiva=${encodeURIComponent(email)}&v=${Date.now()}`;
+    `?noiva=${encodeURIComponent(emailLimpo)}&t=${Date.now()}`;
 }
 
 function compartilharWhatsApp(){
