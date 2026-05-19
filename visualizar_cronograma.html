@@ -2,7 +2,10 @@
 <html lang="pt-br">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+<meta http-equiv="Pragma" content="no-cache">
+<meta http-equiv="Expires" content="0">
 
 <title>Cronograma Oficial | PlanejaNoiva</title>
 
@@ -17,8 +20,6 @@
   --texto:#3F3932;
   --muted:#8F857A;
   --bg:#FDF9F6;
-  --paper:#FFFDFB;
-  --line:rgba(63,57,50,.10);
   --shadow:0 28px 80px rgba(63,57,50,.08);
 }
 
@@ -28,16 +29,21 @@
   box-sizing:border-box;
 }
 
+html,
+body{
+  width:100%;
+  overflow-x:hidden;
+}
+
 body{
   min-height:100vh;
   padding:54px 22px 70px;
   background:
-    radial-gradient(circle at 12% 8%, color-mix(in srgb, var(--cor-tema) 16%, transparent), transparent 30%),
+    radial-gradient(circle at 12% 8%, rgba(238,171,171,.18), transparent 30%),
     radial-gradient(circle at 88% 12%, rgba(212,175,55,.10), transparent 26%),
     linear-gradient(180deg,#FFFDFC,#F8F0EA);
   color:var(--texto);
   font-family:'Cormorant Garamond',serif;
-  overflow-x:hidden;
 }
 
 body::before{
@@ -55,7 +61,7 @@ body::after{
   width:640px;
   height:640px;
   border-radius:50%;
-  background:radial-gradient(circle,color-mix(in srgb, var(--cor-tema) 22%, transparent), transparent 68%);
+  background:radial-gradient(circle,rgba(238,171,171,.18),transparent 68%);
   filter:blur(6px);
   opacity:.42;
   top:-300px;
@@ -72,6 +78,7 @@ body::after{
 
 .hero{
   position:relative;
+  width:100%;
   text-align:center;
   padding:54px 36px 48px;
   margin-bottom:36px;
@@ -88,7 +95,7 @@ body::after{
   width:360px;
   height:360px;
   border-radius:50%;
-  border:1px solid color-mix(in srgb, var(--cor-tema) 30%, transparent);
+  border:1px solid rgba(238,171,171,.28);
   top:-190px;
   right:-110px;
 }
@@ -99,7 +106,7 @@ body::after{
   width:240px;
   height:240px;
   border-radius:50%;
-  background:color-mix(in srgb, var(--cor-tema) 10%, transparent);
+  background:rgba(238,171,171,.10);
   bottom:-150px;
   left:-90px;
 }
@@ -135,6 +142,7 @@ body::after{
   color:var(--cor-tema);
   letter-spacing:-2px;
   margin-bottom:24px;
+  overflow-wrap:anywhere;
 }
 
 .details{
@@ -171,6 +179,7 @@ body::after{
   letter-spacing:3px;
   text-transform:uppercase;
   color:rgba(63,57,50,.52);
+  overflow-wrap:anywhere;
 }
 
 .seal-wrap{
@@ -196,9 +205,7 @@ body::after{
   height:24px;
   border-radius:50%;
   background:var(--cor-tema);
-  box-shadow:
-    0 0 0 11px color-mix(in srgb, var(--cor-tema) 12%, transparent),
-    0 14px 36px color-mix(in srgb, var(--cor-tema) 28%, transparent);
+  box-shadow:0 0 0 11px rgba(238,171,171,.12),0 14px 36px rgba(238,171,171,.28);
 }
 
 .tag{
@@ -223,10 +230,12 @@ body::after{
   display:grid;
   grid-template-columns:repeat(2,1fr);
   gap:18px;
+  width:100%;
 }
 
 .place-card{
   position:relative;
+  width:100%;
   background:linear-gradient(135deg,rgba(255,255,255,.94),rgba(255,248,245,.82));
   border:1px solid rgba(234,223,214,.82);
   border-radius:34px;
@@ -243,7 +252,7 @@ body::after{
   border-radius:50%;
   right:-80px;
   top:-90px;
-  background:color-mix(in srgb, var(--cor-tema) 9%, transparent);
+  background:rgba(238,171,171,.09);
 }
 
 .place-card > *{
@@ -270,6 +279,7 @@ body::after{
   font-style:italic;
   line-height:1.05;
   color:rgba(63,57,50,.9);
+  overflow-wrap:anywhere;
 }
 
 .place-address{
@@ -278,6 +288,7 @@ body::after{
   font-size:.82rem;
   line-height:1.7;
   margin-top:10px;
+  overflow-wrap:anywhere;
 }
 
 .route-actions{
@@ -341,10 +352,12 @@ body::after{
   display:flex;
   flex-direction:column;
   gap:24px;
+  width:100%;
 }
 
 .item{
   position:relative;
+  width:100%;
   padding-left:92px;
   animation:fadeUp .7s ease both;
 }
@@ -358,13 +371,12 @@ body::after{
   height:26px;
   border-radius:50%;
   background:var(--cor-tema);
-  box-shadow:
-    0 0 0 9px color-mix(in srgb, var(--cor-tema) 12%, transparent),
-    0 16px 34px rgba(63,57,50,.08);
+  box-shadow:0 0 0 9px rgba(238,171,171,.12),0 16px 34px rgba(63,57,50,.08);
 }
 
 .card{
   position:relative;
+  width:100%;
   display:grid;
   grid-template-columns:130px 1fr;
   align-items:center;
@@ -386,7 +398,7 @@ body::after{
   width:170px;
   height:170px;
   border-radius:50%;
-  background:color-mix(in srgb, var(--cor-tema) 8%, transparent);
+  background:rgba(238,171,171,.08);
 }
 
 .time{
@@ -409,6 +421,7 @@ body::after{
   font-weight:400;
   line-height:1.12;
   color:rgba(63,57,50,.86);
+  overflow-wrap:anywhere;
 }
 
 .empty{
@@ -482,15 +495,14 @@ body::after{
 }
 
 @media(max-width:720px){
-
   html,
   body{
-    overflow-x:hidden;
     width:100%;
+    overflow-x:hidden;
   }
 
   body{
-    padding:20px 12px 50px;
+    padding:18px 12px 48px;
   }
 
   .page{
@@ -500,39 +512,39 @@ body::after{
 
   .hero{
     width:100%;
-    padding:38px 20px 34px;
+    padding:36px 18px 32px;
     border-radius:30px;
     margin-bottom:26px;
   }
 
   .hero::before{
-    width:240px;
-    height:240px;
-    top:-120px;
-    right:-120px;
+    width:230px;
+    height:230px;
+    top:-125px;
+    right:-125px;
   }
 
   .hero::after{
-    width:180px;
-    height:180px;
+    width:170px;
+    height:170px;
     bottom:-100px;
-    left:-80px;
+    left:-85px;
   }
 
   .logo{
-    height:66px;
+    height:64px;
     margin-bottom:14px;
   }
 
   .kicker{
-    font-size:.58rem;
+    font-size:.56rem;
     letter-spacing:3px;
     margin-bottom:14px;
   }
 
   .names{
-    font-size:2.9rem;
-    line-height:.95;
+    font-size:clamp(2.35rem,13vw,3.15rem);
+    line-height:.98;
     letter-spacing:-1px;
     margin-bottom:18px;
   }
@@ -542,6 +554,7 @@ body::after{
     gap:8px;
     font-size:.62rem;
     letter-spacing:2px;
+    line-height:1.6;
   }
 
   .detail-dot{
@@ -551,6 +564,7 @@ body::after{
   .location{
     font-size:.62rem;
     letter-spacing:2px;
+    line-height:1.6;
     margin-top:10px;
   }
 
@@ -560,9 +574,9 @@ body::after{
 
   .tag{
     width:100%;
-    padding:12px 18px;
-    font-size:.56rem;
-    letter-spacing:3px;
+    padding:12px 12px;
+    font-size:.54rem;
+    letter-spacing:2.6px;
   }
 
   .location-section{
@@ -591,14 +605,16 @@ body::after{
 
   .route-btn{
     width:100%;
+    min-height:44px;
   }
 
   .timeline-shell{
     width:100%;
+    max-width:100%;
   }
 
   .timeline-shell::before{
-    left:14px;
+    left:13px;
   }
 
   .timeline{
@@ -607,11 +623,11 @@ body::after{
 
   .item{
     width:100%;
-    padding-left:42px;
+    padding-left:40px;
   }
 
   .dot{
-    left:2px;
+    left:1px;
     width:22px;
     height:22px;
   }
@@ -620,7 +636,7 @@ body::after{
     width:100%;
     grid-template-columns:1fr;
     gap:12px;
-    padding:22px 20px;
+    padding:22px 18px;
     border-radius:26px;
     min-height:auto;
   }
@@ -632,8 +648,8 @@ body::after{
 
   .desc{
     text-align:left;
-    font-size:1.6rem;
-    line-height:1.08;
+    font-size:1.55rem;
+    line-height:1.1;
   }
 
   .actions{
@@ -756,7 +772,7 @@ function escaparHTML(texto){
 }
 
 function normalizarEmail(valor){
-  return decodeURIComponent(String(valor || '').trim());
+  return decodeURIComponent(String(valor || '').trim()).toLowerCase();
 }
 
 function partesDataLocal(valor){
@@ -904,7 +920,7 @@ async function buscarEmailPublico(){
       .maybeSingle();
 
     if(config && config.usuario_email){
-      return config.usuario_email;
+      return normalizarEmail(config.usuario_email);
     }
   }
 
@@ -927,6 +943,8 @@ async function load(){
     .from('usuarios')
     .select('*')
     .eq('email', emailNoiva)
+    .order('created_at', { ascending:false })
+    .limit(1)
     .maybeSingle();
 
   if(user){
