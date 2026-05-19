@@ -444,10 +444,11 @@ async function add(){
 }
 
 async function gerarSugestao(){
+
   const { data:user } = await supa
     .from('usuarios')
     .select('data_casamento')
-    .eq('id', usuarioLogado.id)
+    .eq('email', email)
     .single();
 
   if(!user || !user.data_casamento){
