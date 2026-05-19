@@ -28,14 +28,16 @@
 
 body{
   font-family:'Inter',sans-serif;
-  background:linear-gradient(180deg,#FFF8F3,#FBF6F1);
+  background:
+    radial-gradient(circle at top left, rgba(238,171,171,.24), transparent 30%),
+    linear-gradient(180deg,#FFF8F3,#FBF6F1);
   color:var(--text);
   min-height:100vh;
 }
 
 nav{
   height:76px;
-  background:rgba(255,255,255,.86);
+  background:rgba(255,255,255,.88);
   backdrop-filter:blur(16px);
   display:flex;
   align-items:center;
@@ -75,6 +77,24 @@ nav{
   padding:34px;
   box-shadow:var(--shadow);
   margin-bottom:22px;
+  position:relative;
+  overflow:hidden;
+}
+
+.hero::after{
+  content:'';
+  position:absolute;
+  width:260px;
+  height:260px;
+  border-radius:50%;
+  background:rgba(238,171,171,.12);
+  right:-110px;
+  top:-120px;
+}
+
+.hero > *{
+  position:relative;
+  z-index:1;
 }
 
 .badge{
@@ -120,11 +140,16 @@ nav{
   align-items:center;
   justify-content:center;
   gap:8px;
+  transition:.25s;
+}
+
+.action-btn:hover{
+  transform:translateY(-2px);
 }
 
 .wpp{background:var(--green);color:white}
 .print{background:var(--text);color:white}
-.ai{background:var(--rose);color:white}
+.ai{background:linear-gradient(135deg,var(--rose),var(--rose-dark));color:white}
 
 .form-box{
   background:white;
@@ -320,6 +345,7 @@ const supa = supabase.createClient(
 
 let usuarioLogado = null;
 let email = null;
+let dataCasamentoUsuario = null;
 
 const hora = document.getElementById('hora');
 const descricao = document.getElementById('descricao');
@@ -340,13 +366,53 @@ async function iniciarCronograma(){
 
   localStorage.setItem('usuario_email', email);
 
+  await carregarPerfilEvento();
   await load();
+}
+
+async function carregarPerfilEvento(){
+  const { data } = await supa
+    .from('usuarios')
+    .select('data_casamento')
+    .eq('email', email)
+    .maybeSingle();
+
+  dataCasamentoUsuario = data?.data_casamento || null;
 }
 
 function escaparHTML(texto){
   const div = document.createElement('div');
   div.innerText = texto || '';
   return div.innerHTML;
+}
+
+function minutosDoHorario(horaTexto){
+  if(!horaTexto) return 0;
+
+  const partes = horaTexto.substring(0,5).split(':');
+  const h = Number(partes[0] || 0);
+  const m = Number(partes[1] || 0);
+
+  return (h * 60) + m;
+}
+
+function horarioOrdenavel(horaTexto){
+  const minutos = minutosDoHorario(horaTexto);
+
+  if(!dataCasamentoUsuario){
+    return minutos;
+  }
+
+  const casamento = new Date(dataCasamentoUsuario);
+  const minutoCasamento = casamento.getHours() * 60 + casamento.getMinutes();
+
+  const inicioDiaCasamento = minutoCasamento - 420;
+
+  if(minutos < inicioDiaCasamento){
+    return minutos + 1440;
+  }
+
+  return minutos;
 }
 
 function somarMinutos(dataBase, minutos){
@@ -359,8 +425,7 @@ async function load(){
   const { data, error } = await supa
     .from('cronograma')
     .select('*')
-    .eq('usuario_email', email)
-    .order('hora', { ascending:true });
+    .eq('usuario_email', email);
 
   if(error){
     Swal.fire({
@@ -381,9 +446,13 @@ async function load(){
     return;
   }
 
+  const dadosOrdenados = [...data].sort((a,b) => {
+    return horarioOrdenavel(a.hora) - horarioOrdenavel(b.hora);
+  });
+
   let html = '';
 
-  data.forEach(e => {
+  dadosOrdenados.forEach(e => {
     html += `
       <div class="item">
         <div class="dot"></div>
@@ -444,7 +513,6 @@ async function add(){
 }
 
 async function gerarSugestao(){
-
   const { data:user } = await supa
     .from('usuarios')
     .select('data_casamento')
@@ -460,6 +528,8 @@ async function gerarSugestao(){
     });
     return;
   }
+
+  dataCasamentoUsuario = user.data_casamento;
 
   const casamento = new Date(user.data_casamento);
 
