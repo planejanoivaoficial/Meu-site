@@ -6,351 +6,523 @@
 
 <title>Cronograma Oficial | PlanejaNoiva</title>
 
-<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,500;1,400&family=Montserrat:wght@200;400;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400;1,500&family=Montserrat:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
 <style>
 :root{
---cor-tema:#EEABAB;
---texto:#4A453E;
---bg:#FDF9F6;
---border:rgba(0,0,0,.08);
+  --cor-tema:#EEABAB;
+  --texto:#3F3932;
+  --muted:#8F857A;
+  --bg:#FDF9F6;
+  --paper:#FFFDFB;
+  --line:rgba(63,57,50,.10);
+  --soft:rgba(255,255,255,.78);
+  --shadow:0 28px 80px rgba(63,57,50,.08);
 }
 
 *{
-margin:0;
-padding:0;
-box-sizing:border-box;
+  margin:0;
+  padding:0;
+  box-sizing:border-box;
 }
 
 body{
-background:var(--bg);
-color:var(--texto);
-min-height:100vh;
-display:flex;
-flex-direction:column;
-align-items:center;
-padding:70px 20px;
-font-family:'Cormorant Garamond',serif;
-overflow-x:hidden;
+  min-height:100vh;
+  padding:54px 22px 70px;
+  background:
+    radial-gradient(circle at 12% 8%, color-mix(in srgb, var(--cor-tema) 16%, transparent), transparent 30%),
+    radial-gradient(circle at 88% 12%, rgba(212,175,55,.10), transparent 26%),
+    linear-gradient(180deg,#FFFDFC,#F8F0EA);
+  color:var(--texto);
+  font-family:'Cormorant Garamond',serif;
+  overflow-x:hidden;
 }
 
 body::before{
-content:"";
-position:fixed;
-inset:0;
-background:url("https://www.transparenttextures.com/patterns/natural-paper.png");
-opacity:.35;
-z-index:-1;
+  content:"";
+  position:fixed;
+  inset:0;
+  background:url("https://www.transparenttextures.com/patterns/natural-paper.png");
+  opacity:.32;
+  z-index:-2;
 }
 
 body::after{
-content:"";
-position:fixed;
-width:500px;
-height:500px;
-border-radius:50%;
-background:radial-gradient(circle,var(--cor-tema),transparent 70%);
-opacity:.08;
-top:-220px;
-right:-180px;
-z-index:-1;
+  content:"";
+  position:fixed;
+  width:640px;
+  height:640px;
+  border-radius:50%;
+  background:radial-gradient(circle,color-mix(in srgb, var(--cor-tema) 22%, transparent), transparent 68%);
+  filter:blur(6px);
+  opacity:.42;
+  top:-300px;
+  left:50%;
+  transform:translateX(-50%);
+  z-index:-1;
 }
 
-.header{
-text-align:center;
-max-width:760px;
-margin-bottom:70px;
-animation:fade .8s ease;
+.page{
+  width:100%;
+  max-width:980px;
+  margin:0 auto;
+}
+
+.hero{
+  position:relative;
+  text-align:center;
+  padding:54px 36px 48px;
+  margin-bottom:52px;
+  border-radius:42px;
+  background:
+    linear-gradient(180deg,rgba(255,255,255,.88),rgba(255,250,247,.68));
+  border:1px solid rgba(234,223,214,.72);
+  box-shadow:var(--shadow);
+  overflow:hidden;
+}
+
+.hero::before{
+  content:"";
+  position:absolute;
+  width:360px;
+  height:360px;
+  border-radius:50%;
+  border:1px solid color-mix(in srgb, var(--cor-tema) 30%, transparent);
+  top:-190px;
+  right:-110px;
+}
+
+.hero::after{
+  content:"";
+  position:absolute;
+  width:240px;
+  height:240px;
+  border-radius:50%;
+  background:color-mix(in srgb, var(--cor-tema) 10%, transparent);
+  bottom:-150px;
+  left:-90px;
 }
 
 .logo{
-height:110px;
-margin-bottom:18px;
-mix-blend-mode:multiply;
+  position:relative;
+  z-index:2;
+  height:86px;
+  margin-bottom:18px;
+  mix-blend-mode:multiply;
+  opacity:.92;
+}
+
+.kicker{
+  position:relative;
+  z-index:2;
+  font-family:'Montserrat',sans-serif;
+  font-size:.66rem;
+  font-weight:700;
+  letter-spacing:5px;
+  text-transform:uppercase;
+  color:var(--muted);
+  margin-bottom:20px;
 }
 
 .names{
-font-size:clamp(2.7rem,7vw,4.2rem);
-font-style:italic;
-font-weight:400;
-line-height:1.08;
-margin-bottom:14px;
-color:var(--cor-tema);
-transition:.4s;
+  position:relative;
+  z-index:2;
+  font-size:clamp(3rem,8vw,5.6rem);
+  font-weight:300;
+  font-style:italic;
+  line-height:.96;
+  color:var(--cor-tema);
+  letter-spacing:-2px;
+  margin-bottom:24px;
 }
 
-.info{
-font-family:'Montserrat';
-font-size:.75rem;
-letter-spacing:4px;
-text-transform:uppercase;
-line-height:2;
-font-weight:700;
+.details{
+  position:relative;
+  z-index:2;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  flex-wrap:wrap;
+  gap:14px;
+  font-family:'Montserrat',sans-serif;
+  font-size:.76rem;
+  font-weight:700;
+  letter-spacing:3.5px;
+  text-transform:uppercase;
+  color:rgba(63,57,50,.72);
 }
 
-.local{
-font-size:.72rem;
-opacity:.58;
-letter-spacing:2px;
-margin-top:6px;
-display:block;
+.detail-dot{
+  width:5px;
+  height:5px;
+  border-radius:50%;
+  background:var(--cor-tema);
+  opacity:.8;
+}
+
+.location{
+  position:relative;
+  z-index:2;
+  margin-top:15px;
+  font-family:'Montserrat',sans-serif;
+  font-size:.72rem;
+  font-weight:600;
+  letter-spacing:3px;
+  text-transform:uppercase;
+  color:rgba(63,57,50,.52);
+}
+
+.seal-wrap{
+  position:relative;
+  z-index:2;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  gap:18px;
+  margin:30px auto 26px;
+  max-width:430px;
+}
+
+.seal-line{
+  height:1px;
+  flex:1;
+  background:linear-gradient(90deg,transparent,var(--cor-tema),transparent);
+  opacity:.72;
 }
 
 .seal{
-width:18px;
-height:18px;
-border-radius:50%;
-margin:24px auto;
-background:var(--cor-tema);
-box-shadow:0 0 0 10px rgba(238,171,171,.10);
+  width:24px;
+  height:24px;
+  border-radius:50%;
+  background:var(--cor-tema);
+  box-shadow:
+    0 0 0 11px color-mix(in srgb, var(--cor-tema) 12%, transparent),
+    0 14px 36px color-mix(in srgb, var(--cor-tema) 28%, transparent);
 }
 
 .tag{
-font-family:'Montserrat';
-font-size:.63rem;
-letter-spacing:5px;
-text-transform:uppercase;
-padding:12px 38px;
-border-top:1px solid var(--cor-tema);
-border-bottom:1px solid var(--cor-tema);
-display:inline-block;
-margin-top:8px;
-font-weight:700;
+  position:relative;
+  z-index:2;
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  padding:13px 42px;
+  border-top:1px solid var(--cor-tema);
+  border-bottom:1px solid var(--cor-tema);
+  font-family:'Montserrat',sans-serif;
+  font-size:.64rem;
+  font-weight:700;
+  letter-spacing:5px;
+  text-transform:uppercase;
+  color:rgba(63,57,50,.82);
+}
+
+.timeline-shell{
+  position:relative;
+  width:100%;
+  max-width:900px;
+  margin:0 auto;
+}
+
+.timeline-shell::before{
+  content:"";
+  position:absolute;
+  left:34px;
+  top:0;
+  bottom:0;
+  width:1px;
+  background:linear-gradient(180deg,transparent,var(--cor-tema),transparent);
+  opacity:.38;
 }
 
 .timeline{
-width:100%;
-max-width:720px;
-position:relative;
-}
-
-.timeline::before{
-content:'';
-position:absolute;
-left:22px;
-top:0;
-bottom:0;
-width:1px;
-background:rgba(0,0,0,.08);
+  display:flex;
+  flex-direction:column;
+  gap:24px;
 }
 
 .item{
-position:relative;
-display:flex;
-gap:28px;
-margin-bottom:26px;
-padding-left:65px;
-animation:fadeUp .6s ease;
+  position:relative;
+  padding-left:92px;
+  animation:fadeUp .7s ease both;
 }
 
 .dot{
-position:absolute;
-left:12px;
-top:8px;
-width:20px;
-height:20px;
-border-radius:50%;
-background:var(--cor-tema);
-box-shadow:
-0 0 0 7px rgba(238,171,171,.10),
-0 10px 25px rgba(0,0,0,.08);
+  position:absolute;
+  left:22px;
+  top:50%;
+  transform:translateY(-50%);
+  width:26px;
+  height:26px;
+  border-radius:50%;
+  background:var(--cor-tema);
+  box-shadow:
+    0 0 0 9px color-mix(in srgb, var(--cor-tema) 12%, transparent),
+    0 16px 34px rgba(63,57,50,.08);
 }
 
-.content{
-background:rgba(255,255,255,.78);
-backdrop-filter:blur(10px);
-border:1px solid rgba(255,255,255,.6);
-box-shadow:0 15px 40px rgba(0,0,0,.04);
-border-radius:28px;
-padding:24px;
-width:100%;
-display:flex;
-justify-content:space-between;
-align-items:center;
-gap:20px;
+.card{
+  position:relative;
+  display:grid;
+  grid-template-columns:130px 1fr;
+  align-items:center;
+  gap:26px;
+  min-height:104px;
+  padding:26px 34px;
+  border-radius:34px;
+  background:
+    linear-gradient(135deg,rgba(255,255,255,.92),rgba(255,250,247,.76));
+  border:1px solid rgba(234,223,214,.78);
+  box-shadow:0 18px 55px rgba(63,57,50,.055);
+  overflow:hidden;
+}
+
+.card::after{
+  content:"";
+  position:absolute;
+  right:-60px;
+  top:-80px;
+  width:170px;
+  height:170px;
+  border-radius:50%;
+  background:color-mix(in srgb, var(--cor-tema) 8%, transparent);
 }
 
 .time{
-font-family:'Montserrat';
-font-size:.92rem;
-font-weight:700;
-min-width:90px;
-color:var(--cor-tema);
-letter-spacing:1px;
+  position:relative;
+  z-index:2;
+  font-family:'Montserrat',sans-serif;
+  color:var(--cor-tema);
+  font-size:1rem;
+  font-weight:800;
+  letter-spacing:1px;
+  text-transform:uppercase;
 }
 
 .desc{
-font-size:1.7rem;
-text-align:right;
-font-style:italic;
-line-height:1.2;
-flex:1;
+  position:relative;
+  z-index:2;
+  text-align:right;
+  font-size:1.9rem;
+  font-style:italic;
+  font-weight:400;
+  line-height:1.12;
+  color:rgba(63,57,50,.86);
 }
 
 .empty{
-text-align:center;
-opacity:.45;
-font-style:italic;
-margin-top:40px;
-font-size:1.5rem;
-}
-
-.btn{
-margin-top:70px;
-background:white;
-border:1px solid var(--border);
-padding:14px 38px;
-border-radius:999px;
-font-family:'Montserrat';
-font-size:.62rem;
-letter-spacing:3px;
-text-transform:uppercase;
-cursor:pointer;
-transition:.3s;
-font-weight:700;
-box-shadow:0 10px 25px rgba(0,0,0,.04);
-}
-
-.btn:hover{
-transform:translateY(-2px);
-background:var(--cor-tema);
-border-color:var(--cor-tema);
-color:white;
+  padding:42px 30px;
+  text-align:center;
+  border-radius:32px;
+  background:rgba(255,255,255,.75);
+  border:1px dashed rgba(63,57,50,.13);
+  color:rgba(63,57,50,.48);
+  font-size:1.65rem;
+  font-style:italic;
 }
 
 .loading{
-font-family:'Montserrat';
-font-size:.8rem;
-letter-spacing:3px;
-text-transform:uppercase;
-opacity:.5;
+  padding:42px 30px;
+  text-align:center;
+  font-family:'Montserrat',sans-serif;
+  font-size:.78rem;
+  letter-spacing:4px;
+  text-transform:uppercase;
+  color:rgba(63,57,50,.48);
 }
 
-@keyframes fade{
-from{
-opacity:0;
-transform:translateY(15px);
-}
-to{
-opacity:1;
-transform:translateY(0);
-}
-}
-
-@keyframes fadeUp{
-from{
-opacity:0;
-transform:translateY(18px);
-}
-to{
-opacity:1;
-transform:translateY(0);
-}
-}
-
-@media(max-width:700px){
-
-body{
-padding:40px 18px;
-}
-
-.logo{
-height:84px;
-}
-
-.names{
-font-size:2.45rem;
-}
-
-.content{
-flex-direction:column;
-align-items:flex-start;
-gap:10px;
-padding:20px;
-}
-
-.desc{
-text-align:left;
-font-size:1.45rem;
-}
-
-.time{
-min-width:auto;
-}
-
-.timeline::before{
-left:14px;
-}
-
-.item{
-padding-left:45px;
-}
-
-.dot{
-left:4px;
-}
-}
-
-@media print{
-
-body{
-padding:30px;
-background:white;
+.actions{
+  display:flex;
+  justify-content:center;
+  margin-top:54px;
 }
 
 .btn{
-display:none;
+  border:none;
+  padding:15px 44px;
+  border-radius:999px;
+  background:var(--texto);
+  color:white;
+  font-family:'Montserrat',sans-serif;
+  font-size:.66rem;
+  font-weight:800;
+  letter-spacing:3.5px;
+  text-transform:uppercase;
+  cursor:pointer;
+  box-shadow:0 18px 38px rgba(63,57,50,.14);
+  transition:.28s;
 }
 
-.content{
-box-shadow:none;
-border:1px solid #eee;
+.btn:hover{
+  transform:translateY(-2px);
+  background:var(--cor-tema);
 }
 
-body::before,
-body::after{
-display:none;
+.footer{
+  margin-top:32px;
+  text-align:center;
+  font-family:'Montserrat',sans-serif;
+  font-size:.62rem;
+  font-weight:600;
+  letter-spacing:3px;
+  text-transform:uppercase;
+  color:rgba(63,57,50,.38);
 }
+
+@keyframes fadeUp{
+  from{
+    opacity:0;
+    transform:translateY(18px);
+  }
+  to{
+    opacity:1;
+    transform:translateY(0);
+  }
+}
+
+@media(max-width:720px){
+  body{
+    padding:28px 14px 54px;
+  }
+
+  .hero{
+    padding:42px 22px 38px;
+    border-radius:32px;
+    margin-bottom:42px;
+  }
+
+  .logo{
+    height:74px;
+  }
+
+  .names{
+    font-size:2.7rem;
+    letter-spacing:-1px;
+  }
+
+  .details{
+    flex-direction:column;
+    gap:8px;
+    letter-spacing:2.5px;
+  }
+
+  .detail-dot{
+    display:none;
+  }
+
+  .tag{
+    letter-spacing:3px;
+    padding:12px 24px;
+  }
+
+  .timeline-shell::before{
+    left:20px;
+  }
+
+  .item{
+    padding-left:54px;
+  }
+
+  .dot{
+    left:8px;
+    width:22px;
+    height:22px;
+  }
+
+  .card{
+    grid-template-columns:1fr;
+    gap:10px;
+    padding:24px;
+    border-radius:28px;
+  }
+
+  .desc{
+    text-align:left;
+    font-size:1.55rem;
+  }
+
+  .time{
+    font-size:.86rem;
+  }
+}
+
+@media print{
+  body{
+    padding:22px;
+    background:white;
+  }
+
+  body::before,
+  body::after{
+    display:none;
+  }
+
+  .hero{
+    box-shadow:none;
+    border:1px solid #eee;
+    margin-bottom:34px;
+  }
+
+  .card{
+    box-shadow:none;
+    border:1px solid #eee;
+    background:white;
+    break-inside:avoid;
+  }
+
+  .actions,
+  .footer{
+    display:none;
+  }
 }
 </style>
 </head>
 
 <body>
 
-<div class="header">
+<main class="page">
 
-<img src="https://vuiqbdqnfnofwkpvvuqy.supabase.co/storage/v1/object/public/logos/logo.png" class="logo" alt="PlanejaNoiva">
+<section class="hero">
+  <img src="https://vuiqbdqnfnofwkpvvuqy.supabase.co/storage/v1/object/public/logos/logo.png" class="logo" alt="PlanejaNoiva">
 
-<div class="names" id="nomes">
-Carregando...
+  <div class="kicker">PlanejaNoiva apresenta</div>
+
+  <div class="names" id="nomes">Carregando...</div>
+
+  <div class="details">
+    <span id="dataHora"></span>
+    <span class="detail-dot"></span>
+    <span id="localHero">Local do evento</span>
+  </div>
+
+  <div class="location" id="local"></div>
+
+  <div class="seal-wrap">
+    <div class="seal-line"></div>
+    <div class="seal"></div>
+    <div class="seal-line"></div>
+  </div>
+
+  <div class="tag">Cronograma Oficial</div>
+</section>
+
+<section class="timeline-shell">
+  <div class="timeline" id="lista">
+    <div class="loading">Carregando cronograma...</div>
+  </div>
+</section>
+
+<div class="actions">
+  <button class="btn" onclick="window.print()">Exportar PDF</button>
 </div>
 
-<div class="info">
-<span id="dataHora"></span>
-<span class="local" id="local"></span>
+<div class="footer">
+  PlanejaNoiva • Organização elegante para o grande dia
 </div>
 
-<div class="seal"></div>
-
-<div class="tag">
-Cronograma Oficial
-</div>
-
-</div>
-
-<div class="timeline" id="lista">
-
-<div class="loading">
-Carregando cronograma...
-</div>
-
-</div>
-
-<button class="btn" onclick="window.print()">
-Exportar PDF
-</button>
+</main>
 
 <script>
 const supa = supabase.createClient(
@@ -359,154 +531,166 @@ const supa = supabase.createClient(
 );
 
 const params = new URLSearchParams(window.location.search);
-
-const email = params.get('noiva');
+const emailParam = params.get('noiva');
 const token = params.get('token');
 
+let dataCasamentoUsuario = null;
+
 function escaparHTML(texto){
-const div = document.createElement('div');
-div.innerText = texto || '';
-return div.innerHTML;
+  const div = document.createElement('div');
+  div.innerText = texto || '';
+  return div.innerHTML;
+}
+
+function normalizarEmail(valor){
+  return decodeURIComponent(String(valor || '').trim());
+}
+
+function partesDataLocal(valor){
+  const texto = String(valor || '');
+  const ano = texto.substring(0,4);
+  const mes = texto.substring(5,7);
+  const dia = texto.substring(8,10);
+  const hora = texto.substring(11,16) || '00:00';
+  return { ano, mes, dia, hora };
+}
+
+function formatarDataCasamento(valor){
+  const p = partesDataLocal(valor);
+
+  if(!p.ano || !p.mes || !p.dia){
+    return '';
+  }
+
+  return `${p.dia}/${p.mes}/${p.ano} • ${p.hora}H`;
+}
+
+function minutoCasamentoLocal(){
+  if(!dataCasamentoUsuario) return null;
+
+  const hora = partesDataLocal(dataCasamentoUsuario).hora;
+  const [h,m] = hora.split(':').map(Number);
+
+  return (h * 60) + (m || 0);
+}
+
+function minutosDoHorario(horaTexto){
+  const [h,m] = String(horaTexto || '00:00').substring(0,5).split(':').map(Number);
+  return (h * 60) + (m || 0);
+}
+
+function horarioOrdenavel(horaTexto){
+  const minutos = minutosDoHorario(horaTexto);
+  const minutoCasamento = minutoCasamentoLocal();
+
+  if(minutoCasamento === null){
+    return minutos;
+  }
+
+  const inicioRoteiro = minutoCasamento - 420;
+
+  if(minutos < inicioRoteiro){
+    return minutos + 1440;
+  }
+
+  return minutos;
 }
 
 async function buscarEmailPublico(){
+  if(emailParam){
+    return normalizarEmail(emailParam);
+  }
 
-if(email){
-return decodeURIComponent(email);
-}
+  if(token){
+    const { data:config } = await supa
+      .from('mesas_assentos')
+      .select('usuario_email')
+      .eq('public_token', token)
+      .maybeSingle();
 
-if(token){
+    if(config && config.usuario_email){
+      return config.usuario_email;
+    }
+  }
 
-const { data:config } = await supa
-.from('mesas_assentos')
-.select('usuario_email')
-.eq('public_token', token)
-.maybeSingle();
-
-if(config && config.usuario_email){
-return config.usuario_email;
-}
-
-}
-
-return null;
+  return null;
 }
 
 async function load(){
+  const lista = document.getElementById('lista');
+  const emailNoiva = await buscarEmailPublico();
 
-const lista = document.getElementById('lista');
+  if(!emailNoiva){
+    lista.innerHTML = `<div class="empty">Link inválido</div>`;
+    document.getElementById('nomes').innerText = 'Cronograma indisponível';
+    document.getElementById('dataHora').innerText = '';
+    document.getElementById('localHero').innerText = '';
+    return;
+  }
 
-const emailNoiva = await buscarEmailPublico();
+  const { data:user } = await supa
+    .from('usuarios')
+    .select('*')
+    .eq('email', emailNoiva)
+    .maybeSingle();
 
-if(!emailNoiva){
+  if(user){
+    dataCasamentoUsuario = user.data_casamento || null;
 
-lista.innerHTML = `
-<p class="empty">
-Link inválido
-</p>
-`;
+    document.getElementById('nomes').innerText =
+      `${user.nome || 'Noiva'} & ${user.nome_noivo || 'Noivo'}`;
 
-document.getElementById('nomes').innerText =
-'Cronograma indisponível';
+    document.getElementById('dataHora').innerText =
+      user.data_casamento ? formatarDataCasamento(user.data_casamento) : '';
 
-return;
-}
+    document.getElementById('localHero').innerText =
+      user.local_casamento || 'Local do evento';
 
-const { data:user } = await supa
-.from('usuarios')
-.select('*')
-.eq('email', emailNoiva)
-.single();
+    document.getElementById('local').innerText =
+      user.local_casamento || '';
 
-if(user){
+    if(user.paleta_cores){
+      document.documentElement.style.setProperty('--cor-tema', user.paleta_cores);
+    }
+  }else{
+    document.getElementById('nomes').innerText = 'Cronograma Oficial';
+  }
 
-document.getElementById('nomes').innerText =
-`${user.nome || 'Noiva'} & ${user.nome_noivo || 'Noivo'}`;
+  const { data:crono, error } = await supa
+    .from('cronograma')
+    .select('*')
+    .eq('usuario_email', emailNoiva);
 
-if(user.data_casamento){
+  if(error){
+    lista.innerHTML = `<div class="empty">Erro ao carregar cronograma</div>`;
+    return;
+  }
 
-const d = new Date(user.data_casamento);
+  if(!crono || crono.length === 0){
+    lista.innerHTML = `<div class="empty">A definir o roteiro dos sonhos...</div>`;
+    return;
+  }
 
-document.getElementById('dataHora').innerText =
-d.toLocaleDateString('pt-BR') +
-' • ' +
-d.toLocaleTimeString('pt-BR',{
-hour:'2-digit',
-minute:'2-digit'
-}) +
-'h';
+  const ordenado = [...crono].sort((a,b) => {
+    return horarioOrdenavel(a.hora) - horarioOrdenavel(b.hora);
+  });
 
-}
+  let html = '';
 
-document.getElementById('local').innerText =
-user.local_casamento || '';
+  ordenado.forEach((item,index) => {
+    html += `
+      <article class="item" style="animation-delay:${index * .05}s">
+        <div class="dot"></div>
 
-if(user.paleta_cores){
+        <div class="card">
+          <div class="time">${escaparHTML((item.hora || '').substring(0,5))}h</div>
+          <div class="desc">${escaparHTML(item.descricao)}</div>
+        </div>
+      </article>
+    `;
+  });
 
-document.documentElement.style.setProperty(
-'--cor-tema',
-user.paleta_cores
-);
-
-}
-
-}
-
-const { data:crono, error } = await supa
-.from('cronograma')
-.select('*')
-.eq('usuario_email', emailNoiva)
-.order('hora', { ascending:true });
-
-if(error){
-
-lista.innerHTML = `
-<p class="empty">
-Erro ao carregar cronograma
-</p>
-`;
-
-return;
-}
-
-if(!crono || crono.length === 0){
-
-lista.innerHTML = `
-<p class="empty">
-A definir o roteiro dos sonhos...
-</p>
-`;
-
-return;
-}
-
-let html = '';
-
-crono.forEach((item,index)=>{
-
-html += `
-<div class="item" style="animation-delay:${index * .06}s">
-
-<div class="dot"></div>
-
-<div class="content">
-
-<div class="time">
-${escaparHTML((item.hora || '').substring(0,5))}h
-</div>
-
-<div class="desc">
-${escaparHTML(item.descricao)}
-</div>
-
-</div>
-
-</div>
-`;
-
-});
-
-lista.innerHTML = html;
+  lista.innerHTML = html;
 }
 
 load();
