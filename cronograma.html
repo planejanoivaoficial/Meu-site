@@ -863,7 +863,7 @@ function linkPublico(){
   const dominio = window.location.origin;
   const versao = new Date().getTime();
 
-  return `${dominio}/visualizar_cronograma.html?noiva=${encodeURIComponent(emailLimpo)}&v=${versao}`;
+  return `${window.location.origin}/cronograma-premium.html?noiva=${encodeURIComponent(email)}&v=${versao}`;
 }
 
 function compartilharWhatsApp(){
