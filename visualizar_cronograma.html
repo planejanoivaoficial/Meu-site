@@ -857,25 +857,37 @@ body::after{
   }
 }
 
-/* PDF PREMIUM CORRIGIDO */
+/* PDF PREMIUM DEFINITIVO */
 
 @page{
   size:A4;
-  margin:26mm 10mm 18mm;
+  margin:32mm 12mm 24mm 12mm;
 }
 
 @media print{
 
-  html,
-  body{
-    width:100%;
+  *{
+    -webkit-print-color-adjust:exact !important;
+    print-color-adjust:exact !important;
+  }
+
+  html{
+    width:100% !important;
+    height:auto !important;
     overflow:visible !important;
     background:white !important;
   }
 
   body{
-    padding:0 !important;
+    width:100% !important;
+    height:auto !important;
+
+    overflow:visible !important;
+
+    background:white !important;
+
     margin:0 !important;
+    padding:0 !important;
   }
 
   body::before,
@@ -884,21 +896,29 @@ body::after{
   }
 
   .page{
+    width:100% !important;
     max-width:100% !important;
-    overflow:visible !important;
-  }
 
-  .hero,
-  .place-card,
-  .card{
-    box-shadow:none !important;
-    background:white !important;
-    border:1px solid #eee !important;
+    overflow:visible !important;
+
+    margin:0 auto !important;
+    padding:0 !important;
   }
 
   .hero{
+    overflow:visible !important;
+
+    margin:0 0 18mm 0 !important;
+
     padding:28px 24px !important;
-    margin-bottom:18mm !important;
+
+    border-radius:22px !important;
+
+    background:white !important;
+
+    border:1px solid #ececec !important;
+
+    box-shadow:none !important;
 
     break-inside:avoid !important;
     page-break-inside:avoid !important;
@@ -906,23 +926,59 @@ body::after{
 
   .hero::before,
   .hero::after,
-  .place-card::after,
-  .card::after{
+  .card::after,
+  .place-card::after{
     display:none !important;
   }
 
+  .names{
+    font-size:42px !important;
+    line-height:1.05 !important;
+  }
+
+  .details{
+    gap:10px !important;
+  }
+
   .location-section{
+    display:grid !important;
+
     grid-template-columns:1fr 1fr !important;
+
     gap:10mm !important;
-    margin-bottom:16mm !important;
+
+    margin-bottom:18mm !important;
+
+    overflow:visible !important;
 
     break-inside:avoid !important;
     page-break-inside:avoid !important;
   }
 
-  .timeline-shell{
-    padding-top:14mm !important;
+  .place-card{
     overflow:visible !important;
+
+    background:white !important;
+
+    border:1px solid #ececec !important;
+
+    box-shadow:none !important;
+
+    border-radius:18px !important;
+
+    padding:18px !important;
+
+    break-inside:avoid !important;
+    page-break-inside:avoid !important;
+  }
+
+  .route-actions{
+    display:none !important;
+  }
+
+  .timeline-shell{
+    overflow:visible !important;
+    padding-top:16mm !important;
   }
 
   .timeline-shell::before{
@@ -930,12 +986,20 @@ body::after{
   }
 
   .timeline{
-    gap:12mm !important;
+    display:flex !important;
+    flex-direction:column !important;
+
+    gap:10mm !important;
+
+    overflow:visible !important;
   }
 
   .item{
+    overflow:visible !important;
+
     padding-left:0 !important;
-    margin-bottom:12mm !important;
+
+    margin:0 !important;
 
     break-inside:avoid !important;
     page-break-inside:avoid !important;
@@ -946,38 +1010,58 @@ body::after{
   }
 
   .card{
-    break-inside:avoid !important;
-    page-break-inside:avoid !important;
+    overflow:visible !important;
+
+    display:grid !important;
+
+    grid-template-columns:95px 1fr !important;
+
+    align-items:center !important;
+
+    gap:18px !important;
 
     min-height:auto !important;
 
-    padding:18px 20px !important;
+    padding:20px 18px !important;
+
+    border-radius:18px !important;
+
+    background:white !important;
+
+    border:1px solid #ececec !important;
+
+    box-shadow:none !important;
+
+    break-inside:avoid !important;
+    page-break-inside:avoid !important;
+  }
+
+  .time{
+    font-size:13px !important;
+
+    line-height:1.5 !important;
+
+    white-space:nowrap !important;
+  }
+
+  .desc{
+    text-align:left !important;
+
+    font-size:23px !important;
+
+    line-height:1.22 !important;
 
     overflow:visible !important;
   }
 
   .actions,
-  .footer,
-  .route-actions{
+  .footer{
     display:none !important;
-  }
-
-  .names{
-    font-size:44px !important;
-  }
-
-  .desc{
-    font-size:24px !important;
-    line-height:1.25 !important;
-  }
-
-  .time{
-    font-size:13px !important;
-    white-space:nowrap !important;
   }
 }
 
 </style>
+
 </head>
 
 <body>
@@ -1045,12 +1129,14 @@ Carregando cronograma...
 </section>
 
 <div class="actions">
+
 <button
 class="btn"
 onclick="window.print()"
 >
 Exportar PDF
 </button>
+
 </div>
 
 <div class="footer">
