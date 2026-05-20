@@ -3,27 +3,14 @@
 <head>
 
 <meta charset="UTF-8">
-
-<meta
-  name="viewport"
-  content="width=device-width, initial-scale=1.0, viewport-fit=cover"
-/>
-
-<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
-<meta http-equiv="Pragma" content="no-cache">
-<meta http-equiv="Expires" content="0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 
 <title>Cronograma Oficial | PlanejaNoiva</title>
 
-<link
-  href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400;1,500&family=Montserrat:wght@300;400;500;600;700&display=swap"
-  rel="stylesheet"
-/>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400;1,500&family=Montserrat:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 
-<link
-  rel="stylesheet"
-  href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined"
-/>
+<link rel="stylesheet"
+href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" />
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
@@ -48,47 +35,82 @@
 html,
 body{
   width:100%;
-  max-width:100%;
   overflow-x:hidden;
-  scroll-behavior:smooth;
 }
 
 body{
   min-height:100vh;
   padding:54px 22px 70px;
+
   background:
-    radial-gradient(circle at 12% 8%, rgba(238,171,171,.16), transparent 30%),
-    radial-gradient(circle at 88% 12%, rgba(212,175,55,.10), transparent 26%),
-    linear-gradient(180deg,#FFFDFC,#F8F0EA);
+    radial-gradient(
+      circle at 12% 8%,
+      color-mix(
+        in srgb,
+        var(--cor-tema) 16%,
+        transparent
+      ),
+      transparent 30%
+    ),
+
+    radial-gradient(
+      circle at 88% 12%,
+      rgba(212,175,55,.10),
+      transparent 26%
+    ),
+
+    linear-gradient(
+      180deg,
+      #FFFDFC,
+      #F8F0EA
+    );
 
   color:var(--texto);
   font-family:'Cormorant Garamond',serif;
-  overflow-x:hidden;
-  position:relative;
 }
 
 body::before{
   content:"";
   position:fixed;
   inset:0;
-  background:url("https://www.transparenttextures.com/patterns/natural-paper.png");
-  opacity:.28;
+
+  background:url(
+    "https://www.transparenttextures.com/patterns/natural-paper.png"
+  );
+
+  opacity:.32;
   z-index:-2;
 }
 
 body::after{
   content:"";
   position:fixed;
+
   width:640px;
   height:640px;
+
   border-radius:50%;
+
   background:
-    radial-gradient(circle, rgba(238,171,171,.18), transparent 68%);
+    radial-gradient(
+      circle,
+      color-mix(
+        in srgb,
+        var(--cor-tema) 22%,
+        transparent
+      ),
+      transparent 68%
+    );
+
   filter:blur(6px);
+
   opacity:.42;
+
   top:-300px;
   left:50%;
+
   transform:translateX(-50%);
+
   z-index:-1;
 }
 
@@ -96,23 +118,24 @@ body::after{
   width:100%;
   max-width:980px;
   margin:0 auto;
-  overflow:hidden;
 }
 
 .hero{
   position:relative;
-  width:100%;
-  max-width:100%;
+
   text-align:center;
+
   padding:54px 36px 48px;
+
   margin-bottom:36px;
+
   border-radius:42px;
 
   background:
     linear-gradient(
       180deg,
-      rgba(255,255,255,.92),
-      rgba(255,250,247,.74)
+      rgba(255,255,255,.88),
+      rgba(255,250,247,.68)
     );
 
   border:1px solid rgba(234,223,214,.72);
@@ -124,6 +147,7 @@ body::after{
 
 .hero::before{
   content:"";
+
   position:absolute;
 
   width:360px;
@@ -131,7 +155,12 @@ body::after{
 
   border-radius:50%;
 
-  border:1px solid rgba(238,171,171,.30);
+  border:1px solid
+    color-mix(
+      in srgb,
+      var(--cor-tema) 30%,
+      transparent
+    );
 
   top:-190px;
   right:-110px;
@@ -139,6 +168,7 @@ body::after{
 
 .hero::after{
   content:"";
+
   position:absolute;
 
   width:240px;
@@ -146,7 +176,12 @@ body::after{
 
   border-radius:50%;
 
-  background:rgba(238,171,171,.10);
+  background:
+    color-mix(
+      in srgb,
+      var(--cor-tema) 10%,
+      transparent
+    );
 
   bottom:-150px;
   left:-90px;
@@ -157,11 +192,11 @@ body::after{
   z-index:2;
 
   height:86px;
-  max-width:180px;
 
   margin-bottom:18px;
 
   mix-blend-mode:multiply;
+
   opacity:.92;
 }
 
@@ -170,9 +205,12 @@ body::after{
   z-index:2;
 
   font-family:'Montserrat',sans-serif;
+
   font-size:.66rem;
   font-weight:700;
+
   letter-spacing:5px;
+
   text-transform:uppercase;
 
   color:var(--muted);
@@ -185,6 +223,7 @@ body::after{
   z-index:2;
 
   font-size:clamp(3rem,8vw,5.6rem);
+
   font-weight:300;
   font-style:italic;
 
@@ -195,8 +234,6 @@ body::after{
   letter-spacing:-2px;
 
   margin-bottom:24px;
-
-  overflow-wrap:anywhere;
 }
 
 .details{
@@ -204,16 +241,21 @@ body::after{
   z-index:2;
 
   display:flex;
+
   justify-content:center;
   align-items:center;
+
   flex-wrap:wrap;
 
   gap:14px;
 
   font-family:'Montserrat',sans-serif;
+
   font-size:.76rem;
   font-weight:700;
+
   letter-spacing:3.5px;
+
   text-transform:uppercase;
 
   color:rgba(63,57,50,.72);
@@ -222,6 +264,7 @@ body::after{
 .detail-dot{
   width:5px;
   height:5px;
+
   border-radius:50%;
 
   background:var(--cor-tema);
@@ -236,14 +279,15 @@ body::after{
   margin-top:15px;
 
   font-family:'Montserrat',sans-serif;
+
   font-size:.72rem;
   font-weight:600;
+
   letter-spacing:3px;
+
   text-transform:uppercase;
 
   color:rgba(63,57,50,.52);
-
-  overflow-wrap:anywhere;
 }
 
 .seal-wrap{
@@ -251,6 +295,7 @@ body::after{
   z-index:2;
 
   display:flex;
+
   align-items:center;
   justify-content:center;
 
@@ -285,8 +330,19 @@ body::after{
   background:var(--cor-tema);
 
   box-shadow:
-    0 0 0 11px rgba(238,171,171,.12),
-    0 14px 36px rgba(238,171,171,.28);
+    0 0 0 11px
+      color-mix(
+        in srgb,
+        var(--cor-tema) 12%,
+        transparent
+      ),
+
+    0 14px 36px
+      color-mix(
+        in srgb,
+        var(--cor-tema) 28%,
+        transparent
+      );
 }
 
 .tag{
@@ -294,6 +350,7 @@ body::after{
   z-index:2;
 
   display:inline-flex;
+
   align-items:center;
   justify-content:center;
 
@@ -303,9 +360,12 @@ body::after{
   border-bottom:1px solid var(--cor-tema);
 
   font-family:'Montserrat',sans-serif;
+
   font-size:.64rem;
   font-weight:700;
+
   letter-spacing:5px;
+
   text-transform:uppercase;
 
   color:rgba(63,57,50,.82);
@@ -315,18 +375,14 @@ body::after{
   margin-bottom:42px;
 
   display:grid;
+
   grid-template-columns:repeat(2,1fr);
 
   gap:18px;
-
-  width:100%;
 }
 
 .place-card{
   position:relative;
-
-  width:100%;
-  max-width:100%;
 
   background:
     linear-gradient(
@@ -341,13 +397,15 @@ body::after{
 
   padding:26px;
 
-  box-shadow:0 18px 55px rgba(63,57,50,.055);
+  box-shadow:
+    0 18px 55px rgba(63,57,50,.055);
 
   overflow:hidden;
 }
 
 .place-card::after{
   content:"";
+
   position:absolute;
 
   width:170px;
@@ -358,7 +416,12 @@ body::after{
   right:-80px;
   top:-90px;
 
-  background:rgba(238,171,171,.08);
+  background:
+    color-mix(
+      in srgb,
+      var(--cor-tema) 9%,
+      transparent
+    );
 }
 
 .place-card > *{
@@ -368,9 +431,12 @@ body::after{
 
 .place-label{
   font-family:'Montserrat',sans-serif;
+
   font-size:.66rem;
   font-weight:800;
+
   letter-spacing:3px;
+
   text-transform:uppercase;
 
   color:var(--cor-tema);
@@ -378,6 +444,7 @@ body::after{
   margin-bottom:12px;
 
   display:flex;
+
   align-items:center;
 
   gap:8px;
@@ -385,49 +452,51 @@ body::after{
 
 .place-title{
   font-family:'Cormorant Garamond',serif;
+
   font-size:2rem;
+
   font-style:italic;
+
   line-height:1.05;
 
   color:rgba(63,57,50,.9);
-
-  overflow-wrap:anywhere;
 }
 
 .place-address{
   font-family:'Montserrat',sans-serif;
+
   color:rgba(63,57,50,.56);
 
   font-size:.82rem;
+
   line-height:1.7;
 
   margin-top:10px;
-
-  overflow-wrap:anywhere;
 }
 
 .route-actions{
   display:flex;
   gap:10px;
   flex-wrap:wrap;
-
   margin-top:18px;
 }
 
 .route-btn{
   text-decoration:none;
-
   border-radius:999px;
-
   padding:12px 16px;
 
   font-family:'Montserrat',sans-serif;
+
   font-size:.66rem;
   letter-spacing:1.5px;
+
   text-transform:uppercase;
+
   font-weight:800;
 
   display:inline-flex;
+
   align-items:center;
   justify-content:center;
 
@@ -454,13 +523,16 @@ body::after{
 
 .timeline-shell{
   position:relative;
+
   width:100%;
   max-width:900px;
+
   margin:0 auto;
 }
 
 .timeline-shell::before{
   content:"";
+
   position:absolute;
 
   left:34px;
@@ -484,15 +556,10 @@ body::after{
   display:flex;
   flex-direction:column;
   gap:24px;
-
-  width:100%;
 }
 
 .item{
   position:relative;
-
-  width:100%;
-
   padding-left:92px;
 
   animation:fadeUp .7s ease both;
@@ -514,17 +581,21 @@ body::after{
   background:var(--cor-tema);
 
   box-shadow:
-    0 0 0 9px rgba(238,171,171,.12),
+    0 0 0 9px
+      color-mix(
+        in srgb,
+        var(--cor-tema) 12%,
+        transparent
+      ),
+
     0 16px 34px rgba(63,57,50,.08);
 }
 
 .card{
   position:relative;
 
-  width:100%;
-  max-width:100%;
-
   display:grid;
+
   grid-template-columns:130px 1fr;
 
   align-items:center;
@@ -546,13 +617,15 @@ body::after{
 
   border:1px solid rgba(234,223,214,.78);
 
-  box-shadow:0 18px 55px rgba(63,57,50,.055);
+  box-shadow:
+    0 18px 55px rgba(63,57,50,.055);
 
   overflow:hidden;
 }
 
 .card::after{
   content:"";
+
   position:absolute;
 
   right:-60px;
@@ -563,7 +636,12 @@ body::after{
 
   border-radius:50%;
 
-  background:rgba(238,171,171,.08);
+  background:
+    color-mix(
+      in srgb,
+      var(--cor-tema) 8%,
+      transparent
+    );
 }
 
 .time{
@@ -576,7 +654,9 @@ body::after{
 
   font-size:1rem;
   font-weight:800;
+
   letter-spacing:1px;
+
   text-transform:uppercase;
 }
 
@@ -584,18 +664,20 @@ body::after{
   position:relative;
   z-index:2;
 
-  text-align:left;
+  text-align:right;
 
   font-size:1.9rem;
+
   font-style:italic;
+
   font-weight:400;
+
   line-height:1.12;
 
   color:rgba(63,57,50,.86);
-
-  overflow-wrap:anywhere;
 }
 
+.loading,
 .empty{
   padding:42px 30px;
 
@@ -610,26 +692,13 @@ body::after{
   color:rgba(63,57,50,.48);
 
   font-size:1.65rem;
+
   font-style:italic;
-}
-
-.loading{
-  padding:42px 30px;
-
-  text-align:center;
-
-  font-family:'Montserrat',sans-serif;
-  font-size:.78rem;
-  letter-spacing:4px;
-  text-transform:uppercase;
-
-  color:rgba(63,57,50,.48);
 }
 
 .actions{
   display:flex;
   justify-content:center;
-
   margin-top:54px;
 }
 
@@ -645,14 +714,18 @@ body::after{
   color:white;
 
   font-family:'Montserrat',sans-serif;
+
   font-size:.66rem;
   font-weight:800;
+
   letter-spacing:3.5px;
+
   text-transform:uppercase;
 
   cursor:pointer;
 
-  box-shadow:0 18px 38px rgba(63,57,50,.14);
+  box-shadow:
+    0 18px 38px rgba(63,57,50,.14);
 
   transition:.28s;
 }
@@ -668,15 +741,19 @@ body::after{
   text-align:center;
 
   font-family:'Montserrat',sans-serif;
+
   font-size:.62rem;
   font-weight:600;
+
   letter-spacing:3px;
+
   text-transform:uppercase;
 
   color:rgba(63,57,50,.38);
 }
 
 @keyframes fadeUp{
+
   from{
     opacity:0;
     transform:translateY(18px);
@@ -688,131 +765,53 @@ body::after{
   }
 }
 
-/* MOBILE PREMIUM */
-
 @media(max-width:720px){
 
-  *{
-    max-width:100%;
-  }
-
-  html,
   body{
-    overflow-x:hidden !important;
-    width:100%;
-  }
-
-  body{
-    padding:18px 12px 48px;
-  }
-
-  .page{
-    width:100%;
-    max-width:100%;
+    padding:22px 12px 52px;
   }
 
   .hero{
-    width:100%;
-    max-width:100%;
-
-    padding:38px 18px 34px;
-
+    padding:40px 20px 34px;
     border-radius:30px;
-
-    margin-bottom:26px;
-  }
-
-  .hero::before{
-    width:240px;
-    height:240px;
-
-    top:-120px;
-    right:-120px;
-  }
-
-  .hero::after{
-    width:180px;
-    height:180px;
-
-    bottom:-100px;
-    left:-80px;
   }
 
   .logo{
-    height:66px;
-    max-width:150px;
-    margin-bottom:14px;
-  }
-
-  .kicker{
-    font-size:.56rem;
-    letter-spacing:3px;
-    margin-bottom:14px;
+    height:68px;
   }
 
   .names{
-    font-size:clamp(2.4rem,13vw,3.2rem);
-    line-height:.98;
-    letter-spacing:-1px;
+    font-size:2.8rem;
     margin-bottom:18px;
   }
 
   .details{
     flex-direction:column;
     gap:8px;
-
-    font-size:.62rem;
     letter-spacing:2px;
-
-    line-height:1.6;
   }
 
   .detail-dot{
     display:none;
   }
 
-  .location{
-    font-size:.62rem;
-    letter-spacing:2px;
-    line-height:1.6;
-    margin-top:10px;
-  }
-
-  .seal-wrap{
-    margin:24px auto 22px;
-  }
-
   .tag{
     width:100%;
-    padding:12px 14px;
-
-    font-size:.54rem;
-    letter-spacing:2.6px;
+    padding:12px 20px;
+    letter-spacing:3px;
   }
 
   .location-section{
     grid-template-columns:1fr;
-    gap:14px;
-
-    margin-bottom:28px;
   }
 
   .place-card{
-    width:100%;
-    max-width:100%;
-
     border-radius:28px;
-
     padding:22px;
   }
 
   .place-title{
-    font-size:1.75rem;
-  }
-
-  .place-address{
-    font-size:.76rem;
-    line-height:1.7;
+    font-size:1.7rem;
   }
 
   .route-actions{
@@ -821,86 +820,48 @@ body::after{
 
   .route-btn{
     width:100%;
-    min-height:48px;
-  }
-
-  .timeline-shell{
-    width:100%;
-    max-width:100%;
   }
 
   .timeline-shell::before{
-    left:13px;
-  }
-
-  .timeline{
-    gap:18px;
+    left:16px;
   }
 
   .item{
-    width:100%;
-    padding-left:40px;
+    padding-left:46px;
   }
 
   .dot{
-    left:1px;
-
+    left:4px;
     width:22px;
     height:22px;
   }
 
   .card{
-    width:100%;
-    max-width:100%;
-
     grid-template-columns:1fr;
-
     gap:12px;
-
     padding:22px 18px;
-
     border-radius:26px;
-
-    min-height:auto;
   }
 
   .time{
-    font-size:.82rem;
-    letter-spacing:1px;
+    font-size:.84rem;
   }
 
   .desc{
     text-align:left;
-
     font-size:1.55rem;
-    line-height:1.08;
-  }
-
-  .actions{
-    margin-top:34px;
   }
 
   .btn{
     width:100%;
-
-    padding:16px 20px;
-
-    font-size:.6rem;
-    letter-spacing:2px;
-  }
-
-  .footer{
-    margin-top:24px;
-
-    font-size:.54rem;
-    letter-spacing:2px;
-    line-height:1.7;
   }
 }
 
+/* PDF PREMIUM CORRIGIDO */
+
 @page{
   size:A4;
-  margin:14mm 10mm 16mm;
+  margin:26mm 10mm 18mm;
 }
 
 @media print{
@@ -909,93 +870,110 @@ body::after{
   body{
     width:100%;
     overflow:visible !important;
+    background:white !important;
   }
 
   body{
-    padding:0;
-    background:white;
+    padding:0 !important;
+    margin:0 !important;
   }
 
   body::before,
   body::after{
-    display:none;
+    display:none !important;
   }
 
   .page{
-    max-width:100%;
-    overflow:visible;
+    max-width:100% !important;
+    overflow:visible !important;
   }
 
   .hero,
   .place-card,
   .card{
-    box-shadow:none;
-    background:white;
-    border:1px solid #eee;
+    box-shadow:none !important;
+    background:white !important;
+    border:1px solid #eee !important;
   }
 
   .hero{
-    padding:26px 22px;
-    margin-bottom:14mm;
-    break-inside:avoid;
-    page-break-inside:avoid;
+    padding:28px 24px !important;
+    margin-bottom:18mm !important;
+
+    break-inside:avoid !important;
+    page-break-inside:avoid !important;
+  }
+
+  .hero::before,
+  .hero::after,
+  .place-card::after,
+  .card::after{
+    display:none !important;
   }
 
   .location-section{
-    grid-template-columns:1fr 1fr;
-    gap:10mm;
-    margin-bottom:14mm;
-    break-inside:avoid;
-    page-break-inside:avoid;
+    grid-template-columns:1fr 1fr !important;
+    gap:10mm !important;
+    margin-bottom:16mm !important;
+
+    break-inside:avoid !important;
+    page-break-inside:avoid !important;
   }
 
   .timeline-shell{
-    padding-top:8mm;
-    overflow:visible;
+    padding-top:14mm !important;
+    overflow:visible !important;
   }
 
   .timeline-shell::before{
-    display:none;
+    display:none !important;
   }
 
   .timeline{
-    gap:10mm;
+    gap:12mm !important;
   }
 
   .item{
-    padding-left:0;
-    margin-bottom:10mm;
-    break-inside:avoid;
-    page-break-inside:avoid;
+    padding-left:0 !important;
+    margin-bottom:12mm !important;
+
+    break-inside:avoid !important;
+    page-break-inside:avoid !important;
   }
 
   .dot{
-    display:none;
+    display:none !important;
   }
 
   .card{
-    break-inside:avoid;
-    page-break-inside:avoid;
-    min-height:auto;
-    padding:16px 20px;
+    break-inside:avoid !important;
+    page-break-inside:avoid !important;
+
+    min-height:auto !important;
+
+    padding:18px 20px !important;
+
+    overflow:visible !important;
   }
 
   .actions,
   .footer,
   .route-actions{
-    display:none;
+    display:none !important;
   }
 
   .names{
-    font-size:44px;
+    font-size:44px !important;
   }
 
   .desc{
-    font-size:26px;
+    font-size:24px !important;
+    line-height:1.25 !important;
   }
 
   .time{
-    font-size:13px;
+    font-size:13px !important;
+    white-space:nowrap !important;
   }
 }
 
@@ -1008,66 +986,75 @@ body::after{
 
 <section class="hero">
 
-  <img
-    src="https://vuiqbdqnfnofwkpvvuqy.supabase.co/storage/v1/object/public/logos/logo.png"
-    class="logo"
-    alt="PlanejaNoiva"
-  >
+<img
+src="https://vuiqbdqnfnofwkpvvuqy.supabase.co/storage/v1/object/public/logos/logo.png"
+class="logo"
+alt="PlanejaNoiva"
+>
 
-  <div class="kicker">
-    PlanejaNoiva apresenta
-  </div>
+<div class="kicker">
+PlanejaNoiva apresenta
+</div>
 
-  <div class="names" id="nomes">
-    Carregando...
-  </div>
+<div class="names" id="nomes">
+Carregando...
+</div>
 
-  <div class="details">
-    <span id="dataHora"></span>
-    <span class="detail-dot"></span>
-    <span id="localHero">Local do evento</span>
-  </div>
+<div class="details">
 
-  <div class="location" id="local"></div>
+<span id="dataHora"></span>
 
-  <div class="seal-wrap">
-    <div class="seal-line"></div>
-    <div class="seal"></div>
-    <div class="seal-line"></div>
-  </div>
+<span class="detail-dot"></span>
 
-  <div class="tag">
-    Cronograma Oficial
-  </div>
+<span id="localHero">
+Local da cerimônia
+</span>
+
+</div>
+
+<div class="location" id="local"></div>
+
+<div class="seal-wrap">
+<div class="seal-line"></div>
+<div class="seal"></div>
+<div class="seal-line"></div>
+</div>
+
+<div class="tag">
+Cronograma Oficial
+</div>
 
 </section>
 
 <section
-  class="location-section"
-  id="locaisSection"
-  style="display:none;"
+class="location-section"
+id="locaisSection"
+style="display:none;"
 ></section>
 
 <section class="timeline-shell">
 
-  <div class="timeline" id="lista">
+<div class="timeline" id="lista">
 
-    <div class="loading">
-      Carregando cronograma...
-    </div>
+<div class="loading">
+Carregando cronograma...
+</div>
 
-  </div>
+</div>
 
 </section>
 
 <div class="actions">
-  <button class="btn" onclick="window.print()">
-    Exportar PDF
-  </button>
+<button
+class="btn"
+onclick="window.print()"
+>
+Exportar PDF
+</button>
 </div>
 
 <div class="footer">
-  PlanejaNoiva • Organização elegante para o grande dia
+PlanejaNoiva • Organização elegante para o grande dia
 </div>
 
 </main>
@@ -1075,439 +1062,424 @@ body::after{
 <script>
 
 const supa = supabase.createClient(
-  'https://vuiqbdqnfnofwkpvvuqy.supabase.co',
-  'sb_publishable_LjKm4HF9kyD7m0ch3Eefdw_TJ5SG6w2'
+'https://vuiqbdqnfnofwkpvvuqy.supabase.co',
+'sb_publishable_LjKm4HF9kyD7m0ch3Eefdw_TJ5SG6w2'
 );
 
-const params = new URLSearchParams(window.location.search);
+const params =
+new URLSearchParams(window.location.search);
 
-const emailParam = params.get('noiva');
-const token = params.get('token');
+const emailParam =
+params.get('noiva');
+
+const token =
+params.get('token');
 
 let dataCasamentoUsuario = null;
 
 function escaparHTML(texto){
 
-  const div = document.createElement('div');
+const div =
+document.createElement('div');
 
-  div.innerText = texto || '';
+div.innerText = texto || '';
 
-  return div.innerHTML;
-}
-
-function normalizarEmail(valor){
-
-  return decodeURIComponent(
-    String(valor || '').trim()
-  ).toLowerCase();
+return div.innerHTML;
 }
 
 function partesDataLocal(valor){
 
-  const texto = String(valor || '');
+const texto =
+String(valor || '');
 
-  const ano = texto.substring(0,4);
-  const mes = texto.substring(5,7);
-  const dia = texto.substring(8,10);
-
-  const hora = texto.substring(11,16) || '00:00';
-
-  return {
-    ano,
-    mes,
-    dia,
-    hora
-  };
+return{
+ano:texto.substring(0,4),
+mes:texto.substring(5,7),
+dia:texto.substring(8,10),
+hora:texto.substring(11,16) || '00:00'
+};
 }
 
 function formatarDataCasamento(valor){
 
-  const p = partesDataLocal(valor);
+const p =
+partesDataLocal(valor);
 
-  if(!p.ano || !p.mes || !p.dia){
-    return '';
-  }
+if(!p.ano) return '';
 
-  return `${p.dia}/${p.mes}/${p.ano} • ${p.hora}H`;
+return `${p.dia}/${p.mes}/${p.ano} • ${p.hora}H`;
 }
 
 function minutoCasamentoLocal(){
 
-  if(!dataCasamentoUsuario) return null;
+if(!dataCasamentoUsuario)
+return null;
 
-  const hora = partesDataLocal(
-    dataCasamentoUsuario
-  ).hora;
+const hora =
+partesDataLocal(
+dataCasamentoUsuario
+).hora;
 
-  const [h,m] = hora.split(':').map(Number);
+const [h,m] =
+hora.split(':').map(Number);
 
-  return (h * 60) + (m || 0);
+return (h * 60) + (m || 0);
 }
 
 function minutosDoHorario(horaTexto){
 
-  const [h,m] = String(
-    horaTexto || '00:00'
-  )
-  .substring(0,5)
-  .split(':')
-  .map(Number);
+const [h,m] =
+String(horaTexto || '00:00')
+.substring(0,5)
+.split(':')
+.map(Number);
 
-  return (h * 60) + (m || 0);
+return (h * 60) + (m || 0);
 }
 
 function horarioOrdenavel(horaTexto){
 
-  const minutos = minutosDoHorario(horaTexto);
+const minutos =
+minutosDoHorario(horaTexto);
 
-  const minutoCasamento = minutoCasamentoLocal();
+const minutoCasamento =
+minutoCasamentoLocal();
 
-  if(minutoCasamento === null){
-    return minutos;
-  }
-
-  const inicioRoteiro = minutoCasamento - 420;
-
-  if(minutos < inicioRoteiro){
-    return minutos + 1440;
-  }
-
-  return minutos;
+if(minutoCasamento === null){
+return minutos;
 }
 
-function textoBusca(local, endereco){
+const inicioRoteiro =
+minutoCasamento - 420;
 
-  return [local, endereco]
-    .map(v => String(v || '').trim())
-    .filter(Boolean)
-    .join(', ');
+if(minutos < inicioRoteiro){
+return minutos + 1440;
+}
+
+return minutos;
+}
+
+function textoBusca(local,endereco){
+
+return [local,endereco]
+.map(v => String(v || '').trim())
+.filter(Boolean)
+.join(', ');
 }
 
 function gerarLinkGoogleMaps(busca){
 
-  const q = encodeURIComponent(busca || '');
+const q =
+encodeURIComponent(busca || '');
 
-  return q
-    ? `https://www.google.com/maps/search/?api=1&query=${q}`
-    : '#';
+return q
+? `https://www.google.com/maps/search/?api=1&query=${q}`
+: '#';
 }
 
 function gerarLinkWaze(busca){
 
-  const q = encodeURIComponent(busca || '');
+const q =
+encodeURIComponent(busca || '');
 
-  return q
-    ? `https://waze.com/ul?q=${q}&navigate=yes`
-    : '#';
+return q
+? `https://waze.com/ul?q=${q}&navigate=yes`
+: '#';
 }
 
 function criarCardLocal(
-  tipo,
-  icone,
-  local,
-  endereco
+tipo,
+icone,
+local,
+endereco
 ){
 
-  const busca = textoBusca(local, endereco);
+const busca =
+textoBusca(local,endereco);
 
-  if(!busca) return '';
+if(!busca) return '';
 
-  return `
-    <article class="place-card">
+return `
+<article class="place-card">
 
-      <div class="place-label">
-        <span class="material-symbols-outlined">
-          ${icone}
-        </span>
+<div class="place-label">
 
-        ${tipo}
-      </div>
+<span class="material-symbols-outlined">
+${icone}
+</span>
 
-      <div class="place-title">
-        ${escaparHTML(local || endereco)}
-      </div>
+${tipo}
 
-      ${
-        endereco
-          ? `
-            <div class="place-address">
-              ${escaparHTML(endereco)}
-            </div>
-          `
-          : ''
-      }
+</div>
 
-      <div class="route-actions">
+<div class="place-title">
+${escaparHTML(local || endereco)}
+</div>
 
-        <a
-          class="route-btn google"
-          href="${gerarLinkGoogleMaps(busca)}"
-          target="_blank"
-        >
-          <span class="material-symbols-outlined">
-            map
-          </span>
+${endereco
+? `
+<div class="place-address">
+${escaparHTML(endereco)}
+</div>
+`
+: ''
+}
 
-          Google Maps
-        </a>
+<div class="route-actions">
 
-        <a
-          class="route-btn waze"
-          href="${gerarLinkWaze(busca)}"
-          target="_blank"
-        >
-          <span class="material-symbols-outlined">
-            near_me
-          </span>
+<a
+class="route-btn google"
+href="${gerarLinkGoogleMaps(busca)}"
+target="_blank"
+>
 
-          Waze
-        </a>
+<span class="material-symbols-outlined">
+map
+</span>
 
-      </div>
+Google Maps
 
-    </article>
-  `;
+</a>
+
+<a
+class="route-btn waze"
+href="${gerarLinkWaze(busca)}"
+target="_blank"
+>
+
+<span class="material-symbols-outlined">
+near_me
+</span>
+
+Waze
+
+</a>
+
+</div>
+
+</article>
+`;
 }
 
 function usuarioTemRecepcao(user){
 
-  return (
-    user.tem_recepcao === true ||
-    user.tem_recepcao === 'true' ||
-    user.tem_recepcao === 1
-  );
+return(
+user.tem_recepcao === true ||
+user.tem_recepcao === 'true' ||
+user.tem_recepcao === 1
+);
 }
 
 function renderizarLocais(user){
 
-  const section =
-    document.getElementById('locaisSection');
+const section =
+document.getElementById(
+'locaisSection'
+);
 
-  const localCerimonia =
-    user.local_cerimonia || '';
+const localCerimonia =
+user.local_cerimonia || '';
 
-  const enderecoCerimonia =
-    user.endereco_cerimonia || '';
+const enderecoCerimonia =
+user.endereco_cerimonia || '';
 
-  const temRecepcao =
-    usuarioTemRecepcao(user);
+const temRecepcao =
+usuarioTemRecepcao(user);
 
-  const localRecepcao =
-    temRecepcao
-      ? (user.local_recepcao || '')
-      : '';
+const localRecepcao =
+temRecepcao
+? (user.local_recepcao || '')
+: '';
 
-  const enderecoRecepcao =
-    temRecepcao
-      ? (user.endereco_recepcao || '')
-      : '';
+const enderecoRecepcao =
+temRecepcao
+? (user.endereco_recepcao || '')
+: '';
 
-  let html = '';
+let html = '';
 
-  html += criarCardLocal(
-    'Cerimônia',
-    'church',
-    localCerimonia,
-    enderecoCerimonia
-  );
+html += criarCardLocal(
+'Cerimônia',
+'church',
+localCerimonia,
+enderecoCerimonia
+);
 
-  if(temRecepcao){
+if(temRecepcao){
 
-    html += criarCardLocal(
-      'Recepção',
-      'celebration',
-      localRecepcao,
-      enderecoRecepcao
-    );
-  }
+html += criarCardLocal(
+'Recepção',
+'celebration',
+localRecepcao,
+enderecoRecepcao
+);
+}
 
-  if(html){
+if(html){
 
-    section.innerHTML = html;
+section.innerHTML = html;
+section.style.display = 'grid';
 
-    section.style.display = 'grid';
+}else{
 
-  }else{
-
-    section.style.display = 'none';
-  }
+section.style.display = 'none';
+}
 }
 
 async function buscarEmailPublico(){
 
-  if(emailParam){
-    return normalizarEmail(emailParam);
-  }
+if(emailParam){
+return decodeURIComponent(emailParam);
+}
 
-  if(token){
+if(token){
 
-    const { data:config } = await supa
-      .from('mesas_assentos')
-      .select('usuario_email')
-      .eq('public_token', token)
-      .maybeSingle();
+const { data:config } =
+await supa
+.from('mesas_assentos')
+.select('usuario_email')
+.eq('public_token', token)
+.maybeSingle();
 
-    if(config && config.usuario_email){
+if(config?.usuario_email){
+return config.usuario_email;
+}
+}
 
-      return normalizarEmail(
-        config.usuario_email
-      );
-    }
-  }
-
-  return null;
+return null;
 }
 
 async function load(){
 
-  const lista =
-    document.getElementById('lista');
+const lista =
+document.getElementById('lista');
 
-  const emailNoiva =
-    await buscarEmailPublico();
+const emailNoiva =
+await buscarEmailPublico();
 
-  if(!emailNoiva){
+if(!emailNoiva){
 
-    lista.innerHTML = `
-      <div class="empty">
-        Link inválido
-      </div>
-    `;
+lista.innerHTML = `
+<div class="empty">
+Link inválido
+</div>
+`;
 
-    document.getElementById('nomes').innerText =
-      'Cronograma indisponível';
+return;
+}
 
-    document.getElementById('dataHora').innerText =
-      '';
+const { data:user } =
+await supa
+.from('usuarios')
+.select('*')
+.eq('email', emailNoiva)
+.maybeSingle();
 
-    document.getElementById('localHero').innerText =
-      '';
+if(user){
 
-    return;
-  }
+dataCasamentoUsuario =
+user.data_hora_cerimonia ||
+user.data_casamento ||
+null;
 
-  const { data:user } = await supa
-    .from('usuarios')
-    .select('*')
-    .eq('email', emailNoiva)
-    .order('created_at', {
-      ascending:false
-    })
-    .limit(1)
-    .maybeSingle();
+const localPrincipal =
+user.local_cerimonia ||
+user.local_casamento ||
+'Local da cerimônia';
 
-  if(user){
+document.getElementById('nomes').innerText =
+`${user.nome || 'Noiva'} & ${user.nome_noivo || 'Noivo'}`;
 
-    dataCasamentoUsuario =
-      user.data_casamento || null;
+document.getElementById('dataHora').innerText =
+dataCasamentoUsuario
+? formatarDataCasamento(dataCasamentoUsuario)
+: '';
 
-    const temRecepcaoHero =
-      usuarioTemRecepcao(user);
+document.getElementById('localHero').innerText =
+localPrincipal;
 
-   const localPrincipal =
-  user.local_cerimonia ||
-  user.local_casamento ||
-  'Local da cerimônia';
+document.getElementById('local').innerText =
+localPrincipal;
 
-    document.getElementById('nomes').innerText =
-      `${user.nome || 'Noiva'} & ${user.nome_noivo || 'Noivo'}`;
+if(user.paleta_cores){
 
-    document.getElementById('dataHora').innerText =
-      user.data_casamento
-        ? formatarDataCasamento(
-            user.data_casamento
-          )
-        : '';
+document.documentElement.style.setProperty(
+'--cor-tema',
+user.paleta_cores
+);
+}
 
-    document.getElementById('localHero').innerText =
-      localPrincipal;
+renderizarLocais(user);
+}
 
-    document.getElementById('local').innerText =
-      localPrincipal;
+const { data:crono, error } =
+await supa
+.from('cronograma')
+.select('*')
+.eq('usuario_email', emailNoiva);
 
-    if(user.paleta_cores){
+if(error){
 
-      document.documentElement.style.setProperty(
-        '--cor-tema',
-        user.paleta_cores
-      );
-    }
+lista.innerHTML = `
+<div class="empty">
+Erro ao carregar cronograma
+</div>
+`;
 
-    renderizarLocais(user);
+return;
+}
 
-  }else{
+if(!crono || crono.length === 0){
 
-    document.getElementById('nomes').innerText =
-      'Cronograma Oficial';
-  }
+lista.innerHTML = `
+<div class="empty">
+A definir o roteiro dos sonhos...
+</div>
+`;
 
-  const { data:crono, error } = await supa
-    .from('cronograma')
-    .select('*')
-    .eq('usuario_email', emailNoiva);
+return;
+}
 
-  if(error){
+const ordenado =
+[...crono].sort((a,b)=>{
+return horarioOrdenavel(a.hora)
+- horarioOrdenavel(b.hora);
+});
 
-    lista.innerHTML = `
-      <div class="empty">
-        Erro ao carregar cronograma
-      </div>
-    `;
+let html = '';
 
-    return;
-  }
+ordenado.forEach((item,index)=>{
 
-  if(!crono || crono.length === 0){
+html += `
+<article
+class="item"
+style="animation-delay:${index * .05}s"
+>
 
-    lista.innerHTML = `
-      <div class="empty">
-        A definir o roteiro dos sonhos...
-      </div>
-    `;
+<div class="dot"></div>
 
-    return;
-  }
+<div class="card">
 
-  const ordenado = [...crono].sort((a,b) => {
+<div class="time">
+${
+escaparHTML(
+(item.hora || '')
+.substring(0,5)
+)
+}h
+</div>
 
-    return (
-      horarioOrdenavel(a.hora)
-      -
-      horarioOrdenavel(b.hora)
-    );
-  });
+<div class="desc">
+${escaparHTML(item.descricao)}
+</div>
 
-  let html = '';
+</div>
 
-  ordenado.forEach((item,index) => {
+</article>
+`;
+});
 
-    html += `
-      <article
-        class="item"
-        style="animation-delay:${index * .05}s"
-      >
-
-        <div class="dot"></div>
-
-        <div class="card">
-
-          <div class="time">
-            ${escaparHTML(
-              (item.hora || '').substring(0,5)
-            )}h
-          </div>
-
-          <div class="desc">
-            ${escaparHTML(item.descricao)}
-          </div>
-
-        </div>
-
-      </article>
-    `;
-  });
-
-  lista.innerHTML = html;
+lista.innerHTML = html;
 }
 
 load();
