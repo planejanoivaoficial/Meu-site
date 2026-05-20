@@ -855,16 +855,31 @@ async function del(id){
 }
 
 function linkPublico(){
-  const emailLimpo = String(email || '').trim().toLowerCase();
+  const emailLimpo =
+    String(email || '')
+    .trim()
+    .toLowerCase();
 
-  return window.location.origin +
-    window.location.pathname.replace('cronograma.html','visualizar_cronograma.html') +
-    `?noiva=${encodeURIComponent(emailLimpo)}&t=${Date.now()}`;
+  const dominio = window.location.origin;
+  const versao = new Date().getTime();
+
+  return `${dominio}/visualizar_cronograma.html?noiva=${encodeURIComponent(emailLimpo)}&v=${versao}`;
 }
 
 function compartilharWhatsApp(){
   const link = linkPublico();
-  window.open(`https://wa.me/?text=${encodeURIComponent("Veja o cronograma oficial do casamento: " + link)}`, '_blank');
+
+  const texto =
+`✨ Cronograma oficial do casamento
+
+Acompanhe os horários, cerimônia, recepção e todos os detalhes especiais do grande dia:
+
+${link}`;
+
+  window.open(
+    `https://wa.me/?text=${encodeURIComponent(texto)}`,
+    '_blank'
+  );
 }
 
 function abrirImpressao(){
