@@ -1454,15 +1454,23 @@ Link inválido
 return;
 }
 
- const { data:usuarios, error:userError } =
+ const emailBusca =
+  String(emailNoiva || '')
+  .replace('%40','@')
+  .trim()
+  .toLowerCase();
+
+console.log(
+  'EMAIL BUSCA:',
+  emailBusca
+);
+
+const { data:usuarios, error:userError } =
 await supa
 .from('usuarios')
 .select('*')
-.eq(
-  'email',
-  String(emailNoiva)
-  .trim()
-  .toLowerCase()
+.or(
+  `email.eq.${emailBusca},email.ilike.${emailBusca}`
 )
 .order('created_at', {
   ascending:false
@@ -1481,6 +1489,11 @@ const user =
 usuarios && usuarios.length
 ? usuarios[0]
 : null;
+
+console.log(
+  'USER ENCONTRADO:',
+  user
+);
 
 console.log('USER ENCONTRADO:', user);
 
@@ -1527,9 +1540,7 @@ await supa
 .select('*')
 .eq(
   'usuario_email',
-  String(emailNoiva)
-  .trim()
-  .toLowerCase()
+  emailBusca
 )
 if(error){
 
