@@ -1482,6 +1482,8 @@ usuarios && usuarios.length
 ? usuarios[0]
 : null;
 
+console.log('USER ENCONTRADO:', user);
+
 if(user){
 
   dataCasamentoUsuario =
@@ -1523,8 +1525,12 @@ const { data:crono, error } =
 await supa
 .from('cronograma')
 .select('*')
-.eq('usuario_email', emailNoiva);
-
+.eq(
+  'usuario_email',
+  String(emailNoiva)
+  .trim()
+  .toLowerCase()
+)
 if(error){
 
 lista.innerHTML = `
