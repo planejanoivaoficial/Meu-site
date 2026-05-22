@@ -1466,16 +1466,12 @@ console.log(
 );
 
 const { data:usuarios, error:userError } =
-await supa
-.from('usuarios')
-.select('*')
-.or(
-  `email.eq.${emailBusca},email.ilike.${emailBusca}`
-)
-.order('created_at', {
-  ascending:false
-})
-.limit(1);
+await supa.rpc(
+  'get_cronograma_perfil',
+  {
+    p_email: emailBusca
+  }
+);
 
 if(userError){
 
