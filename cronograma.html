@@ -855,15 +855,15 @@ async function del(id){
 }
 
 function linkPublico(){
+
   const emailLimpo =
     String(email || '')
     .trim()
     .toLowerCase();
 
-  const dominio = window.location.origin;
-  const versao = new Date().getTime();
-
-  return `${window.location.origin}/cronograma-premium.html?noiva=${encodeURIComponent(email)}&v=${versao}`;
+  return `https://planejanoiva.com.br/cronograma-final.html?noiva=${
+    encodeURIComponent(emailLimpo)
+  }&v=${Date.now()}`;
 }
 
 function compartilharWhatsApp(){
