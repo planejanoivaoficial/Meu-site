@@ -1255,25 +1255,23 @@ iniciarDashboard();
 
     </div>
 
-    <div class="ia-actions">
+    <div class="ia-input-area">
 
-      <button onclick="respostaIA('Checklist')">
-        Revisar checklist
-      </button>
+  <input
+    type="text"
+    id="iaInput"
+    placeholder="Pergunte algo para sua concierge..."
+  >
 
-      <button onclick="respostaIA('Cronograma')">
-        Revisar cronograma
-      </button>
+  <button onclick="enviarMensagemIA()">
 
-      <button onclick="respostaIA('Fornecedores')">
-        Organizar fornecedores
-      </button>
+    <span class="material-symbols-outlined">
+      arrow_upward
+    </span>
 
-      <button onclick="respostaIA('Prioridades')">
-        Prioridades da semana
-      </button>
+  </button>
 
-    </div>
+</div>
 
   </div>
 
@@ -1301,32 +1299,64 @@ iniciarDashboard();
 }
 
 .ia-modal{
-  width:100%;
-  max-width:520px;
-  height:88vh;
-  background:
-    linear-gradient(
-      180deg,
-      rgba(255,255,255,.94),
-      rgba(252,248,245,.96)
-    );
 
-  backdrop-filter:blur(24px);
+width:100%;
+max-width:520px;
+height:88vh;
 
-  border-radius:34px 34px 0 0;
+background:
+linear-gradient(
+180deg,
+rgba(255,250,248,.96) 0%,
+rgba(248,240,235,.98) 100%
+);
 
-  padding:24px;
+backdrop-filter:blur(24px);
 
-  box-shadow:
-    0 -20px 80px rgba(0,0,0,.18);
+border-top:
+1px solid rgba(255,255,255,.7);
 
-  overflow:hidden;
+border-radius:34px 34px 0 0;
 
-  display:flex;
-  flex-direction:column;
+padding:24px;
 
-  transform:translateY(100%);
-  transition:.45s cubic-bezier(.19,1,.22,1);
+box-shadow:
+0 -40px 120px rgba(0,0,0,.18);
+
+overflow:hidden;
+
+display:flex;
+flex-direction:column;
+
+transform:translateY(100%);
+
+transition:.45s cubic-bezier(.19,1,.22,1);
+
+position:relative;
+}
+.ia-modal::before{
+
+content:'';
+
+position:absolute;
+
+top:-120px;
+right:-120px;
+
+width:280px;
+height:280px;
+
+background:
+radial-gradient(
+circle,
+rgba(238,171,171,.22),
+transparent 70%
+);
+
+filter:blur(40px);
+
+pointer-events:none;
+
 }
 
 .ia-overlay.active .ia-modal{
@@ -1402,6 +1432,65 @@ iniciarDashboard();
   margin-bottom:18px;
 }
 
+.ia-msg.user{
+  flex-direction:row-reverse;
+}
+
+.ia-msg.user .ia-bubble{
+
+background:
+linear-gradient(
+135deg,
+#2B2521,
+#4A4039
+);
+
+color:white;
+
+border-radius:
+26px 26px 8px 26px;
+
+box-shadow:
+0 18px 40px rgba(43,37,33,.16);
+
+}
+
+.ia-msg.concierge .ia-bubble{
+
+border-radius:
+26px 26px 26px 8px;
+
+}
+
+.ia-chat{
+  scroll-behavior:smooth;
+}
+
+.loadingIA .ia-bubble{
+
+animation:pulseIA 1.2s infinite;
+
+}
+
+@keyframes pulseIA{
+
+0%{
+opacity:.5;
+transform:scale(.98);
+}
+
+50%{
+opacity:1;
+transform:scale(1);
+}
+
+100%{
+opacity:.5;
+transform:scale(.98);
+}
+
+}
+
 .ia-avatar{
   width:44px;
   height:44px;
@@ -1424,52 +1513,75 @@ iniciarDashboard();
 }
 
 .ia-bubble{
-  background:white;
 
-  border-radius:22px;
+background:
+rgba(255,255,255,.82);
 
-  padding:18px;
+backdrop-filter:blur(18px);
 
-  line-height:1.7;
+border:
+1px solid rgba(255,255,255,.7);
 
-  color:#4A433D;
+border-radius:26px;
 
-  box-shadow:
-    0 10px 30px rgba(0,0,0,.05);
+padding:22px;
+
+line-height:1.9;
+
+color:#4A433D;
+
+font-size:1rem;
+
+box-shadow:
+0 14px 40px rgba(0,0,0,.06);
+
 }
 
-.ia-actions{
-  display:grid;
-  grid-template-columns:1fr 1fr;
+.ia-input-area{
+  display:flex;
+  align-items:center;
   gap:12px;
-  margin-top:20px;
+  margin-top:18px;
+  background:rgba(255,255,255,.72);
+  backdrop-filter:blur(16px);
+  border:1px solid rgba(255,255,255,.7);
+  border-radius:24px;
+  padding:10px;
+  box-shadow:0 12px 40px rgba(0,0,0,.06);
 }
 
-.ia-actions button{
+.ia-input-area input{
+  flex:1;
   border:none;
-
-  background:
-    linear-gradient(
-      135deg,
-      #2B2521,
-      #443A34
-    );
-
-  color:white;
-
-  padding:16px;
-
-  border-radius:18px;
-
-  font-weight:700;
-
-  cursor:pointer;
-
-  transition:.25s ease;
+  outline:none;
+  background:transparent;
+  font-size:1rem;
+  padding:12px;
+  color:#3F3932;
+  font-family:'Inter',sans-serif;
 }
 
-.ia-actions button:active{
-  transform:scale(.97);
+.ia-input-area input::placeholder{
+  color:#9A9086;
+}
+
+.ia-input-area button{
+  width:52px;
+  height:52px;
+  border:none;
+  border-radius:18px;
+  background:linear-gradient(135deg,#2B2521,#4A4039);
+  color:white;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  cursor:pointer;
+  box-shadow:0 12px 30px rgba(43,37,33,.22);
+  transition:.25s;
+}
+
+.ia-input-area button:active{
+  transform:scale(.96);
 }
 
 </style>
@@ -1494,51 +1606,47 @@ function fecharIAConcierge(){
 
 }
 
-function respostaIA(tipo){
+async function enviarMensagemIA(){
+
+  const input =
+    document.getElementById('iaInput');
+
+  const texto =
+    input.value.trim();
+
+  if(!texto) return;
 
   const chat =
     document.getElementById('iaChat');
 
-  let resposta = '';
+  chat.innerHTML += `
 
-  if(tipo === 'Checklist'){
+    <div class="ia-msg user">
 
-    resposta =
-    'Seu checklist ainda possui tarefas importantes pendentes. Recomendamos começar pela confirmação de fornecedores e cerimônia.';
+      <div class="ia-avatar">
+        👰
+      </div>
 
-  }
+      <div class="ia-bubble">
+        ${texto}
+      </div>
 
-  if(tipo === 'Cronograma'){
+    </div>
 
-    resposta =
-    'O cronograma merece atenção especial agora. Revise horários da cerimônia, making of e recepção.';
+  `;
 
-  }
-
-  if(tipo === 'Fornecedores'){
-
-    resposta =
-    'Centralize contatos e contratos para evitar imprevistos próximos ao casamento.';
-
-  }
-
-  if(tipo === 'Prioridades'){
-
-    resposta =
-    'Sua prioridade ideal esta semana é concluir checklist, confirmar convidados e revisar o roteiro do grande dia.';
-
-  }
+  input.value = '';
 
   chat.innerHTML += `
 
-    <div class="ia-msg concierge">
+    <div class="ia-msg concierge loadingIA">
 
       <div class="ia-avatar">
         ✨
       </div>
 
       <div class="ia-bubble">
-        ${resposta}
+        Concierge pensando...
       </div>
 
     </div>
@@ -1547,6 +1655,40 @@ function respostaIA(tipo){
 
   chat.scrollTop =
     chat.scrollHeight;
+
+  setTimeout(()=>{
+
+    const loading =
+      document.querySelector('.loadingIA');
+
+    if(loading){
+      loading.remove();
+    }
+
+    chat.innerHTML += `
+
+      <div class="ia-msg concierge">
+
+        <div class="ia-avatar">
+          ✨
+        </div>
+
+        <div class="ia-bubble">
+
+          Recebi sua solicitação.
+
+          Em breve sua IA Concierge responderá em tempo real utilizando inteligência artificial integrada ao PlanejaNoiva.
+
+        </div>
+
+      </div>
+
+    `;
+
+    chat.scrollTop =
+      chat.scrollHeight;
+
+  },1500);
 
 }
 
