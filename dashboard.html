@@ -1467,8 +1467,12 @@ pointer-events:none;
 .ia-chat{
   flex:1;
   overflow:auto;
-  margin-top:28px;
-  padding-right:4px;
+  margin-top:32px;
+  padding-right:6px;
+
+  display:flex;
+  flex-direction:column;
+  gap:22px;
 }
 
 .ia-msg{
@@ -1482,25 +1486,41 @@ pointer-events:none;
 }
 
 .ia-msg.user .ia-bubble{
-
+  margin-left:auto;
 background:
 linear-gradient(
 135deg,
-#2B2521,
+#2D2622,
 #4A4039
 );
 
 color:white;
 
 border-radius:
-26px 26px 8px 26px;
+30px 30px 10px 30px;
 
 box-shadow:
-0 18px 40px rgba(43,37,33,.16);
+0 20px 45px rgba(43,37,33,.18);
+
+font-weight:500;
+
+backdrop-filter:blur(18px);
 
 }
 
 .ia-msg.concierge .ia-bubble{
+  border-top-left-radius:8px;
+
+background:
+rgba(255,255,255,.76);
+
+backdrop-filter:blur(18px);
+
+border:
+1px solid rgba(255,255,255,.8);
+
+box-shadow:
+0 20px 50px rgba(0,0,0,.05);
 
 border-radius:
 26px 26px 26px 8px;
@@ -1558,6 +1578,8 @@ transform:scale(.98);
 }
 
 .ia-bubble{
+
+  max-width:78%;
 
 background:
 rgba(255,255,255,.82);
@@ -1651,6 +1673,20 @@ function fecharIAConcierge(){
 
 }
 
+document
+.getElementById('iaInput')
+.addEventListener('keypress', function(e){
+
+  if(e.key === 'Enter'){
+
+    enviarMensagemIA();
+
+  }
+
+});
+
+let historicoIA = [];
+
 async function enviarMensagemIA(){
 
   const input =
@@ -1658,6 +1694,11 @@ async function enviarMensagemIA(){
 
   const texto =
     input.value.trim();
+
+    historicoIA.push({
+  tipo:'user',
+  mensagem:texto
+});
 
   if(!texto) return;
 
@@ -1709,37 +1750,108 @@ async function enviarMensagemIA(){
 
   setTimeout(()=>{
 
-    const loading =
-      document.querySelector('.loadingIA');
+  const loading =
+    document.querySelector('.loadingIA');
 
-    if(loading){
-      loading.remove();
-    }
+  if(loading){
+    loading.remove();
+  }
 
-    chat.innerHTML += `
+  let respostaIA = '';
 
-      <div class="ia-msg concierge">
+  const msg =
+    texto.toLowerCase();
 
-        <div class="ia-avatar">
-          ✨
-        </div>
+  if(
+    msg.includes('checklist')
+  ){
 
-        <div class="ia-bubble">
+    respostaIA =
+    'Seu checklist está evoluindo bem ✨ Recomendamos focar agora em fornecedores, cerimônia e confirmação de presença dos convidados.';
 
-          Recebi sua solicitação.
+  }
 
-          Em breve sua IA Concierge responderá em tempo real utilizando inteligência artificial integrada ao PlanejaNoiva.
+  else if(
+    msg.includes('cronograma')
+  ){
 
-        </div>
+    respostaIA =
+    'O cronograma merece atenção especial esta semana. Ajustar horários da cerimônia e entrada dos padrinhos pode evitar atrasos no grande dia.';
 
+  }
+
+  else if(
+    msg.includes('fornecedor')
+  ){
+
+    respostaIA =
+    'Centralize contratos e contatos importantes. Isso reduz ansiedade e evita imprevistos próximos ao casamento.';
+
+  }
+
+  else if(
+    msg.includes('ansiosa') ||
+    msg.includes('ansiedade')
+  ){
+
+    respostaIA =
+    'Você está construindo um momento único 💍 Respire. O planejamento está evoluindo e sua organização está melhor do que imagina.';
+
+  }
+
+  else{
+
+    respostaIA =
+    'Recebi sua solicitação ✨ Sua concierge premium está analisando as prioridades ideais para o seu casamento.';
+  }
+
+historicoIA.push({
+  tipo:'ia',
+  mensagem:respostaIA
+});
+
+  chat.innerHTML += `
+
+    <div class="ia-msg concierge">
+
+      <div class="ia-avatar">
+        ✨
       </div>
 
-    `;
+      <div class="ia-bubble">
+        <span id="digitandoIA"></span>
+      </div>
 
-    chat.scrollTop =
-      chat.scrollHeight;
+    </div>
 
-  },1500);
+  `;
+
+  chat.scrollTop =
+    chat.scrollHeight;
+
+  let i = 0;
+
+  const intervalo =
+    setInterval(()=>{
+
+      document.getElementById(
+        'digitandoIA'
+      ).innerHTML += respostaIA.charAt(i);
+
+      i++;
+
+      if(i >= respostaIA.length){
+
+        clearInterval(intervalo);
+
+      }
+
+      chat.scrollTop =
+        chat.scrollHeight;
+
+    },18);
+
+},1500);
 
 }
 
