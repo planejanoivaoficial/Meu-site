@@ -1722,22 +1722,6 @@ async function enviarMensagemIA(){
  const idDigitacao =
 'digitandoIA_' + Date.now();
 
-chat.innerHTML += `
-
-  <div class="ia-msg concierge">
-
-    <div class="ia-avatar">
-      ✨
-    </div>
-
-    <div class="ia-bubble">
-      <span id="${idDigitacao}"></span>
-    </div>
-
-  </div>
-
-`;
-
   input.value = '';
 
   chat.innerHTML += `
@@ -1773,6 +1757,22 @@ chat.innerHTML += `
   if(loading){
     loading.remove();
   }
+
+  chat.innerHTML += `
+
+  <div class="ia-msg concierge">
+
+    <div class="ia-avatar">
+      ✨
+    </div>
+
+    <div class="ia-bubble">
+      <span id="${idDigitacao}"></span>
+    </div>
+
+  </div>
+
+`;
 
   let respostaIA = '';
 
@@ -1873,7 +1873,7 @@ document.getElementById(
   idDigitacao
 );
 
-elementoDigitando.innerHTML =
+elementoDigitando.textContent =
 respostaIA.substring(0,i);
       i++;
 
