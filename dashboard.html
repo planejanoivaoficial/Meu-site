@@ -1240,25 +1240,6 @@ iniciarDashboard();
 
     <div class="ia-chat" id="iaChat">
 
-      <div class="ia-msg concierge">
-
-        <div class="ia-avatar">
-          ✨
-        </div>
-
-        <div class="ia-bubble">
-
-          Faltam poucos dias para o grande momento.
-
-          Hoje recomendamos:
-
-          • Revisar fornecedores  
-          • Finalizar checklist  
-          • Confirmar cronograma da cerimônia
-
-        </div>
-
-      </div>
 
     </div>
 
@@ -1486,6 +1467,8 @@ pointer-events:none;
   display:flex;
   gap:12px;
   margin-bottom:18px;
+
+  animation:msgIn .35s ease;
 }
 
 .ia-msg.user{
@@ -1541,6 +1524,20 @@ border-radius:
 .loadingIA .ia-bubble{
 
 animation:pulseIA 1.2s infinite;
+
+}
+
+@keyframes msgIn{
+
+  from{
+    opacity:0;
+    transform:translateY(12px);
+  }
+
+  to{
+    opacity:1;
+    transform:translateY(0);
+  }
 
 }
 
@@ -1709,18 +1706,37 @@ async function enviarMensagemIA(){
   const texto =
     input.value.trim();
 
-    historicoIA.push({
-  tipo:'user',
-  mensagem:texto
-});
-
   if(!texto) return;
 
   const chat =
     document.getElementById('iaChat');
 
- const idDigitacao =
-'digitandoIA_' + Date.now();
+  historicoIA.push({
+    tipo:'user',
+    mensagem:texto
+  });
+
+  const idDigitacao =
+  'digitandoIA_' + Date.now();
+
+  chat.innerHTML += `
+
+    <div class="ia-msg user">
+
+      <div class="ia-avatar">
+        👰
+      </div>
+
+      <div class="ia-bubble">
+        ${texto}
+      </div>
+
+    </div>
+
+  `;
+
+  chat.scrollTop =
+  chat.scrollHeight;
 
   input.value = '';
 
@@ -1860,9 +1876,9 @@ historicoIA.push({
 });
 
 const mensagens =
-  chat.querySelectorAll('.ia-msg.concierge');
+  chat.querySelectorAll('.ia-msg');
 
-if(mensagens.length > 6){
+if(mensagens.length > 12){
 
   mensagens[0].remove();
 
