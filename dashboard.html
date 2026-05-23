@@ -1074,6 +1074,7 @@ async function carregarPerfil() {
 
     const nome = data?.nome || localStorage.getItem('usuario_nome') || 'Noiva';
     const primeiroNome = nome.split(' ')[0];
+    contextoNoiva.nome = primeiroNome;
 
     localStorage.setItem('usuario_nome', nome);
 
@@ -1107,6 +1108,7 @@ async function carregarDadosDashboard() {
       const total = checklist.data.length;
       const concluidas = checklist.data.filter(t => t.concluida).length;
       const progresso = Math.round((concluidas / total) * 100);
+      contextoNoiva.progresso = progresso;
 
       document.getElementById('kpiChecklist').innerText = `${concluidas}/${total}`;
       document.getElementById('progressText').innerText = `${progresso}%`;
@@ -1124,6 +1126,11 @@ async function carregarDadosDashboard() {
 
     document.getElementById('kpiConvidados').innerText =
       convidados.data ? convidados.data.length : '0';
+
+      contextoNoiva.convidados =
+  convidados.data
+  ? convidados.data.length
+  : 0;
 
   } catch (erro) {
     console.log('Dashboard carregado com dados parciais:', erro);
@@ -1687,6 +1694,13 @@ document
 
 let historicoIA = [];
 
+const contextoNoiva = {
+  nome:'',
+  progresso:0,
+  convidados:0,
+  diasRestantes:0
+};
+
 async function enviarMensagemIA(){
 
   const input =
@@ -1705,21 +1719,24 @@ async function enviarMensagemIA(){
   const chat =
     document.getElementById('iaChat');
 
-  chat.innerHTML += `
+ const idDigitacao =
+'digitandoIA_' + Date.now();
 
-    <div class="ia-msg user">
+chat.innerHTML += `
 
-      <div class="ia-avatar">
-        👰
-      </div>
+  <div class="ia-msg concierge">
 
-      <div class="ia-bubble">
-        ${texto}
-      </div>
-
+    <div class="ia-avatar">
+      ✨
     </div>
 
-  `;
+    <div class="ia-bubble">
+      <span id="${idDigitacao}"></span>
+    </div>
+
+  </div>
+
+`;
 
   input.value = '';
 
@@ -1759,6 +1776,15 @@ async function enviarMensagemIA(){
 
   let respostaIA = '';
 
+  const nomeNoiva =
+  contextoNoiva.nome || 'Noiva';
+
+const progressoAtual =
+  contextoNoiva.progresso || 0;
+
+const convidadosAtuais =
+  contextoNoiva.convidados || 0;
+
   const msg =
     texto.toLowerCase();
 
@@ -1766,8 +1792,12 @@ async function enviarMensagemIA(){
     msg.includes('checklist')
   ){
 
-    respostaIA =
-    'Seu checklist está evoluindo bem ✨ Recomendamos focar agora em fornecedores, cerimônia e confirmação de presença dos convidados.';
+   respostaIA =
+`${nomeNoiva}, seu planejamento já alcançou ${progressoAtual}% ✨
+
+Vocês possuem ${convidadosAtuais} convidados cadastrados atualmente.
+
+Agora recomendamos focar nos fornecedores principais, cerimônia e confirmação final de presença.`;
 
   }
 
@@ -1799,33 +1829,37 @@ async function enviarMensagemIA(){
 
   }
 
-  else{
+ else{
 
-    respostaIA =
-    'Recebi sua solicitação ✨ Sua concierge premium está analisando as prioridades ideais para o seu casamento.';
-  }
+  const respostasLuxo = [
+
+`${nomeNoiva}, estou analisando os próximos detalhes ideais para deixar seu casamento ainda mais elegante ✨`,
+
+`Seu planejamento está evoluindo com muita sofisticação 💍 Agora vamos focar nos detalhes que realmente transformam a experiência.`,
+
+`${nomeNoiva}, você não precisa carregar tudo sozinha. Sua concierge premium está organizando as prioridades ideais para hoje ✨`,
+
+`Os detalhes mais refinados normalmente fazem toda diferença no grande dia 🌙`,
+
+`Seu casamento está começando a ganhar forma de evento editorial premium ✨`
+
+  ];
+
+  respostaIA =
+    respostasLuxo[
+      Math.floor(
+        Math.random() * respostasLuxo.length
+      )
+    ];
+
+}
 
 historicoIA.push({
   tipo:'ia',
   mensagem:respostaIA
 });
 
-  chat.innerHTML += `
-
-    <div class="ia-msg concierge">
-
-      <div class="ia-avatar">
-        ✨
-      </div>
-
-      <div class="ia-bubble">
-        <span id="digitandoIA"></span>
-      </div>
-
-    </div>
-
-  `;
-
+ 
   chat.scrollTop =
     chat.scrollHeight;
 
@@ -1834,10 +1868,13 @@ historicoIA.push({
   const intervalo =
     setInterval(()=>{
 
-      document.getElementById(
-        'digitandoIA'
-      ).innerHTML += respostaIA.charAt(i);
+const elementoDigitando =
+document.getElementById(
+  idDigitacao
+);
 
+elementoDigitando.innerHTML =
+respostaIA.substring(0,i);
       i++;
 
       if(i >= respostaIA.length){
