@@ -1157,10 +1157,15 @@ async function carregarCronometro() {
     const dataEvento = new Date(data.data_casamento).getTime();
 
     const intervalo = setInterval(() => {
-      const agora = new Date().getTime();
-      const distancia = dataEvento - agora;
+    const agora = new Date().getTime();
+const distancia = dataEvento - agora;
 
-      if (distancia < 0) {
+contextoNoiva.diasRestantes =
+  Math.floor(
+    distancia / (1000 * 60 * 60 * 24)
+  );
+
+if (distancia < 0) {
         document.getElementById('relogio').innerHTML =
           "<div style='color:#D98F8F;font-weight:900;font-size:1.2rem'>Chegou o Grande Dia! ❤️</div>";
         clearInterval(intervalo);
@@ -1796,7 +1801,126 @@ function respostaVariada(lista){
   ];
 }
 
+function carregarMemoriaPremium(){
+
+  const memoria =
+    JSON.parse(
+      localStorage.getItem('memoriaPremiumNoiva')
+    ) || {};
+
+  contextoNoiva.estiloCasamento =
+    memoria.estiloCasamento || '';
+
+  contextoNoiva.igreja =
+    memoria.igreja || '';
+
+  contextoNoiva.corDecoracao =
+    memoria.corDecoracao || '';
+
+  contextoNoiva.luaDeMel =
+    memoria.luaDeMel || '';
+
+  contextoNoiva.orcamentoIdeal =
+    memoria.orcamentoIdeal || '';
+
+  contextoNoiva.observacaoEspecial =
+    memoria.observacaoEspecial || '';
+
+}
+
+function insightDoEstagio(){
+
+  const progresso =
+    contextoNoiva.progresso || 0;
+
+  const convidados =
+    contextoNoiva.convidados || 0;
+
+  const dias =
+    contextoNoiva.diasRestantes || 0;
+
+  if(dias > 0 && dias <= 15){
+    return `${contextoNoiva.nome || 'Noiva'}, agora é fase de proteger sua energia emocional ✨
+
+Com poucos dias para o casamento, minha sugestão é evitar mudanças grandes e focar em:
+• confirmação final
+• cronograma
+• beleza
+• descanso
+• fornecedores alinhados`;
+  }
+
+  if(progresso < 30){
+    return `Percebi que o planejamento ainda está no início ✨
+
+Vamos priorizar:
+• checklist inicial
+• fornecedores principais
+• orçamento
+• lista de convidados`;
+  }
+
+  if(convidados > 150){
+    return `Seu evento já está entrando em escala premium ✨
+
+Com ${convidados} convidados, vale revisar:
+• RSVP
+• mesas
+• buffet
+• cronograma de recepção`;
+  }
+
+  if(progresso >= 70){
+    return `Seu casamento está entrando na fase final ✨
+
+Agora os detalhes emocionais começam a fazer diferença:
+• roteiro
+• votos
+• momentos especiais
+• experiência dos convidados`;
+  }
+
+  return `Seu planejamento está evoluindo bem ✨
+
+Minha sugestão para hoje é ${sugestaoProximaAcao()}.`;
+
+}
+
+function tomDaConcierge(){
+
+  const hora = new Date().getHours();
+
+  const progresso =
+    contextoNoiva.progresso || 0;
+
+  const dias =
+    contextoNoiva.diasRestantes || 0;
+
+  if(
+    contextoNoiva.modoEmocional
+  ){
+    return 'emocional';
+  }
+
+  if(dias > 0 && dias <= 20){
+    return 'acolhedora';
+  }
+
+  if(progresso >= 70){
+    return 'sofisticada';
+  }
+
+  if(hora >= 22 || hora <= 5){
+    return 'intimista';
+  }
+
+  return 'premium';
+
+}
+
 function abrirIAConcierge(){
+
+carregarMemoriaPremium();
 
   document
   .getElementById('iaOverlay')
@@ -1867,6 +1991,34 @@ Por onde deseja começar?`;
 
     },18);
 
+setTimeout(()=>{
+
+  const chat =
+    document.getElementById('iaChat');
+
+  const insight = insightDoEstagio();
+
+  chat.innerHTML += `
+
+    <div class="ia-msg concierge">
+
+      <div class="ia-avatar">
+        ✨
+      </div>
+
+      <div class="ia-bubble">
+        ${insight}
+      </div>
+
+    </div>
+
+  `;
+
+  chat.scrollTop =
+    chat.scrollHeight;
+
+},2500);
+
 }
 
 function sugerirIA(texto){
@@ -1912,7 +2064,13 @@ const contextoNoiva = {
   progresso:0,
   convidados:0,
   diasRestantes:0,
-  modoEmocional:false
+  modoEmocional:false,
+  estiloCasamento:'',
+  igreja:'',
+  corDecoracao:'',
+  luaDeMel:'',
+  orcamentoIdeal:'',
+  observacaoEspecial:''
 };
 
 async function enviarMensagemIA(){
@@ -1998,6 +2156,95 @@ localStorage.setItem(
   const msg =
   texto.toLowerCase();
 
+const personalidade =
+  tomDaConcierge();
+
+/* =========================================
+MEMÓRIA PREMIUM AUTOMÁTICA
+========================================= */
+
+const memoriaPremium =
+JSON.parse(
+  localStorage.getItem('memoriaPremiumNoiva')
+) || {};
+
+/* ESTILO */
+
+if(
+  msg.includes('casamento clássico') ||
+  msg.includes('casamento moderno') ||
+  msg.includes('casamento intimista') ||
+  msg.includes('casamento luxuoso')
+){
+
+  memoriaPremium.estiloCasamento = texto;
+
+}
+
+/* DECORAÇÃO */
+
+if(
+  msg.includes('decoração') ||
+  msg.includes('paleta') ||
+  msg.includes('flores')
+){
+
+  memoriaPremium.corDecoracao = texto;
+
+}
+
+/* IGREJA */
+
+if(
+  msg.includes('igreja') ||
+  msg.includes('cerimônia')
+){
+
+  memoriaPremium.igreja = texto;
+
+}
+
+/* LUA DE MEL */
+
+if(
+  msg.includes('lua de mel') ||
+  msg.includes('viagem')
+){
+
+  memoriaPremium.luaDeMel = texto;
+
+}
+
+/* ORÇAMENTO */
+
+if(
+  msg.includes('orçamento') ||
+  msg.includes('pretendo gastar')
+){
+
+  memoriaPremium.orcamentoIdeal = texto;
+
+}
+
+/* OBSERVAÇÕES IMPORTANTES */
+
+if(
+  msg.includes('importante') ||
+  msg.includes('sonho') ||
+  msg.includes('quero muito')
+){
+
+  memoriaPremium.observacaoEspecial = texto;
+
+}
+
+localStorage.setItem(
+  'memoriaPremiumNoiva',
+  JSON.stringify(memoriaPremium)
+);
+
+carregarMemoriaPremium();
+
 let respostaLocal = '';
 
 /* =========================================
@@ -2013,17 +2260,37 @@ if(
   msg.includes('cansada')
 ){
 
-respostaLocal =
-`${contextoNoiva.nome || 'Noiva'}, você não precisa carregar tudo sozinha ✨
+respostaLocal = respostaVariada([
 
-O casamento é um momento emocionalmente intenso mesmo.
+`${contextoNoiva.nome || 'Noiva'}, respira comigo ✨
 
-Hoje, tente focar apenas em:
-• uma decisão importante
-• uma confirmação pendente
-• um momento de descanso para você
+Organizar um casamento mexe com emoção, expectativa e detalhes ao mesmo tempo.
 
-Seu planejamento está evoluindo mais do que imagina 💍`;
+Hoje, a melhor próxima ação é ${sugestaoProximaAcao()}.
+
+Você não precisa resolver tudo agora. Só precisa avançar com leveza 💍`,
+
+`${contextoNoiva.nome || 'Noiva'}, essa ansiedade não significa que está dando errado ✨
+
+Ela só mostra o quanto esse dia importa para você e ${contextoNoiva.nomeNoivo || 'seu noivo'}.
+
+Para hoje, escolha:
+• uma pendência real
+• uma conversa importante
+• um momento para descansar
+
+Elegância também é saber pausar 🌙`,
+
+`${fraseCasal()} estão construindo algo muito especial ✨
+
+Quando a ansiedade vier, volte para o simples:
+• o que precisa ser decidido hoje?
+• o que pode esperar?
+• o que outra pessoa pode ajudar?
+
+Minha sugestão agora é ${sugestaoProximaAcao()}.`
+
+]);
 
 }
 
@@ -2113,16 +2380,30 @@ else if(
   msg.includes('confirmação')
 ){
 
-respostaLocal =
-`A confirmação de presença evita desperdícios e reduz ansiedade ✨
+  respostaLocal = respostaVariada([
 
-Agora vale focar em:
-• convidados pendentes
+`Atualmente vocês possuem ${contextoNoiva.convidados || 0} convidados cadastrados ✨
+
+Minha recomendação agora é revisar:
+• confirmações pendentes
 • mesas prioritárias
 • familiares próximos
-• lista final do buffet
 
-Um RSVP organizado melhora toda a experiência do evento.`;
+Quanto mais organizada a lista, mais leve o grande dia 💍`,
+
+`${fraseCasal()} possuem ${contextoNoiva.convidados || 0} convidados no planejamento atual ✨
+
+Agora vale focar em:
+• RSVP
+• distribuição de mesas
+• convidados especiais
+• possíveis ajustes finais.`,
+
+`Sua lista atual possui ${contextoNoiva.convidados || 0} convidados 💍
+
+Esse é um ótimo momento para revisar confirmações e evitar custos desnecessários ✨`
+
+  ]);
 
 }
 
@@ -2163,7 +2444,12 @@ else if(
 ){
 
 respostaLocal =
-`A estética ideal é aquela que transmite a personalidade do casal ✨
+
+`${contextoNoiva.corDecoracao
+? `Como vocês escolheram ${contextoNoiva.corDecoracao}, `
+: ''}
+
+a estética ideal é aquela que transmite a personalidade do casal ✨
 
 Hoje as tendências mais sofisticadas priorizam:
 • iluminação intimista
@@ -2260,7 +2546,12 @@ else if(
 ){
 
 respostaLocal =
-`A lua de mel ideal é aquela que combina descanso e conexão ✨
+
+`${contextoNoiva.luaDeMel
+? `Levando em consideração que vocês comentaram sobre ${contextoNoiva.luaDeMel}, `
+: ''}
+
+a lua de mel ideal é aquela que combina descanso e conexão ✨
 
 Hoje muitos casais preferem:
 • experiências mais intimistas
@@ -2271,6 +2562,79 @@ Hoje muitos casais preferem:
 
 O casamento termina.
 A experiência do casal continua 💍`;
+}
+
+/* =========================================
+ABERTURA AUTOMÁTICA DE PÁGINAS
+========================================= */
+
+else if(
+  msg.includes('abrir checklist') ||
+  msg.includes('organizar checklist')
+){
+
+respostaLocal =
+`Perfeito ✨
+
+Estou abrindo seu checklist premium agora.`;
+
+setTimeout(()=>{
+  window.location.href = 'checklist.html';
+},1800);
+
+}
+
+else if(
+  msg.includes('abrir fornecedores')
+){
+
+respostaLocal =
+`Vamos organizar seus fornecedores ✨`;
+
+setTimeout(()=>{
+  window.location.href = 'fornecedores.html';
+},1800);
+
+}
+
+else if(
+  msg.includes('abrir cronograma')
+){
+
+respostaLocal =
+`Vou abrir seu cronograma do grande dia ✨`;
+
+setTimeout(()=>{
+  window.location.href = 'cronograma.html';
+},1800);
+
+}
+
+else if(
+  msg.includes('abrir financeiro') ||
+  msg.includes('abrir orçamento')
+){
+
+respostaLocal =
+`Abrindo seu controle financeiro premium ✨`;
+
+setTimeout(()=>{
+  window.location.href = 'financeiro.html';
+},1800);
+
+}
+
+else if(
+  msg.includes('abrir convidados') ||
+  msg.includes('abrir lista de convidados')
+){
+
+respostaLocal =
+`Abrindo sua central de convidados ✨`;
+
+setTimeout(()=>{
+  window.location.href = 'convidados.html';
+},1800);
 
 }
 
@@ -2280,19 +2644,78 @@ DEFAULT PREMIUM
 
 else{
 
-const respostasPremium = [
+let respostasPremium = [];
+
+if(personalidade === 'emocional'){
+
+respostasPremium = [
+
+`${contextoNoiva.nome || 'Noiva'}, você não precisa resolver tudo hoje ✨
+
+Seu casamento merece leveza também.`,
+
+`Respira comigo 🌙
+
+Os detalhes podem esperar alguns minutos.
+Sua paz emocional também faz parte do casamento.`
+
+];
+
+}
+
+else if(personalidade === 'acolhedora'){
+
+respostasPremium = [
+
+`Agora o casamento começa a ganhar emoção de verdade ✨
+
+Proteja sua energia e tente viver essa fase com mais presença.`,
+
+`Faltam poucos detalhes para o grande dia 💍
+
+Minha sugestão é desacelerar a ansiedade e focar apenas no essencial.`
+
+];
+
+}
+
+else if(personalidade === 'sofisticada'){
+
+respostasPremium = [
+
+`Os casamentos mais sofisticados normalmente parecem leves porque os bastidores foram cuidadosamente planejados ✨`,
+
+`Seu planejamento já transmite uma experiência muito mais refinada 🌙`
+
+];
+
+}
+
+else if(personalidade === 'intimista'){
+
+respostasPremium = [
+
+`Existe algo especial em organizar um casamento durante a noite ✨`,
+
+`Os detalhes mais emocionantes do casamento normalmente nascem nos momentos silenciosos 🌙`
+
+];
+
+}
+
+else{
+
+respostasPremium = [
 
 `${contextoNoiva.nome || 'Noiva'}, estou analisando os próximos detalhes ideais para deixar seu casamento ainda mais sofisticado ✨`,
 
 `Os detalhes mais refinados normalmente são aqueles que fazem os convidados sentirem algo especial 💍`,
 
-`Seu planejamento está começando a ganhar forma de experiência editorial premium ✨`,
-
-`Agora vamos focar nos pontos que trazem mais leveza e elegância para o grande dia 🌙`,
-
-`Seu casamento merece organização, emoção e uma experiência inesquecível ✨`
+`Seu planejamento está começando a ganhar forma de experiência editorial premium ✨`
 
 ];
+
+}
 
 respostaLocal =
   respostasPremium[
