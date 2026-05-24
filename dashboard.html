@@ -1243,6 +1243,14 @@ iniciarDashboard();
 
     </div>
 
+<div class="ia-suggestions">
+  <button onclick="sugerirIA('Estou ansiosa')">✨ Estou ansiosa</button>
+  <button onclick="sugerirIA('Me ajuda com checklist')">📋 Checklist</button>
+  <button onclick="sugerirIA('Me ajuda com fornecedores')">📸 Fornecedores</button>
+  <button onclick="sugerirIA('Meu orçamento está apertado')">💸 Orçamento</button>
+  <button onclick="sugerirIA('Me ajuda com o cronograma')">💍 Cronograma</button>
+</div>
+
     <div class="ia-input-area">
 
   <input
@@ -1608,6 +1616,32 @@ box-shadow:
 
 }
 
+.ia-suggestions{
+  display:flex;
+  gap:10px;
+  overflow-x:auto;
+  padding:12px 2px 4px;
+  margin-top:10px;
+}
+
+.ia-suggestions::-webkit-scrollbar{
+  display:none;
+}
+
+.ia-suggestions button{
+  border:none;
+  white-space:nowrap;
+  padding:12px 16px;
+  border-radius:999px;
+  background:rgba(255,255,255,.78);
+  border:1px solid rgba(255,255,255,.85);
+  color:#6F625B;
+  font-weight:800;
+  font-size:.82rem;
+  cursor:pointer;
+  box-shadow:0 10px 26px rgba(63,57,50,.07);
+}
+
 .ia-input-area{
   display:flex;
   align-items:center;
@@ -1725,6 +1759,17 @@ Por onde deseja começar?`;
         chat.scrollHeight;
 
     },18);
+
+}
+
+function sugerirIA(texto){
+
+  const input =
+    document.getElementById('iaInput');
+
+  input.value = texto;
+
+  enviarMensagemIA();
 
 }
 
