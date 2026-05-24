@@ -1792,7 +1792,7 @@ async function enviarMensagemIA(){
       await respostaAPI.json();
 
     const respostaIA =
-      dados.resposta || 'Não consegui responder agora. Tente novamente em alguns segundos.';
+      dados.resposta || dados.erroReal || 'Erro ao consultar IA.';
 
     chat.innerHTML += `
 

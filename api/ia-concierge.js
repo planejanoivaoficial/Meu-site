@@ -19,7 +19,7 @@ module.exports = async function handler(req, res) {
     } = req.body;
 
     const resposta = await client.responses.create({
-      model: "gpt-4.1-mini",
+      model: "gpt-4o-mini",
       input: `
 Você é a IA Concierge Premium do PlanejaNoiva.
 
