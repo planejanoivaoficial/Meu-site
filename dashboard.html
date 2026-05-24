@@ -1774,93 +1774,85 @@ async function enviarMensagemIA(){
     loading.remove();
   }
 
-  const respostaAPI = await fetch('/api/ia-concierge',{
+  try{
 
-  method:'POST',
+    const respostaAPI = await fetch('/api/ia-concierge', {
+      method:'POST',
+      headers:{
+        'Content-Type':'application/json'
+      },
+      body:JSON.stringify({
+        pergunta:texto,
+        contexto:contextoNoiva,
+        historico:historicoIA
+      })
+    });
 
-  headers:{
-    'Content-Type':'application/json'
-  },
+    const dados =
+      await respostaAPI.json();
 
-  body:JSON.stringify({
+    const respostaIA =
+      dados.resposta || 'Não consegui responder agora. Tente novamente em alguns segundos.';
 
-    pergunta:texto,
+    chat.innerHTML += `
 
-    contexto:{
-      nome:'Gabriely',
-      progresso:62,
-      convidados:180
-    },
+      <div class="ia-msg concierge">
+        <div class="ia-avatar">✨</div>
+        <div class="ia-bubble">
+          <span id="${idDigitacao}"></span>
+        </div>
+      </div>
 
-    historico:historicoIA
+    `;
 
-  })
+    historicoIA.push({
+      tipo:'ia',
+      mensagem:respostaIA
+    });
 
-});
+    let i = 0;
 
-const dados =
-  await respostaAPI.json();
+    const intervalo =
+      setInterval(()=>{
 
-  const respostaIA =
-  dados.resposta;
+        const elementoDigitando =
+          document.getElementById(idDigitacao);
 
-historicoIA.push({
-  tipo:'ia',
-  mensagem:respostaIA
-});
+        if(!elementoDigitando){
+          clearInterval(intervalo);
+          return;
+        }
 
-const mensagens =
-  chat.querySelectorAll('.ia-msg');
+        elementoDigitando.textContent =
+          respostaIA.substring(0,i);
 
-if(mensagens.length > 12){
+        i++;
 
-  mensagens[0].remove();
+        if(i >= respostaIA.length){
+          clearInterval(intervalo);
+        }
 
-}
+        chat.scrollTop =
+          chat.scrollHeight;
 
-chat.innerHTML += `
+      },18);
 
-  <div class="ia-msg concierge">
+  }catch(erro){
 
-    <div class="ia-avatar">
-      ✨
-    </div>
+    console.error('Erro IA:', erro);
 
-    <div class="ia-bubble">
-      <span id="${idDigitacao}"></span>
-    </div>
+    chat.innerHTML += `
 
-  </div>
+      <div class="ia-msg concierge">
+        <div class="ia-avatar">✨</div>
+        <div class="ia-bubble">
+          Não consegui conectar com a concierge agora. Verifique a API na Vercel.
+        </div>
+      </div>
 
-`;
+    `;
 
-chat.scrollTop =
-  chat.scrollHeight;
-
-let i = 0;
-
-  const intervalo =
-    setInterval(()=>{
-
-const elementoDigitando =
-document.getElementById(
-  idDigitacao
-);
-
-elementoDigitando.textContent =
-respostaIA.substring(0,i);
-      i++;
-
-      if(i >= respostaIA.length){
-
-        clearInterval(intervalo);
-
-      }
-
-      chat.scrollTop =
-        chat.scrollHeight;
-
-    },18);
+  }
 
 },1500);
 
