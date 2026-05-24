@@ -1068,13 +1068,16 @@ async function carregarPerfil() {
   try {
     const { data } = await _supabase
       .from('usuarios')
-      .select('nome,data_casamento')
+      .select('nome,nome_noivo,data_casamento')
       .eq('id', usuarioLogado.id)
       .single();
 
     const nome = data?.nome || localStorage.getItem('usuario_nome') || 'Noiva';
     const primeiroNome = nome.split(' ')[0];
     contextoNoiva.nome = primeiroNome;
+
+contextoNoiva.nomeNoivo =
+  data?.nome_noivo || localStorage.getItem('nome_noivo') || 'seu noivo';
 
     localStorage.setItem('usuario_nome', nome);
 
@@ -1484,6 +1487,7 @@ pointer-events:none;
 }
 
 .ia-msg.user .ia-bubble{
+line-height:1.75;
   margin-left:auto;
 background:
 linear-gradient(
@@ -1618,10 +1622,11 @@ box-shadow:
 
 .ia-suggestions{
   display:flex;
-  gap:10px;
+  gap:12px;
   overflow-x:auto;
-  padding:12px 2px 4px;
-  margin-top:10px;
+  padding:14px 4px 6px;
+  margin-top:14px;
+  scroll-behavior:smooth;
 }
 
 .ia-suggestions::-webkit-scrollbar{
@@ -1629,17 +1634,41 @@ box-shadow:
 }
 
 .ia-suggestions button{
+
   border:none;
   white-space:nowrap;
-  padding:12px 16px;
+
+  padding:14px 18px;
+
   border-radius:999px;
-  background:rgba(255,255,255,.78);
-  border:1px solid rgba(255,255,255,.85);
+
+  background:
+    rgba(255,255,255,.82);
+
+  backdrop-filter:blur(18px);
+
+  border:
+    1px solid rgba(255,255,255,.95);
+
   color:#6F625B;
-  font-weight:800;
-  font-size:.82rem;
+
+  font-weight:700;
+
+  font-size:.88rem;
+
   cursor:pointer;
-  box-shadow:0 10px 26px rgba(63,57,50,.07);
+
+  box-shadow:
+    0 12px 30px rgba(63,57,50,.08);
+
+  transition:.25s ease;
+
+}
+
+.ia-suggestions button:active{
+
+  transform:scale(.96);
+
 }
 
 .ia-input-area{
@@ -1693,6 +1722,80 @@ box-shadow:
 
 <script>
 
+function saudacaoDoDia(){
+  const hora = new Date().getHours();
+
+  if(hora < 12) return 'Bom dia';
+  if(hora < 18) return 'Boa tarde';
+  return 'Boa noite';
+}
+
+function prioridadeDoMomento(){
+  const progresso = contextoNoiva.progresso || 0;
+  const convidados = contextoNoiva.convidados || 0;
+
+  if(progresso < 30){
+    return 'começar pelo checklist inicial e fornecedores principais';
+  }
+
+  if(convidados < 50){
+    return 'organizar a lista de convidados e confirmações';
+  }
+
+  if(progresso < 70){
+    return 'revisar cronograma, pagamentos e pendências importantes';
+  }
+
+  return 'fazer os ajustes finais com leveza e atenção aos detalhes';
+}
+
+function fraseCasal(){
+  return `${contextoNoiva.nome || 'Noiva'} e ${contextoNoiva.nomeNoivo || 'seu noivo'}`;
+}
+
+function nivelUrgencia(){
+  const progresso = contextoNoiva.progresso || 0;
+  const convidados = contextoNoiva.convidados || 0;
+
+  if(progresso < 30){
+    return 'inicial';
+  }
+
+  if(convidados < 50){
+    return 'convidados';
+  }
+
+  if(progresso < 70){
+    return 'atenção';
+  }
+
+  return 'finalização';
+}
+
+function sugestaoProximaAcao(){
+  const nivel = nivelUrgencia();
+
+  if(nivel === 'inicial'){
+    return 'abrir o checklist e concluir as tarefas principais';
+  }
+
+  if(nivel === 'convidados'){
+    return 'revisar a lista de convidados e enviar confirmações';
+  }
+
+  if(nivel === 'atenção'){
+    return 'revisar cronograma, fornecedores e pagamentos próximos';
+  }
+
+  return 'fazer ajustes finais com calma e conferir os detalhes do grande dia';
+}
+
+function respostaVariada(lista){
+  return lista[
+    Math.floor(Math.random() * lista.length)
+  ];
+}
+
 function abrirIAConcierge(){
 
   document
@@ -1713,7 +1816,11 @@ function abrirIAConcierge(){
     contextoNoiva.nome || 'Noiva';
 
   const mensagem =
-`${nome}, seja bem-vinda à sua concierge premium ✨
+`${saudacaoDoDia()}, ${nome} ✨
+
+Seja bem-vinda à sua concierge premium.
+
+Pelo seu planejamento atual, minha recomendação é ${prioridadeDoMomento()}.
 
 Posso te ajudar com checklist, convidados, fornecedores, cronograma, orçamento, estética do casamento ou ansiedade do grande dia.
 
@@ -1794,13 +1901,18 @@ document
 
 });
 
-let historicoIA = [];
+let historicoIA =
+JSON.parse(
+  localStorage.getItem('historicoIA')
+) || [];
 
 const contextoNoiva = {
   nome:'',
+  nomeNoivo:'',
   progresso:0,
   convidados:0,
-  diasRestantes:0
+  diasRestantes:0,
+  modoEmocional:false
 };
 
 async function enviarMensagemIA(){
@@ -1815,11 +1927,15 @@ async function enviarMensagemIA(){
 
   const chat =
     document.getElementById('iaChat');
+historicoIA.push({
+  tipo:'user',
+  mensagem:texto
+});
 
-  historicoIA.push({
-    tipo:'user',
-    mensagem:texto
-  });
+localStorage.setItem(
+  'historicoIA',
+  JSON.stringify(historicoIA)
+);
 
   const idDigitacao =
   'digitandoIA_' + Date.now();
@@ -2209,6 +2325,10 @@ if(respostaLocal){
     tipo:'ia',
     mensagem:respostaLocal
   });
+localStorage.setItem(
+  'historicoIA',
+  JSON.stringify(historicoIA)
+);
 
   let i = 0;
 
@@ -2276,6 +2396,10 @@ if(respostaLocal){
       tipo:'ia',
       mensagem:respostaIA
     });
+    localStorage.setItem(
+  'historicoIA',
+  JSON.stringify(historicoIA)
+);
 
     let i = 0;
 
