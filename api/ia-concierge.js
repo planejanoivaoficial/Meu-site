@@ -53,10 +53,10 @@ Responda como uma concierge de casamento premium.
     });
 
   } catch (erro) {
-    console.error(erro);
+    console.error("ERRO OPENAI:", erro);
 
     return res.status(500).json({
-      error: "Erro ao consultar IA Concierge"
+      erroReal: erro.message
     });
   }
 };
