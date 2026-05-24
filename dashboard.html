@@ -1112,6 +1112,10 @@ async function carregarDadosDashboard() {
       const concluidas = checklist.data.filter(t => t.concluida).length;
       const progresso = Math.round((concluidas / total) * 100);
       contextoNoiva.progresso = progresso;
+      localStorage.setItem(
+  'progressoChecklist',
+  progresso
+);
 
       document.getElementById('kpiChecklist').innerText = `${concluidas}/${total}`;
       document.getElementById('progressText').innerText = `${progresso}%`;
@@ -1245,6 +1249,9 @@ iniciarDashboard();
       </p>
 
     </div>
+
+<div class="ia-memory" id="iaMemory">
+</div>
 
     <div class="ia-chat" id="iaChat">
 
@@ -1466,6 +1473,30 @@ pointer-events:none;
   margin-top:12px;
   color:#7E746C;
   line-height:1.7;
+}
+
+.ia-memory{
+  display:flex;
+  gap:10px;
+  overflow-x:auto;
+  padding:14px 2px 4px;
+  margin-top:18px;
+}
+
+.ia-memory::-webkit-scrollbar{
+  display:none;
+}
+
+.ia-memory div{
+  white-space:nowrap;
+  padding:11px 15px;
+  border-radius:999px;
+  background:rgba(255,255,255,.78);
+  border:1px solid rgba(255,255,255,.9);
+  color:#7A625C;
+  font-size:.78rem;
+  font-weight:800;
+  box-shadow:0 10px 24px rgba(63,57,50,.06);
 }
 
 .ia-chat{
@@ -1722,7 +1753,76 @@ box-shadow:
 .ia-input-area button:active{
   transform:scale(.96);
 }
+/* =========================================
+MODO MADRUGADA
+========================================= */
 
+body.modo-madrugada .ia-overlay{
+
+  background:
+    rgba(8,8,12,.62);
+
+  backdrop-filter:
+    blur(22px);
+
+}
+
+body.modo-madrugada .ia-modal{
+
+  background:
+    linear-gradient(
+      180deg,
+      rgba(26,22,28,.96) 0%,
+      rgba(18,16,22,.98) 100%
+    );
+
+}
+
+body.modo-madrugada .ia-header h2{
+
+  color:#F7EFE7;
+
+}
+
+body.modo-madrugada .ia-header p{
+
+  color:
+    rgba(255,255,255,.62);
+
+}
+
+body.modo-madrugada .ia-bubble{
+
+  background:
+    rgba(255,255,255,.06);
+
+  color:#F3ECE6;
+
+}
+
+body.modo-madrugada .ia-msg.user .ia-bubble{
+
+  background:
+    linear-gradient(
+      135deg,
+      #8E6D52,
+      #5E4635
+    );
+
+}
+
+body.modo-madrugada .ia-input-area{
+
+  background:
+    rgba(255,255,255,.05);
+
+}
+
+body.modo-madrugada .ia-input-area input{
+
+  color:#F5EEE8;
+
+}
 </style>
 
 <script>
@@ -1918,9 +2018,137 @@ function tomDaConcierge(){
 
 }
 
+function atualizarPainelMemoria(){
+
+  const box =
+    document.getElementById('iaMemory');
+
+  if(!box) return;
+
+  const itens = [];
+
+  if(contextoNoiva.estiloCasamento){
+    itens.push(`💍 ${contextoNoiva.estiloCasamento}`);
+  }
+
+  if(contextoNoiva.corDecoracao){
+    itens.push(`🎨 Decoração ${contextoNoiva.corDecoracao}`);
+  }
+
+  if(contextoNoiva.igreja){
+    itens.push(`⛪ ${contextoNoiva.igreja}`);
+  }
+
+  if(contextoNoiva.luaDeMel){
+    itens.push(`🌙 ${contextoNoiva.luaDeMel}`);
+  }
+
+  if(contextoNoiva.orcamentoIdeal){
+    itens.push(`💸 ${contextoNoiva.orcamentoIdeal}`);
+  }
+
+  if(contextoNoiva.observacaoEspecial){
+    itens.push(`✨ ${contextoNoiva.observacaoEspecial}`);
+  }
+
+  if(itens.length === 0){
+    box.innerHTML = `
+      <div>✨ A concierge está começando a conhecer vocês</div>
+    `;
+    return;
+  }
+
+  box.innerHTML =
+    itens.map(item => `<div>${item}</div>`).join('');
+
+}
+
+function restaurarHistoricoIA(){
+
+  const chat =
+    document.getElementById('iaChat');
+
+  if(!chat) return;
+
+  if(
+    chat.dataset.restaurado === 'ok'
+  ){
+    return;
+  }
+
+  chat.dataset.restaurado = 'ok';
+
+chat.innerHTML = '';
+
+  if(historicoIA.length === 0){
+    return;
+  }
+
+  historicoIA.forEach(item => {
+
+    const classe =
+      item.tipo === 'user'
+      ? 'user'
+      : 'concierge';
+
+    const avatar =
+      item.tipo === 'user'
+      ? '👰'
+      : '✨';
+
+    chat.innerHTML += `
+
+      <div class="ia-msg ${classe}">
+
+        <div class="ia-avatar">
+          ${avatar}
+        </div>
+
+        <div class="ia-bubble">
+          ${item.mensagem}
+        </div>
+
+      </div>
+
+    `;
+
+  });
+
+  chat.scrollTop =
+    chat.scrollHeight;
+
+}
+
+function ativarModoMadrugada(){
+
+  const hora =
+    new Date().getHours();
+
+  if(
+    hora >= 22 ||
+    hora <= 5
+  ){
+
+    document.body.classList.add(
+      'modo-madrugada'
+    );
+
+  }else{
+
+    document.body.classList.remove(
+      'modo-madrugada'
+    );
+
+  }
+
+}
+
 function abrirIAConcierge(){
 
 carregarMemoriaPremium();
+atualizarPainelMemoria();
+restaurarHistoricoIA();
+ativarModoMadrugada();
 
   document
   .getElementById('iaOverlay')
@@ -2061,7 +2289,9 @@ JSON.parse(
 const contextoNoiva = {
   nome:'',
   nomeNoivo:'',
-  progresso:0,
+  progresso:parseInt(
+  localStorage.getItem('progressoChecklist')
+) || 0,
   convidados:0,
   diasRestantes:0,
   modoEmocional:false,
@@ -2189,7 +2419,12 @@ if(
   msg.includes('flores')
 ){
 
-  memoriaPremium.corDecoracao = texto;
+  memoriaPremium.corDecoracao =
+  texto
+    .replace('tenho decoração','')
+    .replace('minha decoração é','')
+    .replace('decoração','')
+    .trim();
 
 }
 
