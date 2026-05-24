@@ -1666,6 +1666,66 @@ function abrirIAConcierge(){
   .classList
   .add('active');
 
+  const chat =
+    document.getElementById('iaChat');
+
+  if(chat.dataset.boasVindas === 'ok'){
+    return;
+  }
+
+  chat.dataset.boasVindas = 'ok';
+
+  const nome =
+    contextoNoiva.nome || 'Noiva';
+
+  const mensagem =
+`${nome}, seja bem-vinda à sua concierge premium ✨
+
+Posso te ajudar com checklist, convidados, fornecedores, cronograma, orçamento, estética do casamento ou ansiedade do grande dia.
+
+Por onde deseja começar?`;
+
+  const idBoasVindas =
+    'boasVindasIA_' + Date.now();
+
+  chat.innerHTML += `
+
+    <div class="ia-msg concierge">
+      <div class="ia-avatar">✨</div>
+      <div class="ia-bubble">
+        <span id="${idBoasVindas}"></span>
+      </div>
+    </div>
+
+  `;
+
+  let i = 0;
+
+  const intervalo =
+    setInterval(()=>{
+
+      const el =
+        document.getElementById(idBoasVindas);
+
+      if(!el){
+        clearInterval(intervalo);
+        return;
+      }
+
+      el.textContent =
+        mensagem.substring(0,i);
+
+      i++;
+
+      if(i >= mensagem.length){
+        clearInterval(intervalo);
+      }
+
+      chat.scrollTop =
+        chat.scrollHeight;
+
+    },18);
+
 }
 
 function fecharIAConcierge(){
@@ -1773,6 +1833,368 @@ async function enviarMensagemIA(){
   if(loading){
     loading.remove();
   }
+
+  const msg =
+  texto.toLowerCase();
+
+let respostaLocal = '';
+
+/* =========================================
+ANSIEDADE / EMOCIONAL
+========================================= */
+
+if(
+  msg.includes('ansiosa') ||
+  msg.includes('ansiedade') ||
+  msg.includes('nervosa') ||
+  msg.includes('medo') ||
+  msg.includes('sobrecarregada') ||
+  msg.includes('cansada')
+){
+
+respostaLocal =
+`${contextoNoiva.nome || 'Noiva'}, você não precisa carregar tudo sozinha ✨
+
+O casamento é um momento emocionalmente intenso mesmo.
+
+Hoje, tente focar apenas em:
+• uma decisão importante
+• uma confirmação pendente
+• um momento de descanso para você
+
+Seu planejamento está evoluindo mais do que imagina 💍`;
+
+}
+
+/* =========================================
+CHECKLIST
+========================================= */
+
+else if(
+  msg.includes('checklist') ||
+  msg.includes('tarefas') ||
+  msg.includes('pendências')
+){
+
+respostaLocal =
+`${contextoNoiva.nome || 'Noiva'}, seu planejamento está atualmente em ${contextoNoiva.progresso || 0}% ✨
+
+As prioridades ideais agora são:
+• fornecedores principais
+• confirmação de convidados
+• cronograma da cerimônia
+• pagamentos próximos
+
+Pequenas etapas concluídas criam sensação de controle e leveza.`;
+
+}
+
+/* =========================================
+FORNECEDORES
+========================================= */
+
+else if(
+  msg.includes('fornecedor') ||
+  msg.includes('contrato') ||
+  msg.includes('buffet') ||
+  msg.includes('fotografo') ||
+  msg.includes('filmagem') ||
+  msg.includes('cerimonial')
+){
+
+respostaLocal =
+`Vamos organizar seus fornecedores com mais clareza ✨
+
+Priorize:
+• contratos assinados
+• horários confirmados
+• contatos salvos
+• responsáveis definidos
+• alinhamento final próximo ao evento
+
+Os melhores casamentos parecem leves porque os bastidores estão organizados 💍`;
+
+}
+
+/* =========================================
+CRONOGRAMA
+========================================= */
+
+else if(
+  msg.includes('cronograma') ||
+  msg.includes('horário') ||
+  msg.includes('roteiro') ||
+  msg.includes('atraso')
+){
+
+respostaLocal =
+`O cronograma é o que transforma o casamento em uma experiência fluida ✨
+
+Revise principalmente:
+• making of
+• entrada da cerimônia
+• fotos oficiais
+• recepção
+• abertura da pista
+• encerramento
+
+Quanto mais claro o roteiro, mais leve o grande dia se torna 💍`;
+
+}
+
+/* =========================================
+CONVIDADOS / RSVP
+========================================= */
+
+else if(
+  msg.includes('convidado') ||
+  msg.includes('rsvp') ||
+  msg.includes('confirmação')
+){
+
+respostaLocal =
+`A confirmação de presença evita desperdícios e reduz ansiedade ✨
+
+Agora vale focar em:
+• convidados pendentes
+• mesas prioritárias
+• familiares próximos
+• lista final do buffet
+
+Um RSVP organizado melhora toda a experiência do evento.`;
+
+}
+
+/* =========================================
+DINHEIRO / ORÇAMENTO
+========================================= */
+
+else if(
+  msg.includes('dinheiro') ||
+  msg.includes('orçamento') ||
+  msg.includes('gasto') ||
+  msg.includes('financeiro') ||
+  msg.includes('caro')
+){
+
+respostaLocal =
+`Casamentos elegantes não dependem apenas de gastar mais ✨
+
+O segredo normalmente está em:
+• boas prioridades
+• menos excessos
+• fornecedores estratégicos
+• experiência emocional bem construída
+
+Seu planejamento financeiro deve trazer segurança, não pressão 💍`;
+
+}
+
+/* =========================================
+DECORAÇÃO
+========================================= */
+
+else if(
+  msg.includes('decoração') ||
+  msg.includes('flores') ||
+  msg.includes('paleta') ||
+  msg.includes('mesa')
+){
+
+respostaLocal =
+`A estética ideal é aquela que transmite a personalidade do casal ✨
+
+Hoje as tendências mais sofisticadas priorizam:
+• iluminação intimista
+• flores mais orgânicas
+• tons suaves
+• menos excesso visual
+• sensação editorial elegante
+
+O luxo moderno costuma ser mais leve e refinado 🌙`;
+
+}
+
+/* =========================================
+VESTIDO / BELEZA
+========================================= */
+
+else if(
+  msg.includes('vestido') ||
+  msg.includes('maquiagem') ||
+  msg.includes('cabelo') ||
+  msg.includes('beleza')
+){
+
+respostaLocal =
+`O visual ideal é aquele em que você se reconhece no espelho ✨
+
+Os estilos mais elegantes atualmente valorizam:
+• leveza
+• movimento
+• naturalidade sofisticada
+• maquiagem iluminada
+• penteados mais fluidos
+
+Conforto também é luxo 💍`;
+
+}
+
+/* =========================================
+CHUVA / IMPREVISTOS
+========================================= */
+
+else if(
+  msg.includes('chuva') ||
+  msg.includes('imprevisto') ||
+  msg.includes('deu errado')
+){
+
+respostaLocal =
+`Os casamentos mais memoráveis raramente são os mais perfeitos ✨
+
+Ter:
+• plano B
+• fornecedores alinhados
+• cronograma claro
+• pessoas responsáveis
+
+já reduz grande parte dos imprevistos.
+
+O mais importante continua sendo a experiência emocional do dia 💍`;
+
+}
+
+/* =========================================
+FAMÍLIA / PADRINHOS
+========================================= */
+
+else if(
+  msg.includes('família') ||
+  msg.includes('padrinho') ||
+  msg.includes('madrinha') ||
+  msg.includes('briga')
+){
+
+respostaLocal =
+`Casamentos misturam emoção, expectativa e famílias diferentes ✨
+
+Tente priorizar:
+• comunicação leve
+• decisões claras
+• limites saudáveis
+• menos pressão externa
+
+Nem toda decisão precisa agradar todo mundo 💍`;
+
+}
+
+/* =========================================
+LUA DE MEL
+========================================= */
+
+else if(
+  msg.includes('lua de mel') ||
+  msg.includes('viagem')
+){
+
+respostaLocal =
+`A lua de mel ideal é aquela que combina descanso e conexão ✨
+
+Hoje muitos casais preferem:
+• experiências mais intimistas
+• hotéis boutique
+• destinos tranquilos
+• menos correria
+• mais presença emocional
+
+O casamento termina.
+A experiência do casal continua 💍`;
+
+}
+
+/* =========================================
+DEFAULT PREMIUM
+========================================= */
+
+else{
+
+const respostasPremium = [
+
+`${contextoNoiva.nome || 'Noiva'}, estou analisando os próximos detalhes ideais para deixar seu casamento ainda mais sofisticado ✨`,
+
+`Os detalhes mais refinados normalmente são aqueles que fazem os convidados sentirem algo especial 💍`,
+
+`Seu planejamento está começando a ganhar forma de experiência editorial premium ✨`,
+
+`Agora vamos focar nos pontos que trazem mais leveza e elegância para o grande dia 🌙`,
+
+`Seu casamento merece organização, emoção e uma experiência inesquecível ✨`
+
+];
+
+respostaLocal =
+  respostasPremium[
+    Math.floor(
+      Math.random() * respostasPremium.length
+    )
+  ];
+
+}
+
+if(respostaLocal){
+
+  chat.innerHTML += `
+
+    <div class="ia-msg concierge">
+
+      <div class="ia-avatar">
+        ✨
+      </div>
+
+      <div class="ia-bubble">
+        <span id="${idDigitacao}"></span>
+      </div>
+
+    </div>
+
+  `;
+
+  historicoIA.push({
+    tipo:'ia',
+    mensagem:respostaLocal
+  });
+
+  let i = 0;
+
+  const intervalo =
+    setInterval(()=>{
+
+      const elementoDigitando =
+        document.getElementById(idDigitacao);
+
+      if(!elementoDigitando){
+        clearInterval(intervalo);
+        return;
+      }
+
+      elementoDigitando.textContent =
+        respostaLocal.substring(0,i);
+
+      i++;
+
+      if(i >= respostaLocal.length){
+        clearInterval(intervalo);
+      }
+
+      chat.scrollTop =
+        chat.scrollHeight;
+
+    },18);
+
+  return;
+
+}
 
   try{
 
