@@ -389,8 +389,8 @@ async function esqueciSenha() {
     const emailFormatado = email.trim().toLowerCase();
 
     const { error } = await _supabase.auth.resetPasswordForEmail(emailFormatado, {
-        redirectTo: `${window.location.origin}/redefinir-senha.html`
-    });
+  redirectTo: 'https://planejanoiva.com.br/redefinir-senha.html'
+});
 
     if (error) {
         const msg = error.status === 429
