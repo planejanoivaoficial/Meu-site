@@ -389,7 +389,7 @@ async function esqueciSenha() {
     const emailFormatado = email.trim().toLowerCase();
 
     const { error } = await _supabase.auth.resetPasswordForEmail(emailFormatado, {
-  redirectTo: 'https://planejanoiva.com.br/redefinir-senha.html'
+  redirectTo: 'https://planeja-noiva.vercel.app/redefinir-senha.html'
 });
 
     if (error) {
